@@ -21,10 +21,10 @@ Kategorije:
 
 Korisnici (svaki korisnik moze da promeni svoju lozinku):
 - 0		admin
+	- moze da dodaje i menja kategorije (mozda deleted_at)
 	- vidi objave svih autora
 	- moze da vrati obrisane objave
 	- vidi logove
 - 100	autor
-	- moze da dodaje i menja kategorije (mozda deleted_at)
 	- moze da dodaje objave u kategorijama koje su mu dodeljene
 	- moze da menja i brise samo svoje objave (brisanje deleted_at)

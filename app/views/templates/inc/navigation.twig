@@ -10,11 +10,26 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="{{ path_for('pocetna') }}"><i class="fas fa-home"></i> Početna</a>
+        <a class="nav-link" href="{{ path_for('pocetna') }}"><i class="fas fa-home"></i> Почетна</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href=""><i class="fas fa-gavel"></i> Закони</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href=""><i class="fas fa-file-alt"></i> Уредбе</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href=""><i class="fas fa-file"></i> Правилници</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href=""><i class="fas fa-paragraph"></i> Обрасци</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href=""><i class="fas fa-link"></i> Везе</a>
       </li>
       {% if auth.logged %}
       {% if auth.user.nivo == 200 %}
-        {# Korisnik #}
+      {# Korisnik #}
       {% endif %}
 
       {% if auth.user.nivo == 0 %}

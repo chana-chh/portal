@@ -10,7 +10,7 @@ class Clanak extends Model
 
     public function kategorija()
     {
-        return $this->belongsToMany('App\Models\Kategorija', 'id_kategorije');
+        return $this->belongsTo('App\Models\Kategorija', 'kategorija_id');
     }
 
     public function korisnik()

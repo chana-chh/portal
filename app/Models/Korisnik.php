@@ -37,8 +37,13 @@ class Korisnik extends Model
         return $this->hasMany('App\Models\Log', 'korisnik_id');
     }
 
-    public function clanak()
+    public function clanci()
     {
         return $this->hasMany('App\Models\Clanak', 'korisnik_id');
+    }
+
+    public function dokumenti()
+    {
+        return $this->hasMany('App\Models\Dokument', 'clanak_id');
     }
 }

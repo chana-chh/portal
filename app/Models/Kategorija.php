@@ -8,8 +8,8 @@ class Kategorija extends Model
 {
     protected $table = 'kategorije';
 
-    public function clanak()
+    public function clanci()
     {
-        return $this->belongsToMany('App\Models\Clanak', 'id_clanka');
+        return $this->hasMany('App\Models\Clanak', 'korisnik_id');
     }
 }
