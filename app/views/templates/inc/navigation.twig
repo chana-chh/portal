@@ -1,0 +1,57 @@
+<nav class="navbar navbar-dark bg-dark text-light navbar-expand-lg sticky-top">
+  <a href="{{ path_for('pocetna') }}" class="navbar-brand text-success">
+    Portal zaposlenih u Gradskim upravama grada Kragujevca
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path_for('pocetna') }}"><i class="fas fa-home"></i> Početna</a>
+      </li>
+      {% if auth.logged %}
+      {% if auth.user.nivo == 200 %}
+        {# Korisnik #}
+      {% endif %}
+
+      {% if auth.user.nivo == 0 %}
+      {# meni za admina #}
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-calendar-alt"></i> Nesto</a>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-user-lock"></i> Administrator
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{{ path_for('admin.korisnik.lista') }}">Korisnici</a>
+          <a class="dropdown-item" href="{{ path_for('logovi') }}">Logovi</a>
+        </div>
+      </li>
+      {% endif %}
+      {% endif %}
+
+      {% if auth.logged %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-user"></i> {{ auth.user.imePrezime }}
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{{ path_for('odjava') }}">Odjava</a>
+          <a class="dropdown-item" href="{{ path_for('promena') }}">Promena lozinke</a>
+        </div>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path_for('prijava') }}"><i class="fas fa-sign-in-alt"></i> Prijava</a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

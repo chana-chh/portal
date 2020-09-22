@@ -1,0 +1,30 @@
+# PORTAL
+
+Za sada bih terao bez komentara.
+File manager i wysiwyg editor.
+
+Vrste (enum u kategorijama):
+- Opste
+- Uprave
+- Sindikati
+
+Kategorije:
+- Vesti (opste)
+- Saopstenja (opste)
+- Covid-19 (opste)
+- Adresar (link na IKT imenik)
+- JP i ustanove (opste)
+- Uprave... (uprave)
+- Samostalni (sindikati)
+- Nezavisnost (sindikati)
+- Pera? (sindikati) ovo kao da je Stanislav umesao prste
+
+Korisnici (svaki korisnik moze da promeni svoju lozinku):
+- 0		admin
+	- vidi objave svih autora
+	- moze da vrati obrisane objave
+	- vidi logove
+- 100	autor
+	- moze da dodaje i menja kategorije (mozda deleted_at)
+	- moze da dodaje objave u kategorijama koje su mu dodeljene
+	- moze da menja i brise samo svoje objave (brisanje deleted_at)

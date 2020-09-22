@@ -1,0 +1,8 @@
+<div class="container-fluid clearfix bg-dark text-light ne_stampaj mobilni">
+  <p class="float-left mb-1">
+    <em>&copy; {{ 'now'|date('Y') }} ChaSha One All Rights Reserved</em>
+  </p>
+  <p class="float-right mb-1">
+    Korisnik: <em>{{ auth.logged ? auth.user.imePrezime : "Gost" }}</em>
+  </p>
+</div>

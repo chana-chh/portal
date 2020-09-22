@@ -1,0 +1,190 @@
+{% extends "templates/app.twig" %}
+{% block stil %}
+<style>
+  @media (max-width: 575.98px) {
+    .mobilni {
+      font-size: 0.875rem !important;
+    }
+  }
+</style>
+{% endblock stil %}
+{% block naslov %}
+<div class="row mt-md-4 d-none d-sm-flex">
+  <div class="col-md-8">
+    <h1>
+      <i class="fas fa-history text-secondary"></i>
+      Pregled logova
+      {% if data %}
+      <small><em class="text-warning">[filtrirano]</em></small>
+      {% else %}
+      <small><em class="text-success">[svi logovi]</em></small>
+      {% endif %}
+    </h1>
+  </div>
+  <div class="col-md-4 text-right">
+    <div class="btn-group btn-group mt-3">
+      {% if data is null %}
+      <button type="button" class="btn btn-success btn-sm" id="filter-toggle" title="Prikaži formu za filtriranje">
+        <i class="fas fa-filter"></i> Filter
+      </button>
+      {% endif %}
+      <a href="{{ path_for('logovi') }}" class="btn btn-secondary btn-sm">
+        <i class="fas fa-history"></i> Svi logovi
+      </a>
+    </div>
+  </div>
+</div>
+<div class="row mt-2 d-sm-none">
+  <div class="col">
+    <h4>
+      <i class="fas fa-history text-secondary"></i>
+      Pregled logova
+      {% if data %}
+      <small><em class="text-warning">[filtrirano]</em></small>
+      {% else %}
+      <small><em class="text-success">[svi logovi]</em></small>
+      {% endif %}
+    </h4>
+  </div>
+</div>
+<div class="row mt-2 d-sm-none">
+  <div class="col text-right">
+    <div class="btn-group btn-group">
+      {% if data is null %}
+      <button type="button" class="btn btn-success btn-sm" id="filter-toggle" title="Prikaži formu za filtriranje">
+        <i class="fas fa-filter"></i> Filter
+      </button>
+      {% endif %}
+      <a href="{{ path_for('logovi') }}" class="btn btn-secondary btn-sm">
+        <i class="fas fa-history"></i> Svi logovi
+      </a>
+    </div>
+  </div>
+</div>
+<hr />
+<div class="card border-dark mb-3 pretraga_div" style="display: none;">
+  <div class="card-header">Filtriranje logova</div>
+  <div class="card-body text-dark mobilni">
+    <form action="{{ path_for('logovi.pretraga') }}" method="POST">
+      {{ csrf|raw }}
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label for="opis">Opis:</label>
+          <input type="text" name="opis" id="opis" class="form-control" autocomplete="off">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="izmene">Izmene:</label>
+          <input type="text" name="izmene" id="izmene" class="form-control" autocomplete="off">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="korisnik_id">Korisnik</label>
+          <select class="custom-select mb-2" name="korisnik_id" id="korisnik_id">
+            <option value=""></option>
+            {% for korisnik in korisnici %}
+            <option value="{{ korisnik.id }}">{{ korisnik.prezimeIme }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="tip">Tip akcije:</label>
+          <select class="custom-select mb-2" name="tip" id="tip" class="form-control">
+            <option value=""></option>
+            <option value="dodavanje">Dodavanje novog zapisa</option>
+            <option value="izmena">Izmena zapisa</option>
+            <option value="brisanje">Brisanje zapisa</option>
+            <option value="upload">Otpremanje podataka</option>
+          </select>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="datum_1">Datum (od): </label>
+          <input type="date" name="datum_1" id="datum_1" class="form-control">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="tdatum_2ip">Datum (do): </label>
+          <input type="date" name="datum_2" id="datum_2" class="form-control">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-md-8 text-info">
+          * Ako se unese samo prvi datum pretraga će se vršiti za ugovore sa tim datumom. Ako se unesu oba datuma
+          pretraga će se vršiti za ugovore između ta dva datuma.
+        </div>
+        <div class="col-md-4 text-right">
+          <div class="btn-group">
+            <button type="submit" class="btn btn-success btn-sm">
+              <i class="fas fa-filter"></i> Filtriraj
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="table-responsive">
+  <table class="table mobilni">
+    <thead class="thead-dark">
+      <tr>
+        <th class="w-5">ID</th>
+        <th class="w-30">Opis</th>
+        <th class="w-35">Izmene</th>
+        <th class="w-10">Tip</th>
+        <th class="w-10">Korisnik</th>
+        <th class="w-10">Datum i vreme</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logovi.data %}
+      <tr>
+        <th class="text-danger">{{ log.id }}</th>
+        <td>{{ log.opis }}</td>
+        <td>
+          <ul class="list-unstyled">
+            {% if log.tip == 'izmena' %}
+            {% for k,v in log.izmene %}
+            <li>{{ k }} [ {{ v.stara_vrednost }} => {{ v.nova_vrednost }} ]</li>
+            {% endfor %}
+            {% else %}
+            {% for k,v in log.izmene %}
+            <li>{{ k }} [ {{ v }} ]</li>
+            {% endfor %}
+            {% endif %}
+          </ul>
+        </td>
+        <td>{{ log.tip }}</td>
+        <td>{{ log.korisnik.prezimeIme }}</td>
+        <td>{{ log.datum|date('d.m.Y H:i:s') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="row mobilni">
+  <nav class="col">
+    <ul class="pagination pagination-sm">
+      {% for button in logovi.links.buttons %}
+      <li class="page-item{{ button.current ? ' active' : '' }}">
+        <a class="page-link" href="{{ button.url }}">{{ button.page }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  <p class="col justify-content-end text-right text-info"><strong>
+      Prikazani redovi od
+      <em>{{ logovi.links.row_from }}</em> do
+      <em>{{ logovi.links.row_to }}</em> od ukupno
+      <em>{{ logovi.links.total_rows }}</em>
+    </strong>
+  </p>
+</div>
+{% endblock naslov %}
+{% block skripta %}
+<script>
+  $(document).ready(function () {
+
+    $('#filter-toggle').click(function () {
+      $('.pretraga_div').toggle();
+    });
+
+  });
+</script>
+{% endblock skripta %}

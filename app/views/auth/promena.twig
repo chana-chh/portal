@@ -1,0 +1,97 @@
+{% extends "templates/app.twig" %} {% block naslov %}
+<div class="row">
+  <div class="col-lg-4 offset-lg-4">
+    <h1 class="display-3 text-info"><i class="fas fa-key"></i> Promena lozinke</h1>
+    <hr />
+    <form action="{{ path_for('promena') }}" method="POST" class="needs-validation" novalidate>
+      {{ csrf | raw }}
+      <div class="form-group">
+        <label for="lozinka" class="uk-form-label">Trenutna lozinka</label>
+        <input
+          class="form-control{{ errors.lozinka[0] ? ' is-invalid' : '' }}"
+          type="password"
+          name="lozinka"
+          id="lozinka"
+          class="uk-input"
+          autocomplete="new-password"
+          required
+        />
+        <small class="form-text text-muted">Trenutna lozinka za prijavljenog korisnika.</small>
+        <div class="valid-feedback">Odgovarajući podatak</div>
+        <div class="invalid-feedback">
+          {{ errors.lozinka[0] ? : 'Obavezno polje' }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="nova_lozinka" class="uk-form-label">Nova lozinka</label>
+        <input
+          class="form-control{{ errors.nova_lozinka[0] ? ' is-invalid' : '' }}"
+          type="password"
+          name="nova_lozinka"
+          id="nova_lozinka"
+          class="uk-input"
+          autocomplete="new-password"
+          required
+          minlength="6"
+        />
+        <small class="form-text text-muted">Nova lozinka za prijavljenog korisnika.</small>
+        <div class="valid-feedback">Odgovarajući podatak</div>
+        <div class="invalid-feedback">
+          {{ errors.nova_lozinka[0] ? : 'Obavezno polje' }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="lozinka_potvrda" class="uk-form-label">Potvrda nove lozinke</label>
+        <input
+          class="form-control{{ errors.lozinka_potvrda[0] ? ' is-invalid' : '' }}"
+          type="password"
+          name="lozinka_potvrda"
+          id="lozinka_potvrda"
+          class="uk-input"
+          autocomplete="new-password"
+          required
+          minlength="6"
+        />
+        <small class="form-text text-muted">Potvrda nove lozinke za prijavljenog korisnika.</small>
+        <div class="valid-feedback">Odgovarajući podatak</div>
+        <div class="invalid-feedback">
+          {{ errors.lozinka_potvrda[0] ? : 'Obavezno polje' }}
+        </div>
+      </div>
+
+      <div class="btn-group float-right">
+        <input type="submit" value="Promeni lozinku" class="btn btn-info" />
+        <a href="{{ path_for('pocetna') }}" class="btn btn-warning">Otkaži promenu</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock naslov %} {% block skripta %}
+<script>
+  (function() {
+    "use strict";
+    window.addEventListener(
+      "load",
+      function() {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName("needs-validation");
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+          form.addEventListener(
+            "submit",
+            function(event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      },
+      false
+    );
+  })();
+</script>
+{% endblock skripta %}

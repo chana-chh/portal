@@ -1,0 +1,37 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+	<div class="row mt-5">
+		<div class="col text-center">
+			<h4>NASLOV</h4>
+			<hr>
+		</div>
+	</div>
+
+{% endblock naslov %}
+{% block sadrzaj %}
+<h4>Poslednji objavljeni članak</h4>
+<div class="jumbotron">
+  <h1 class="display-4">{{ clanak[0].naslov }}</h1>
+  <p class="lead">{{ clanak[0].rezime }}</p>
+  <hr class="my-4">
+  <p>{{ clanak[0].clanak|length < 200 ? clanak[0].clanak : clanak[0].clanak|slice(0, 100) ~ '...'}}</p>
+  <p class="lead">
+    <a class="btn btn-primary btn-lg" href="#" role="button">Pročitaj ceo članak</a>
+  </p>
+</div>
+{% endblock sadrzaj %}
+{% block traka %}
+<h4>Kategorije</h4>
+<div class="list-group">
+  {% for kat in kategorije %}
+  <a href="#" class="list-group-item list-group-item-action">{{ kat.naziv }}</a>
+  {% endfor %}
+</div>
+{% endblock traka %}
+{% block skripta %}
+<script>
+  $(document).ready(function () {
+
+});
+</script>
+{% endblock skripta %}

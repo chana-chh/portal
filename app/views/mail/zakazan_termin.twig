@@ -1,0 +1,6 @@
+<h1>U sali {{ termin.sala().naziv }} je zakazan događaj: {{ termin.tip().tip }}</h1>
+<h2>Dana {{ termin.datum|date() }}. godine od {{ termin.pocetak|date('H:i') }} do {{ termin.kraj|date('H:i') }}</h2>
+<h3>{{ termin.opis }}</h3>
+<p><a href="{{ link }}">Link do termina</a></p>
+<p style="color: red">* Molimo Vas da ne odgovarate na ovu poruku</p>
+<p><strong>Prijatan dan</strong></p>

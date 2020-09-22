@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="sr">
+  <head>
+    <meta charset=" UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>{{ APP_NAME }}</title>
+    <link rel="shortcut icon" href="{{ base_url() }}/favicon.png" />
+    <link rel="stylesheet" href="{{ base_url() }}/css/fontawesome.css" />
+    <link rel="stylesheet" href="{{ base_url() }}/css/brands.css" />
+    <link rel="stylesheet" href="{{ base_url() }}/css/solid.css" />
+    <link rel="stylesheet" href="{{ base_url() }}/css/bootstrap.css" />
+    <link rel="stylesheet" href="{{ base_url() }}/css/app.css" />
+    {% block stil %}{% endblock stil %}
+  </head>
+
+  <body class="d-flex flex-column kalendar">
+    <div id="page-content">
+      <header>
+        {% include 'templates/inc/navigation.twig' %}
+      </header>
+
+      <div>
+        {% include 'templates/inc/flash.twig' %}
+      </div>
+
+      <main class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            {% block naslov %}{% endblock naslov %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-8">
+            {% block sadrzaj %}{% endblock sadrzaj %}
+          </div>
+          <div class="col-lg-4">
+            {% block traka %}{% endblock traka %}
+          </div>
+        </div>
+      </main>
+    </div>
+    <footer id="sticky-footer">
+      {% include 'templates/inc/footer.twig' %}
+    </footer>
+    <script src="{{ base_url() }}/js/jquery.js"></script>
+    <script src="{{ base_url() }}/js/bootstrap.js"></script>
+    <script src="{{ base_url() }}/js/app.js"></script>
+    {% block skripta %}{% endblock skripta %}
+  </body>
+</html>
