@@ -2,29 +2,36 @@
 {% block naslov %}
 	<div class="row mt-5">
 		<div class="col text-center">
-			<h4>NASLOV</h4>
+			<h4>НЕКИ НАСЛОВ, ГРБ, ПТИЦА ГРАБЉИВИЦА</h4>
 			<hr>
 		</div>
 	</div>
 
 {% endblock naslov %}
 {% block sadrzaj %}
-<h4>Poslednji objavljeni članak</h4>
+<div class="row mb-5 mt-3">
+  <div class="col">
+    <h2 class="text-primary">Последњи објављени чланак</h2>
+  </div>
+</div>
 <div class="jumbotron">
   <h1 class="display-4">{{ clanak[0].naslov }}</h1>
   <p class="lead">{{ clanak[0].rezime }}</p>
   <hr class="my-4">
-  <p>{{ clanak[0].clanak|length < 200 ? clanak[0].clanak : clanak[0].clanak|slice(0, 100) ~ '...'}}</p>
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="#" role="button">Pročitaj ceo članak</a>
-  </p>
+  <p>{{ clanak[0].clanak|length < 410 ? clanak[0].clanak : clanak[0].clanak|slice(0, 400) ~ '...'}}</p>
+  <div class="col text-right">
+      <a class="btn btn-primary" href="{{path_for('clanci.pregled', { id: clanak[0].id })}}" role="button">Прочитај цео чланак</a>
+  </div>
 </div>
 {% endblock sadrzaj %}
 {% block traka %}
-<h4>Kategorije</h4>
+<h4>Категорије</h4>
 <div class="list-group">
   {% for kat in kategorije %}
-  <a href="#" class="list-group-item list-group-item-action">{{ kat.naziv }}</a>
+ <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+    <a href="{{ path_for('clanci.lista', { id: kat.id }) }}">{{ kat.naziv }}</a>
+    <span class="badge badge-primary badge-pill">{{ kat.broj_kategorije() }}</span>
+  </li>
   {% endfor %}
 </div>
 {% endblock traka %}

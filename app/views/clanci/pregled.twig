@@ -1,0 +1,27 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<div class="row mt-md-2 ne_stampaj">
+  <div class="col text-right mt-3">
+    <div class="btn-group">
+      <a href="#" class="btn btn-secondary btn-sm" title="Повратак на листу чланака">
+        <i class="fas fa-list"></i> Листа чланака
+      </a>
+      <button type="button" class="btn btn-primary btn-sm" title="Штампање чланка" onclick="window.print();">
+        <i class="fas fa-print"></i> Штампај</button>
+    </div>
+  </div>
+</div>
+<hr class="ne_stampaj" />
+<div class="row">
+  <div class="col">
+    <h2 class="text-primary text-uppercase">&emsp;{{ clanak.naslov }}</h2>
+  </div>
+</div>
+<hr class="mb-5">
+<div class="row">
+  <div class="col">
+    <p>{{ clanak.clanak }}</p>
+  </div>
+</div>
+{% endblock naslov %}

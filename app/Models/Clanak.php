@@ -17,4 +17,10 @@ class Clanak extends Model
     {
         return $this->belongsTo('App\Models\Korisnik', 'korisnik_id');
     }
+
+    public function clanci_kategorija($id_kategorije)
+    {
+        $sql = "SELECT * FROM {$this->table()} WHERE kategorija_id = '{$id_kategorije}'";
+        return $this->fetch($sql);
+    }
 }

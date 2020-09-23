@@ -6,6 +6,10 @@ use App\Middlewares\UserLevelMiddleware;
 
 $app->group('', function () {
     $this->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
+    //Clanci
+    $this->get('/clanci/pregled/{id}', '\App\Controllers\ClanakController:getPregled')->setName('clanci.pregled');
+    $this->get('/clanci/lista/{id}', '\App\Controllers\ClanakController:getLista')->setName('clanci.lista');
+    //Prijava
     $this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');
     $this->post('/prijava', '\App\Controllers\AuthController:postPrijava');
 })->add(new GuestMiddleware($container));

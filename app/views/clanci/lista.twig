@@ -1,0 +1,89 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row mt-md-2">
+  <div class="col">
+    <h1>
+      <i class="fas fa-list text-secondary"></i>&emsp;Преглед објављених чланака
+    </h1>
+    {% if data %}
+    <small><em class="text-warning">[филтрирано]</em></small>
+    {% else %}
+    <small><em class="text-success">[сви чланци]</em></small>
+    {% endif %}
+  </div>
+  <div class="col justify-content-end text-right">
+    <div class="btn-group btn-group mt-3">
+      <button type="button" class="btn btn-success btn-sm prikazi" id="prikazi" title="Prikaži formu za filtriranje">
+        <i class="fas fa-filter"></i> Филтер</button>
+      <a href="#" class="btn btn-secondary btn-sm pretraga_div"><i
+          class="fas fa-list"></i> Сви чланци</a>
+    </div>
+  </div>
+</div>
+<hr />
+<div class="card border-dark mb-3 pretraga_div" style="display: none;">
+  <div class="card-header">Филтрирање чланака</div>
+  <div class="card-body text-dark mobilni">
+    <form action="#" method="POST">
+      {{ csrf|raw }}
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label for="naziv">Наслов</label>
+          <input type="text" name="naziv" id="naziv" class="form-control" value=" " autocomplete="off">
+        </div>
+        <div class="col-md-6 text-right mt-4">
+          <div class="btn-group">
+            <button type="submit" class="btn btn-success btn-sm">
+              <i class="fas fa-filter"></i> Филтрирај
+            </button>
+            <a href="#" class="btn btn-secondary btn-sm"><i class="fas fa-list"></i> Сви чланци</a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="table-responsive">
+  <table class="table table-hover table-sm">
+    <thead class="thead-dark">
+      <tr>
+        <th class="w-10">ID</th>
+        <th class="w-15 text-center">Наслов</th>
+        <th class="w-20">Резиме</th>
+        <th class="w-25">Kategorija/vrsta</th>
+        <th class="w-20">Datum</th>
+        <th class="w-10 text-right"><i class="fas fa-cogs text-warning"></i></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for clanak in clanci %}
+      <tr>
+        <th class="text-danger">{{ clanak.id }}</th>
+        <td>{{ clanak.naslov }}</td>
+        <td>
+         <em>{{ clanak.rezime|nl2br }}</em>
+        </td>
+        <td class="text-success text-center"><strong>{{ clanak.kategorija.naziv}}/{{ clanak.kategorija.vrsta}}</strong></td>
+        <td>{{ clanak.publish_at|date('d.m.Y') }}</td>
+        <td class="text-right">
+          <div class="btn-group btn-group-sm">
+            <a class="btn btn-success btn-sm" href="{{ path_for('clanci.pregled', { id: clanak.id }) }}"
+              title="Detaljni pregled odabranog menija"><i class="fas fa-eye"></i></a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock naslov %}
+{% block skripta %}
+<script>
+  $(document).ready(function () {
+
+    $('.prikazi').click(function () {
+      $('.pretraga_div').toggle();
+    });
+  });
+</script>
+{% endblock skripta %}
