@@ -15,26 +15,11 @@
       <li class="nav-item">
         <a class="nav-link" href="{{ path_for('biraj') }}"><i class="fas fa-user"></i> Biraj</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href=""><i class="fas fa-gavel"></i> Закони</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href=""><i class="fas fa-file-alt"></i> Уредбе</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href=""><i class="fas fa-file"></i> Правилници</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href=""><i class="fas fa-paragraph"></i> Обрасци</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href=""><i class="fas fa-link"></i> Везе</a>
-      </li>
       {% if auth.logged %}
-      {% if auth.user.nivo == 200 %}
       {# Korisnik #}
-      {% endif %}
-
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path_for('autor.objave.lista') }}"><i class="fas fa-clipboard"></i> Објаве</a>
+      </li>
       {% if auth.user.nivo == 0 %}
       {# meni za admina #}
       <li class="nav-item">
