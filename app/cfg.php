@@ -11,8 +11,8 @@ $config = [
             'db' => [
                 'dsn' => 'mysql:host=127.0.0.1;dbname=portal;charset=utf8mb4',
                 'dbname' => 'portal',
-                'username' => 'root',
-                'password' => '',
+                'username' => 'portal',
+                'password' => 'portal2020',
                 'options' => [
                     \PDO::ATTR_PERSISTENT => true,
                     \PDO::ATTR_EMULATE_PREPARES => false,
@@ -29,7 +29,7 @@ $config = [
             'mail' => [
                 'host' => 'mail.kg.org.rs',
                 'username' => 'portal@kg.org.rs',
-                'password' => 'portal2020',
+                'password' => 'Portal2020',
                 'port' => 465, // 465 = ssl, 587 = tls
                 'from' => 'portal@kg.org.rs',
                 'from_name' => 'GU KG portal',

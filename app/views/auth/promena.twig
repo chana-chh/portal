@@ -1,12 +1,12 @@
 {% extends "templates/app.twig" %} {% block naslov %}
 <div class="row">
   <div class="col-lg-4 offset-lg-4">
-    <h1 class="display-3 text-info"><i class="fas fa-key"></i> Promena lozinke</h1>
+    <h1 class="display-3 text-info"><i class="fas fa-key"></i> Промена лозинке</h1>
     <hr />
     <form action="{{ path_for('promena') }}" method="POST" class="needs-validation" novalidate>
       {{ csrf | raw }}
       <div class="form-group">
-        <label for="lozinka" class="uk-form-label">Trenutna lozinka</label>
+        <label for="lozinka" class="uk-form-label">Тренутна лозинка</label>
         <input
           class="form-control{{ errors.lozinka[0] ? ' is-invalid' : '' }}"
           type="password"
@@ -16,14 +16,14 @@
           autocomplete="new-password"
           required
         />
-        <small class="form-text text-muted">Trenutna lozinka za prijavljenog korisnika.</small>
-        <div class="valid-feedback">Odgovarajući podatak</div>
+        <small class="form-text text-muted">Тренутна лозинка за пријављеног корисника.</small>
+        <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
           {{ errors.lozinka[0] ? : 'Obavezno polje' }}
         </div>
       </div>
       <div class="form-group">
-        <label for="nova_lozinka" class="uk-form-label">Nova lozinka</label>
+        <label for="nova_lozinka" class="uk-form-label">Нова лозинка</label>
         <input
           class="form-control{{ errors.nova_lozinka[0] ? ' is-invalid' : '' }}"
           type="password"
@@ -34,14 +34,14 @@
           required
           minlength="6"
         />
-        <small class="form-text text-muted">Nova lozinka za prijavljenog korisnika.</small>
-        <div class="valid-feedback">Odgovarajući podatak</div>
+        <small class="form-text text-muted">Новалозинка за пријављеног корисника.</small>
+        <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
           {{ errors.nova_lozinka[0] ? : 'Obavezno polje' }}
         </div>
       </div>
       <div class="form-group">
-        <label for="lozinka_potvrda" class="uk-form-label">Potvrda nove lozinke</label>
+        <label for="lozinka_potvrda" class="uk-form-label">Потврда нове лозинке</label>
         <input
           class="form-control{{ errors.lozinka_potvrda[0] ? ' is-invalid' : '' }}"
           type="password"
@@ -52,16 +52,16 @@
           required
           minlength="6"
         />
-        <small class="form-text text-muted">Potvrda nove lozinke za prijavljenog korisnika.</small>
-        <div class="valid-feedback">Odgovarajući podatak</div>
+        <small class="form-text text-muted">Потврда лозинке за пријављеног корисника.</small>
+        <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
           {{ errors.lozinka_potvrda[0] ? : 'Obavezno polje' }}
         </div>
       </div>
 
       <div class="btn-group float-right">
-        <input type="submit" value="Promeni lozinku" class="btn btn-info" />
-        <a href="{{ path_for('pocetna') }}" class="btn btn-warning">Otkaži promenu</a>
+        <input type="submit" value="Промени лозинку" class="btn btn-info" />
+        <a href="{{ path_for('pocetna') }}" class="btn btn-warning">Откажи промену</a>
       </div>
     </form>
   </div>

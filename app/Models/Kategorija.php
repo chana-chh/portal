@@ -12,4 +12,10 @@ class Kategorija extends Model
     {
         return $this->hasMany('App\Models\Clanak', 'korisnik_id');
     }
+
+    public function broj_kategorije()
+    {
+        $sql = "SELECT COUNT(*) AS broj_kategorije FROM clanci WHERE kategorija_id = {$this->id}";
+        return (int) $this->fetch($sql)[0]->broj_kategorije;
+    }
 }

@@ -17,7 +17,7 @@ Kategorije:
 - Uprave... (uprave)
 - Samostalni (sindikati)
 - Nezavisnost (sindikati)
-- Pera? (sindikati) ovo kao da je Stanislav umesao prste
+- Pera? (sindikati) ovo kao da je Stanislav umesao prste (Jes)
 
 Korisnici (svaki korisnik moze da promeni svoju lozinku):
 - 0		admin
@@ -28,3 +28,6 @@ Korisnici (svaki korisnik moze da promeni svoju lozinku):
 - 100	autor
 	- moze da dodaje objave u kategorijama koje su mu dodeljene
 	- moze da menja i brise samo svoje objave (brisanje deleted_at)
+
+STASHA
+deleted_at mora default na null da se postavi u bazi
