@@ -8,7 +8,7 @@ $app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
 $app->get('/biraj', '\App\Controllers\HomeController:getBiraj')->setName('biraj');
 
 $app->group('', function () {
-    
+
     //Clanci
     $this->get('/clanci/pregled/{id}', '\App\Controllers\ClanakController:getPregled')->setName('clanci.pregled');
     $this->get('/clanci/lista/{id}', '\App\Controllers\ClanakController:getLista')->setName('clanci.lista');
@@ -38,7 +38,11 @@ $app->group('', function () {
     $this->post('/admin/logovi/pretraga', '\App\Controllers\LogController:postLogPretraga');
 })->add(new UserLevelMiddleware($container, [0]));
 
-// ZAKAZIVACI
+// AUTORI
 $app->group('', function () {
-    // Clanci-objave
+    // Objave
+    $this->get('/autor/objave/lista', '\App\Controllers\AutorObjaveController:getObjaveLista')->setName('autor.objave.lista');
+    $this->get('/autor/objave/dodavanje', '\App\Controllers\AutorObjaveController:getObjaveDodavanje')->setName('autor.objave.dodavanje');
+    $this->post('/autor/objave/dodavanje', '\App\Controllers\AutorObjaveController:postObjaveDodavanje')->setName('autor.objave.dodavanje');
+    // Dokumenti
 })->add(new UserLevelMiddleware($container, [0,100]));

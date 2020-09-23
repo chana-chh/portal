@@ -46,4 +46,12 @@ class Korisnik extends Model
     {
         return $this->hasMany('App\Models\Dokument', 'clanak_id');
     }
+
+    public function dozvoljeneKategorije()
+    {
+        $model = new Kategorija();
+        $sql = "SELECT * FROM kategorije WHERE id IN({$this->dozvoljene_kategorije});";
+        $kat = $model->fetch($sql);
+        return $kat;
+    }
 }
