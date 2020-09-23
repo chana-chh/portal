@@ -19,10 +19,19 @@ class HomeController extends Controller
         $sql = "SELECT *
                 FROM   clanci
                 WHERE  objavljen = 1
-                ORDER  BY publish_at DESC
+                ORDER  BY published_at DESC
                 LIMIT  1;";
         $clanak = $model_clanak->fetch($sql);
-        $this->render($response, 'home.twig', compact('kategorije', 'clanak'));
+
+        $model = new Clanak();
+        $clanci = $model->paginate($this->page(), 'page', 
+            "SELECT * FROM clanci
+            WHERE  objavljen = 1
+            AND arhiviran = 0 
+            AND deleted_at IS NULL
+            ORDER BY published_at DESC;");
+
+        $this->render($response, 'home.twig', compact('kategorije', 'clanci'));
     }
 
     public function getBiraj($request, $response)
