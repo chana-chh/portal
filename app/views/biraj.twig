@@ -1,0 +1,39 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row text-left">
+  <div class="col-lg-6">
+    <h4><img class="img-fluid" src="{{ base_url() }}/img/orao.png" alt="Grad Kragujevac - portal"></h4>
+  </div>
+  <div class="col-lg-6">
+    <h4>Избор садржаја</h4>
+  </div>
+</div>
+ <div class="row mt-5 text-center">
+  <div class="col col-lg-4">
+      <div class="card">
+  <div class="card-header">
+    Документа
+  </div>
+  <div class="card-body">
+    <h1 class="card-title text-secondary"><i class="fas fa-file-word"></i></h1>
+    <p class="card-text">Има их 349</p>
+    <a href="#" class="btn btn-primary">Прочитај</a>
+  </div>
+</div>
+  </div>
+  <div class="col col-lg-1">
+  </div>
+    <div class="col col-lg-4">
+      <div class="card">
+  <div class="card-header">
+    Чланци
+  </div>
+  <div class="card-body">
+    <h1 class="card-title text-secondary"><i class="fas fa-newspaper"></i></h1>
+    <p class="card-text">Има их 231</p>
+    <a href="#" class="btn btn-primary">Прочитај</a>
+  </div>
+</div>
+  </div>
+</div>
+{% endblock naslov %}

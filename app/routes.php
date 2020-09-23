@@ -4,8 +4,11 @@ use App\Middlewares\AuthMiddleware;
 use App\Middlewares\GuestMiddleware;
 use App\Middlewares\UserLevelMiddleware;
 
+$app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
+$app->get('/biraj', '\App\Controllers\HomeController:getBiraj')->setName('biraj');
+
 $app->group('', function () {
-    $this->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
+    
     //Clanci
     $this->get('/clanci/pregled/{id}', '\App\Controllers\ClanakController:getPregled')->setName('clanci.pregled');
     $this->get('/clanci/lista/{id}', '\App\Controllers\ClanakController:getLista')->setName('clanci.lista');
@@ -16,7 +19,6 @@ $app->group('', function () {
 
 $app->group('', function () {
     $this->get('/odjava', '\App\Controllers\AuthController:getOdjava')->setName('odjava');
-
     // Promena lozinke
     $this->get('/promena', '\App\Controllers\AuthController:getPromena')->setName('promena');
     $this->post('/promena', '\App\Controllers\AuthController:postPromena')->setName('promena');

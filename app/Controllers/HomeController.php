@@ -24,4 +24,9 @@ class HomeController extends Controller
         $clanak = $model_clanak->fetch($sql);
         $this->render($response, 'home.twig', compact('kategorije', 'clanak'));
     }
+
+    public function getBiraj($request, $response)
+    {
+        $this->render($response, 'biraj.twig');
+    }
 }
