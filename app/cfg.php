@@ -11,8 +11,8 @@ $config = [
             'db' => [
                 'dsn' => 'mysql:host=127.0.0.1;dbname=portal;charset=utf8mb4',
                 'dbname' => 'portal',
-                'username' => 'root',
-                'password' => '',
+                'username' => 'portal',
+                'password' => 'portal2020',
                 'options' => [
                     \PDO::ATTR_PERSISTENT => true,
                     \PDO::ATTR_EMULATE_PREPARES => false,

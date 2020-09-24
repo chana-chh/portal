@@ -1,109 +1,55 @@
 {% extends "templates/app.twig" %}
-{% block sadrzaj %}
-{% for clanak in clanci.data %}
-<div class="row mb-5 mt-5">
-<div class="col col-lg-10 offset-lg-1">
-  <h3>{{ clanak.naslov }}</h3>
-  <p class="lead">{{ clanak.rezime }}</p>
-  <blockquote class="blockquote text-right">
-  <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt"></i> {{ clanak.published_at|date('d.m.Y') }}&emsp;<i class="fas fa-comments"></i> 16</p>
-  <footer class="blockquote-footer">{{ clanak.kategorija.naziv }}, <cite title="Vrsta">{{ clanak.kategorija.vrsta }}</cite></footer>
-  </blockquote>
-  <hr class="my-4">
-  <p>{{ clanak.clanak|length < 410 ? clanak.clanak : clanak.clanak|slice(0, 400) ~ '...'}}</p>
-  <div class="col text-right">
-      <a class="btn btn-outline-primary btn-sm" href="{{path_for('clanci.pregled', { id: clanak.id })}}" role="button">Прочитај цео чланак <i class="fas fa-chevron-right"></i></a>
-  </div>
-</div>
-</div>
-{% endfor %}
-<div class="row  mt-5">
-  <nav class="col col-lg-5 offset-lg-1">
-    <ul class="pagination pagination-sm">
-      {% for button in clanci.links.buttons %}
-      <li class="page-item{{ button.current ? ' active' : '' }}">
-        <a class="page-link" href="{{ button.url }}">{{ button.page }}</a>
-      </li>
-      {% endfor %}
-    </ul>
-  </nav>
-  <p class="col col-lg-5 justify-content-end text-right text-primary">
-      Prikazani redovi od
-      <em>{{ clanci.links.row_from }}</em> do
-      <em>{{ clanci.links.row_to }}</em> od ukupno
-      <em>{{ clanci.links.total_rows }}</em>
-  </p>
-</div>
-{% endblock sadrzaj %}
-{% block traka %}
-  <div class="row mt-5 mb-4">
-<div class="col col-lg-12 pl-5">
-      <form class="form-inline" action="#" method="POST">
-      {{ csrf|raw }}
-          <input type="text" name="upit" id="upit" class="form-control" autocomplete="off" placeholder="Upit za pretragu">
-            <button type="submit" class="btn btn-default btn-sm">
-              <i class="fas fa-search"></i>
-            </button>
-    </form>
-  </div>
-</div>
+{% block naslov %}
 <div class="row">
-<div class="col col-lg-12 pl-5">
-<h4 class="font-italic text-secondary">Категорије</h4>
-<br>
-<div class="list-group list-group-flush">
-  {% for kat in kategorije %}
- <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="{{ path_for('clanci.lista', { id: kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
-    <span class="badge badge-pill badge-dark">{{ kat.broj_kategorije() }}</span>
-  </li>
-  {% endfor %}
+  <div class="col-lg-6">
+    <h1 class="display-3">Избор доступних садржаја</h1>
+  </div>
+  <div class="col-lg-6 text-right">
+    <h4><img class="img-fluid" src="{{ base_url() }}/img/orao.png" alt="Grad Kragujevac - portal"></h4>
+  </div>
 </div>
+<div class="card-deck mt-5">
+  <div class="card">
+    <img src="{{ base_url() }}/img/dok.png" class="card-img-top mx-auto d-block" alt="..." style="max-width: 200px;
+  width:100%;">
+    <div class="card-body">
+      <h5 class="card-title">Документа <small>({{ brojClanaka }})</small></h5>
+      <p class="card-text">Преглед листе сачуваних документа.</p>
+    </div>
+    <div class="card-footer">
+       <blockquote class="blockquote text-right">
+          <a href="">Преглед <i class="fas fa-chevron-right"></i></a>
+          <footer class="blockquote-footer">Последње постављање: <cite title="Последња објава">{{ poslednjaObjava|date('d.m.Y H:m') }}</cite></footer>
+      </blockquote>
+    </div>
+  </div>
+  <div class="card">
+    <img src="{{ base_url() }}/img/clanak.png" class="card-img-top mx-auto d-block" alt="..." style="max-width: 200px;
+  width:100%;">
+    <div class="card-body">
+      <h5 class="card-title">Чланци <small>({{ brojClanaka }})</small></h5>
+      <p class="card-text">Преглед објављених чланака.</p>
+    </div>
+    <div class="card-footer">
+      <blockquote class="blockquote text-right">
+          <a href="{{ path_for('feed') }}">Преглед <i class="fas fa-chevron-right"></i></a>
+          <footer class="blockquote-footer">Последња објава: <cite title="Последња објава">{{ poslednjaObjava|date('d.m.Y H:m') }}</cite></footer>
+      </blockquote>
+    </div>
+  </div>
+  <div class="card">
+    <img src="{{ base_url() }}/img/Phone.png" class="card-img-top mx-auto d-block" alt="..." style="max-width: 200px;
+  width:100%;">
+    <div class="card-body">
+      <h5 class="card-title">Именик Градске управе у Крагујевцу</h5>
+      <p class="card-text">Претрага по имену и презимену, броју канцеларије ...</p>
+    </div>
+    <div class="card-footer">
+      <blockquote class="blockquote text-right">
+          <a href="http://it.kg.grad/imenik">Преглед <i class="fas fa-chevron-right"></i></a>
+          <footer class="blockquote-footer">Последње ажурирање: <cite title="Последња објава">пре 3 минута</cite></footer>
+      </blockquote>
+    </div>
+  </div>
 </div>
-</div>
-<div class="row mt-5">
-<div class="col col-lg-12 pl-5">
-<h4 class="font-italic text-secondary">Најпопуларнији чланци</h4>
-<br>
-<div class="list-group list-group-flush">
- <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="" class="text-reset">Представа „Чипка” је прича о хуманости</a>
-  </li>
-   <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="" class="text-reset">Бечић изабран за председника Скупштине Црне Горе</a>
-  </li>
-   <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="" class="text-reset">Протест у Минску после инаугурације Лукашенка</a>
-  </li>
-</div>
-</div>
-</div>
-
-<div class="row mt-5">
-<div class="col col-lg-12 pl-5">
-<h4 class="font-italic text-secondary">Архива</h4>
-<br>
-<div class="list-group list-group-flush">
- <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="" class="text-reset">Децембар 2019</a>
-    <span class="badge badge-pill badge-dark">1</span>
-  </li>
-   <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="" class="text-reset">Август 2020</a>
-    <span class="badge badge-pill badge-dark">3</span>
-  </li>
-   <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="" class="text-reset">Септембар 2020</a>
-    <span class="badge badge-pill badge-dark">1</span>
-  </li>
-</div>
-</div>
-</div>
-{% endblock traka %}
-{% block skripta %}
-<script>
-  $(document).ready(function () {
-
-});
-</script>
-{% endblock skripta %}
+{% endblock naslov %}

@@ -12,21 +12,19 @@ class HomeController extends Controller
 {
     public function getHome($request, $response)
     {
-        $model_kategorije = new Kategorija();
-        $kategorije = $model_kategorije->all();
-
         $model = new Clanak();
-        $clanci = $model->paginate($this->page(), 'page', 
-            "SELECT * FROM clanci
-            WHERE  objavljen = 1
-            AND deleted_at IS NULL
-            ORDER BY published_at DESC;");
+        $brojClanaka = $model->broj_objavljenih();
+        $poslednjaObjava = $model->poslednja_objava();
 
-        $this->render($response, 'home.twig', compact('kategorije', 'clanci'));
+        $this->render($response, 'home.twig', compact('brojClanaka', 'poslednjaObjava'));
     }
 
     public function getBiraj($request, $response)
     {
-        $this->render($response, 'biraj.twig');
+        $model = new Clanak();
+        $brojClanaka = $model->broj_objavljenih();
+        $poslednjaObjava = $model->poslednja_objava();
+
+        $this->render($response, 'biraj.twig', compact('brojClanaka', 'poslednjaObjava'));
     }
 }

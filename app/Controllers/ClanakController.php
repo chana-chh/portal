@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Clanak;
+use App\Models\Kategorija;
 
 class ClanakController extends Controller
 {
@@ -12,6 +13,21 @@ class ClanakController extends Controller
         $clanci = $model->paginate($this->page());
 
         $this->render($response, 'clanci/lista.twig', compact('clanci'));
+    }
+
+    public function getFeed($request, $response)
+    {
+        $model_kategorije = new Kategorija();
+        $kategorije = $model_kategorije->all();
+
+        $model = new Clanak();
+        $clanci = $model->paginate($this->page(), 'page', 
+            "SELECT * FROM clanci
+            WHERE  objavljen = 1
+            AND deleted_at IS NULL
+            ORDER BY published_at DESC;");
+
+        $this->render($response, 'clanci/feed.twig', compact('kategorije', 'clanci'));
     }
 
     public function getPregled($request, $response, $args)

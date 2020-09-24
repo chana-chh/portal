@@ -5,7 +5,7 @@ use App\Middlewares\GuestMiddleware;
 use App\Middlewares\UserLevelMiddleware;
 
 $app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
-$app->get('/biraj', '\App\Controllers\HomeController:getBiraj')->setName('biraj');
+$app->get('/feed', '\App\Controllers\ClanakController:getFeed')->setName('feed');
 
 $app->group('', function () {
 
