@@ -15,6 +15,61 @@ class ClanakController extends Controller
         $this->render($response, 'clanci/lista.twig', compact('clanci'));
     }
 
+    public function postClanciPretraga($request, $response)
+    {
+        $_SESSION['DATA_CLANCI_PRETRAGA'] = $request->getParams();
+        return $response->withRedirect($this->router->pathFor('feed'));
+    }
+
+    public function getClanciPretraga($request, $response)
+    {
+        $data = $_SESSION['DATA_CLANCI_PRETRAGA'];
+        array_shift($data);
+        array_shift($data);
+
+        if (empty($data['upit'])) {
+            return $response->withRedirect($this->router->pathFor('feed'));
+        }
+
+        $data['upit'] = str_replace('%', '', $data['upit']);
+
+        $upit = '%' . filter_var($data['upit'], FILTER_SANITIZE_STRING) . '%';
+
+        $where = " WHERE ";
+        $params = [];
+
+        if (!empty($data['upit'])) {
+            if ($where !== " WHERE ") {
+                $where .= " OR ";
+            }
+            $where .= "naslov LIKE :upit";
+            $params[':upit'] = $upit;
+        }
+
+        if (!empty($data['upit'])) {
+            if ($where !== " WHERE ") {
+                $where .= " OR ";
+            }
+            $where .= "clanak LIKE :upit";
+            $params[':upit'] = $upit;
+        }
+
+        if (!empty($data['upit'])) {
+            if ($where !== " WHERE ") {
+                $where .= " OR ";
+            }
+            $where .= "rezime LIKE :upit";
+            $params[':upit'] = $upit;
+        }
+
+        $where = $where === " WHERE " ? "" : $where;
+        $model = new Clanak();
+        $sql = "SELECT * FROM {$model->getTable()}{$where} ORDER BY published_at DESC;";
+        $clanci = $model->paginate($this->page(), 'page', $sql, $params);
+
+        $this->render($response, 'clanci/lista.twig', compact('clanci', 'data'));
+    }
+
     public function getFeed($request, $response)
     {
         $model_kategorije = new Kategorija();
