@@ -24,6 +24,14 @@ class Clanak extends Model
         return $this->fetch($sql);
     }
 
+    public function najpopularniji()
+    {
+        $sql = "SELECT * FROM {$this->table()} WHERE  objavljen = 1
+            AND deleted_at IS NULL
+            ORDER BY pregledi DESC LIMIT 5";
+        return $this->fetch($sql);
+    }
+
     public function broj_objavljenih()
     {
         $sql = "SELECT COUNT(*) AS broj_clanaka FROM clanci

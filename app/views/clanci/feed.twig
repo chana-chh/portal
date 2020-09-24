@@ -12,7 +12,13 @@
   <hr class="my-4">
   <p>{{ clanak.clanak|length < 410 ? clanak.clanak : clanak.clanak|slice(0, 400) ~ '...'}}</p>
   <div class="col text-right">
-      <a class="btn btn-outline-primary btn-sm" href="{{path_for('clanci.pregled', { id: clanak.id })}}" role="button">Прочитај цео чланак <i class="fas fa-chevron-right"></i></a>
+    <form action="{{path_for('clanci.pregled')}}" method="POST">
+      {{ csrf|raw }}
+          <input type="text" name="id" id="id" value="{{ clanak.id }}" class="form-control" autocomplete="off" hidden="true">
+            <button type="submit" class="btn btn-outline-primary btn-sm">
+              Прочитај цео чланак <i class="fas fa-chevron-right"></i>
+            </button>
+    </form>
   </div>
 </div>
 </div>
@@ -66,15 +72,12 @@
 <h4 class="font-italic text-secondary">Најпопуларнији чланци</h4>
 <br>
 <div class="list-group list-group-flush">
+  {% for pop in najpopularniji %}
  <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="" class="text-reset">Представа „Чипка” је прича о хуманости</a>
+    <p>{{ pop.naslov }}</p>
+    <span class="badge badge-pill badge-dark">{{ pop.pregledi }}</span>
   </li>
-   <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="" class="text-reset">Бечић изабран за председника Скупштине Црне Горе</a>
-  </li>
-   <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="" class="text-reset">Протест у Минску после инаугурације Лукашенка</a>
-  </li>
+  {% endfor %}
 </div>
 </div>
 </div>

@@ -10,7 +10,7 @@ $app->get('/feed', '\App\Controllers\ClanakController:getFeed')->setName('feed')
 $app->group('', function () {
 
     //Clanci
-    $this->get('/clanci/pregled/{id}', '\App\Controllers\ClanakController:getPregled')->setName('clanci.pregled');
+    $this->post('/clanci/pregled', '\App\Controllers\ClanakController:postPregled')->setName('clanci.pregled');
     $this->get('/clanci/lista/{id}', '\App\Controllers\ClanakController:getLista')->setName('clanci.lista');
     //Prijava
     $this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');

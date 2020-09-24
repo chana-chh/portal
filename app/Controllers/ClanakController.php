@@ -27,14 +27,24 @@ class ClanakController extends Controller
             AND deleted_at IS NULL
             ORDER BY published_at DESC;");
 
-        $this->render($response, 'clanci/feed.twig', compact('kategorije', 'clanci'));
+        $najpopularniji = $model->najpopularniji();
+
+        $this->render($response, 'clanci/feed.twig', compact('kategorije', 'clanci', 'najpopularniji'));
     }
 
-    public function getPregled($request, $response, $args)
+    public function postPregled($request, $response)
     {
-       	$id = (int) $args['id'];
+       	$data = $request->getParams();
+        $id = $data['id'];
+        unset($data['id']);
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
+
         $modelClanak = new Clanak();
         $clanak = $modelClanak->find($id);
+        $pregledi = $clanak->pregledi + 1;
+        $data['pregledi'] = $pregledi;
+        $clanak->update($data, $id);
         $this->render($response, 'clanci/pregled.twig', compact('clanak'));
     }
 
