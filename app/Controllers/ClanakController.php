@@ -7,6 +7,7 @@ use App\Models\Kategorija;
 
 class ClanakController extends Controller
 {
+    //Ova metoda ce postati Feed kad zavrsim pretragu, a za sada je getFeed glavna !!!
 	public function getClanke($request, $response)
     {
         $model = new Clanak();
@@ -15,10 +16,31 @@ class ClanakController extends Controller
         $this->render($response, 'clanci/lista.twig', compact('clanci'));
     }
 
+    public function getFeed($request, $response)
+    {
+        $query = [];
+        parse_str($request->getUri()->getQuery(), $query);
+        $page = isset($query['page']) ? (int)$query['page'] : 1;
+
+        $model_kategorije = new Kategorija();
+        $kategorije = $model_kategorije->all();
+
+        $model = new Clanak();
+        $clanci = $model->paginate($this->page(), 'page', 
+            "SELECT * FROM clanci
+            WHERE  objavljen = 1
+            AND deleted_at IS NULL
+            ORDER BY published_at DESC;");
+
+        $najpopularniji = $model->najpopularniji();
+
+        $this->render($response, 'clanci/feed.twig', compact('kategorije', 'clanci', 'najpopularniji'));
+    }
+
     public function postClanciPretraga($request, $response)
     {
         $_SESSION['DATA_CLANCI_PRETRAGA'] = $request->getParams();
-        return $response->withRedirect($this->router->pathFor('feed'));
+        return $response->withRedirect($this->router->pathFor('clanci.pretraga'));
     }
 
     public function getClanciPretraga($request, $response)
@@ -35,56 +57,45 @@ class ClanakController extends Controller
 
         $upit = '%' . filter_var($data['upit'], FILTER_SANITIZE_STRING) . '%';
 
+        $query = [];
+        parse_str($request->getUri()->getQuery(), $query);
+        $page = isset($query['page']) ? (int)$query['page'] : 1;
+
         $where = " WHERE ";
         $params = [];
 
         if (!empty($data['upit'])) {
-            if ($where !== " WHERE ") {
-                $where .= " OR ";
-            }
-            $where .= "naslov LIKE :upit";
-            $params[':upit'] = $upit;
+            $where .= "naslov LIKE :naslov";
+            $params[':naslov'] = $upit;
         }
 
         if (!empty($data['upit'])) {
             if ($where !== " WHERE ") {
                 $where .= " OR ";
             }
-            $where .= "clanak LIKE :upit";
-            $params[':upit'] = $upit;
+            $where .= "clanak LIKE :clanak";
+            $params[':clanak'] = $upit;
         }
 
         if (!empty($data['upit'])) {
             if ($where !== " WHERE ") {
                 $where .= " OR ";
             }
-            $where .= "rezime LIKE :upit";
-            $params[':upit'] = $upit;
+            $where .= "rezime LIKE :rezime";
+            $params[':rezime'] = $upit;
         }
 
         $where = $where === " WHERE " ? "" : $where;
         $model = new Clanak();
         $sql = "SELECT * FROM {$model->getTable()}{$where} ORDER BY published_at DESC;";
-        $clanci = $model->paginate($this->page(), 'page', $sql, $params);
+        $clanci = $model->paginate($page, 'page', $sql, $params);
 
-        $this->render($response, 'clanci/lista.twig', compact('clanci', 'data'));
-    }
-
-    public function getFeed($request, $response)
-    {
         $model_kategorije = new Kategorija();
         $kategorije = $model_kategorije->all();
 
-        $model = new Clanak();
-        $clanci = $model->paginate($this->page(), 'page', 
-            "SELECT * FROM clanci
-            WHERE  objavljen = 1
-            AND deleted_at IS NULL
-            ORDER BY published_at DESC;");
-
         $najpopularniji = $model->najpopularniji();
 
-        $this->render($response, 'clanci/feed.twig', compact('kategorije', 'clanci', 'najpopularniji'));
+        $this->render($response, 'clanci/feed.twig', compact('kategorije', 'clanci', 'najpopularniji', 'data'));
     }
 
     public function postPregled($request, $response)

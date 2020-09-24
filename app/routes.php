@@ -6,6 +6,8 @@ use App\Middlewares\UserLevelMiddleware;
 
 $app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
 $app->get('/feed', '\App\Controllers\ClanakController:getFeed')->setName('feed');
+$app->get('/feed/pretraga', '\App\Controllers\ClanakController:getClanciPretraga')->setName('clanci.pretraga');
+$app->post('/feed/pretraga', '\App\Controllers\ClanakController:postClanciPretraga');
 
 $app->group('', function () {
 
