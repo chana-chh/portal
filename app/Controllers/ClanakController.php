@@ -119,7 +119,19 @@ class ClanakController extends Controller
         $pregledi = $clanak->pregledi + 1;
         $data['pregledi'] = $pregledi;
         $clanak->update($data, $id);
-        $this->render($response, 'clanci/pregled.twig', compact('clanak'));
+
+        $sql = "SELECT
+    			COUNT(id) as broj, MONTHNAME(t.published_at) as mesec, YEAR(t.published_at) as godina, MONTH (t.published_at) as mm
+				FROM clanci t 
+				WHERE  objavljen = 1
+            	AND deleted_at IS NULL
+				GROUP BY EXTRACT(YEAR_MONTH FROM t.published_at) DESC;";
+        $arhiva =$modelClanak->fetch($sql);
+        $najpopularniji = $modelClanak->najpopularniji();
+        $model_kategorije = new Kategorija();
+        $kategorije = $model_kategorije->all();
+
+        $this->render($response, 'clanci/pregled.twig', compact('clanak', 'kategorije', 'najpopularniji', 'arhiva'));
     }
 
     public function getLista($request, $response, $args)
