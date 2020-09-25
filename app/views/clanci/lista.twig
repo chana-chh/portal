@@ -47,11 +47,11 @@
   <table class="table table-hover table-sm">
     <thead class="thead-dark">
       <tr>
-        <th class="w-10">ID</th>
-        <th class="w-15 text-center">Наслов</th>
-        <th class="w-20">Резиме</th>
-        <th class="w-25">Kategorija/vrsta</th>
-        <th class="w-20">Datum</th>
+        <th class="w-5">ID</th>
+        <th class="w-30">Наслов</th>
+        <th class="w-30">Резиме</th>
+        <th class="w-15">Kategorija/vrsta</th>
+        <th class="w-10">Datum</th>
         <th class="w-10 text-right"><i class="fas fa-cogs text-warning"></i></th>
       </tr>
     </thead>
@@ -63,8 +63,8 @@
         <td>
          <em>{{ clanak.rezime|nl2br }}</em>
         </td>
-        <td class="text-success text-center"><strong>{{ clanak.kategorija.naziv}}/{{ clanak.kategorija.vrsta}}</strong></td>
-        <td>{{ clanak.publish_at|date('d.m.Y') }}</td>
+        <td class="text-success"><strong>{{ clanak.kategorija.naziv}}/{{ clanak.kategorija.vrsta}}</strong></td>
+        <td>{{ clanak.published_at|date('d.m.Y') }}</td>
         <td class="text-right">
           <div class="btn-group btn-group-sm">
             <a class="btn btn-success btn-sm" href="{{ path_for('clanci.pregled', { id: clanak.id }) }}"

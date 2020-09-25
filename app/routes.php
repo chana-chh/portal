@@ -14,6 +14,7 @@ $app->group('', function () {
     //Clanci
     $this->post('/clanci/pregled', '\App\Controllers\ClanakController:postPregled')->setName('clanci.pregled');
     $this->get('/clanci/lista/{id}', '\App\Controllers\ClanakController:getLista')->setName('clanci.lista');
+    $this->get('/clanci/arhiva/{mm}/{yy}', '\App\Controllers\ClanakController:getArhiva')->setName('clanci.arhiva');
     //Prijava
     $this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');
     $this->post('/prijava', '\App\Controllers\AuthController:postPrijava');

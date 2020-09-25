@@ -32,9 +32,17 @@ class ClanakController extends Controller
             AND deleted_at IS NULL
             ORDER BY published_at DESC;");
 
+        $sql = "SELECT
+    			COUNT(id) as broj, MONTHNAME(t.published_at) as mesec, YEAR(t.published_at) as godina, MONTH (t.published_at) as mm
+				FROM clanci t 
+				WHERE  objavljen = 1
+            	AND deleted_at IS NULL
+				GROUP BY EXTRACT(YEAR_MONTH FROM t.published_at) DESC;";
+        $arhiva =$model->fetch($sql);
+
         $najpopularniji = $model->najpopularniji();
 
-        $this->render($response, 'clanci/feed.twig', compact('kategorije', 'clanci', 'najpopularniji'));
+        $this->render($response, 'clanci/feed.twig', compact('kategorije', 'clanci', 'najpopularniji', 'arhiva'));
     }
 
     public function postClanciPretraga($request, $response)
@@ -119,6 +127,21 @@ class ClanakController extends Controller
        	$id_kategorije = (int) $args['id'];
         $modelClanak = new Clanak();
         $clanci = $modelClanak->clanci_kategorija($id_kategorije);
+        $this->render($response, 'clanci/lista.twig', compact('clanci'));
+    }
+
+    public function getArhiva($request, $response, $args)
+    {
+       	$mesec = (int) $args['mm'];
+       	$godina = (int) $args['yy'];
+        $model = new Clanak();
+        $sql = "SELECT *
+				FROM clanci
+				WHERE month(published_at)={$mesec}
+				AND year(published_at)={$godina}
+            	AND deleted_at IS NULL
+				ORDER BY published_at DESC;";
+        $clanci =$model->fetch($sql);
         $this->render($response, 'clanci/lista.twig', compact('clanci'));
     }
 }
