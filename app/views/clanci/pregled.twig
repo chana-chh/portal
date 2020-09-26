@@ -1,137 +1,143 @@
 {% extends "templates/app.twig" %}
 {% block naslov %}
-<div class="row mt-md-2">
-  <div class="col-lg-8">
-    <h2 class="text-primary font-italic">{{ clanak.naslov }}</h2>
-    <p class="lead">({{ clanak.rezime }})</p>
-  </div>
-  <div class="col-lg-4 text-right mt-3 ne_stampaj">
-    <div class="btn-group">
-      <a href="{{ path_for('feed') }}" class="btn btn-secondary btn-sm" title="Повратак на листу чланака">
-        <i class="fas fa-list"></i> Листа чланака
-      </a>
-      <button type="button" class="btn btn-primary btn-sm" title="Штампање чланка" onclick="window.print();">
-        <i class="fas fa-print"></i> Штампај</button>
+<div class="row mt-5 md-2">
+    <div class="col-lg-7 offset-lg-1">
+        <h2 class="text-primary font-italic">{{ clanak.naslov }}</h2>
+        <p class="lead">({{ clanak.rezime }})</p>
     </div>
-  </div>
+    <div class="col-lg-4 text-right mt-3 ne_stampaj">
+        <div class="btn-group">
+            <a href="{{ path_for('clanci.lista') }}" class="btn btn-secondary btn-sm" title="Повратак на листу чланака">
+                <i class="fas fa-list"></i> Листа чланака
+            </a>
+            <button type="button" class="btn btn-primary btn-sm" title="Штампање чланка" onclick="window.print();">
+                <i class="fas fa-print"></i> Штампај</button>
+        </div>
+    </div>
 </div>
-<hr class="ne_stampaj" />
+<hr/>
 {% endblock naslov %}
 {% block sadrzaj %}
 <div class="row mb-5">
-  <div class="col">
-  <blockquote class="blockquote text-right">
-  <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ clanak.published_at|date('d.m.Y') }}&emsp;<a href="#komentari"><i class="fas fa-comments text-warning"></i></a> {{ clanak.komentari|length }}</p>
-  <footer class="blockquote-footer">{{ clanak.kategorija.naziv }}, <cite title="Vrsta">{{ clanak.kategorija.vrsta }}</cite></footer>
-  </blockquote>
-    <p>{{ clanak.clanak }}</p>
-  </div>
+    <div class="col col-lg-10 offset-lg-1">
+        <blockquote class="blockquote text-right ne_stampaj">
+            <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ clanak.published_at|date('d.m.Y') }}&emsp;<a href="#komentari"><i class="fas fa-comments text-warning"></i></a> {{ clanak.objavljeniKomentari()|length }}</p>
+            <footer class="blockquote-footer">{{ clanak.kategorija.naziv }}, <cite title="Vrsta">{{ clanak.kategorija.vrsta }}</cite></footer>
+        </blockquote>
+        <p style="font-size: 1.125rem;">{{ clanak.clanak }}</p>
+    </div>
 </div>
-<div class="row mb-5">
-  <div class="col">
-    <button type="button" class="btn btn-warning">Пошаљи коментар <i class="fas fa-paper-plane text-white"></i></button>
+<div class="row mb-5 text-right ne_stampaj">
+    <div class="col col-lg-10 offset-lg-1">
+        <a href="{{path_for('clanci.komentar.get', { id:  clanak.id})}}" class="btn btn-warning">Пошаљи коментар <i class="fas fa-paper-plane text-white"></i></a>
+    </div>
 </div>
+{% if (clanak.objavljeniKomentari())%}
+<div class="row mt-5 mb-4 ne_stampaj">
+    <div class="col col-lg-10 offset-lg-1">
+        <div class="card border-warning" id="komentari">
+            <div class="card-header">
+                <h4 class="font-italic font-weight-light">Коментари:</h4>
+            </div>
+            <div class="card-body">
+                {% for kom in clanak.objavljeniKomentari() %}
+                <h5 class="card-title">{{kom.naslov}}</h5>
+                <blockquote class="blockquote">
+                    <p class="mb-0" style="font-size: 1rem;">{{kom.komentar}}</p>
+                    <footer class="blockquote-footer" style="font-size: 1rem;">{{kom.korisnik}}, <cite title="vreme">{{kom.published_at}}</cite></footer>
+                </blockquote>
+                <hr style="border-top: dotted 1px;">
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
-<div class="card border-warning mt-5" id="komentari">
-  <div class="card-header"><h3 class="font-italic font-weight-light">Коментари:</h3></div>
-  <div class="card-body">
-    {% for kom in clanak.komentari %}
-       <h5 class="card-title">{{kom.naslov}}</h5>
-      <p class="card-text">{{kom.komentar}}</p>
-      <hr style="border-top: dotted 1px;">
-      {% endfor %}
-  </div>
-</div>
+{% endif %}
 {% endblock sadrzaj %}
 
 {% block traka %}
-  <div class="row mt-5 mb-4 ne_stampaj">
-<div class="col col-lg-12 pl-5">
-      <form class="form" action="{{ path_for(clanci.pretraga)}}" method="POST">
-      {{ csrf|raw }}
-      <div class="row">
-      <div class="col col-lg-10">
-          <input type="text" name="upit" id="upit" class="form-control" autocomplete="off" placeholder="...појам за претрагу" required>
-        </div>
-        <div class="col col-lg-2">
-            <button type="submit" class="btn btn-default btn-sm">
-              <i class="fas fa-search text-primary"></i>
-            </button>
-          </div>
-        </div>
-    </form>
-  </div>
+<div class="row mt-5 mb-4 ne_stampaj">
+    <div class="col col-lg-12 pl-5">
+        <form class="form" action="{{ path_for(clanci.pretraga)}}" method="POST">
+            {{ csrf|raw }}
+            <div class="row">
+                <div class="col col-lg-10">
+                    <input type="text" name="upit" id="upit" class="form-control" autocomplete="off" placeholder="...појам за претрагу" required>
+                </div>
+                <div class="col col-lg-2">
+                    <button type="submit" class="btn btn-default btn-sm">
+                        <i class="fas fa-search text-primary"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 <div class="row ne_stampaj">
-<div class="col col-lg-12 pl-5">
-<h4 class="font-italic text-secondary">Категорије</h4>
-<br>
-<div class="list-group list-group-flush">
-  {% for kat in kategorije %}
- <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="{{ path_for('clanci.lista', { id: kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
-    <span class="badge badge-pill badge-dark">{{ kat.broj_kategorije() }}</span>
-  </li>
-  {% endfor %}
-</div>
-</div>
+    <div class="col col-lg-12 pl-5">
+        <h4 class="font-italic text-secondary">Категорије</h4>
+        <br>
+        <div class="list-group list-group-flush">
+            {% for kat in kategorije %}
+            <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
+                <a href="{{ path_for('clanci.lista', { id: kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
+                <span class="badge badge-pill badge-dark">{{ kat.broj_kategorije() }}</span>
+            </li>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 <div class="row mt-5 ne_stampaj">
-<div class="col col-lg-12 pl-5">
-<h4 class="font-italic text-secondary">Најпопуларнији чланци</h4>
-<br>
-<div class="list-group list-group-flush">
-  {% for pop in najpopularniji %}
- <li class="list-group-item list-group-item-light py-2">
-    <form action="{{path_for('clanci.pregled')}}" method="POST" class="d-flex justify-content-between align-items-center">
-      {{ csrf|raw }}
-    <input type="text" name="id" id="id" value="{{ pop.id }}" class="form-control" autocomplete="off" style="display: none;">
-        <a href="#" onclick="$(this).closest('form').submit()">{{ pop.naslov }}</a>
-        <span class="badge badge-pill badge-dark">{{ pop.pregledi }}</span>
-    </form>
-  </li>
-  {% endfor %}
+    <div class="col col-lg-12 pl-5">
+        <h4 class="font-italic text-secondary">Најпопуларнији чланци</h4>
+        <br>
+        <div class="list-group list-group-flush">
+            {% for pop in najpopularniji %}
+            <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
+                <a href="{{ path_for('clanci.pregled', { id: pop.id }) }}">{{ pop.naslov }}</a>
+                <span class="badge badge-pill badge-dark">{{ pop.pregledi }}</span>
+            </li>
+            {% endfor %}
+        </div>
+    </div>
 </div>
-</div>
-</div>
-
 <div class="row mt-5 ne_stampaj">
-<div class="col col-lg-12 pl-5">
-<h4 class="font-italic text-secondary">Архива</h4>
-<br>
-<div class="list-group list-group-flush">
-  {% for arh in arhiva %}
- <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-    <a href="{{path_for('clanci.arhiva', { 'mm': arh.mm, 'yy': arh.godina})}}" class="text-reset">
-      {% if arh.mesec == 'January' %}
-      Јануар
-      {% elseif arh.mesec == 'February' %}
-      Фебруар
-      {% elseif arh.mesec == 'March' %}
-      Март
-      {% elseif arh.mesec == 'April' %}
-      Април
-      {% elseif arh.mesec == 'May' %}
-      Мај
-      {% elseif arh.mesec == 'June' %}
-      Јун
-      {% elseif arh.mesec == 'July' %}
-      Јул
-      {% elseif arh.mesec == 'August' %}
-      Август
-      {% elseif arh.mesec == 'September' %}
-      Септембар
-      {% elseif arh.mesec == 'October' %}
-      Октобар
-      {% elseif arh.mesec == 'November' %}
-      Новембар
-      {% else %}
-      Децембар
-      {% endif %}, {{ arh.godina }}</a>
-    <span class="badge badge-pill badge-dark">{{ arh.broj }}</span>
-  </li>
-  {% endfor %}
-</div>
-</div>
+    <div class="col col-lg-12 pl-5">
+        <h4 class="font-italic text-secondary">Архива</h4>
+        <br>
+        <div class="list-group list-group-flush">
+            {% for arh in arhiva %}
+            <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
+                <a href="{{path_for('clanci.arhiva', { 'mm': arh.mm, 'yy': arh.godina})}}" class="text-reset">
+                    {% if arh.mesec == 'January' %}
+                    Јануар
+                    {% elseif arh.mesec == 'February' %}
+                    Фебруар
+                    {% elseif arh.mesec == 'March' %}
+                    Март
+                    {% elseif arh.mesec == 'April' %}
+                    Април
+                    {% elseif arh.mesec == 'May' %}
+                    Мај
+                    {% elseif arh.mesec == 'June' %}
+                    Јун
+                    {% elseif arh.mesec == 'July' %}
+                    Јул
+                    {% elseif arh.mesec == 'August' %}
+                    Август
+                    {% elseif arh.mesec == 'September' %}
+                    Септембар
+                    {% elseif arh.mesec == 'October' %}
+                    Октобар
+                    {% elseif arh.mesec == 'November' %}
+                    Новембар
+                    {% else %}
+                    Децембар
+                    {% endif %}, {{ arh.godina }}</a>
+                <span class="badge badge-pill badge-dark">{{ arh.broj }}</span>
+            </li>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock traka %}
