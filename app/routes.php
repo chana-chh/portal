@@ -8,13 +8,13 @@ $app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
 $app->get('/feed', '\App\Controllers\ClanakController:getFeed')->setName('feed');
 $app->get('/feed/pretraga', '\App\Controllers\ClanakController:getClanciPretraga')->setName('clanci.pretraga');
 $app->post('/feed/pretraga', '\App\Controllers\ClanakController:postClanciPretraga');
+//Clanci
+$app->post('/clanci/pregled', '\App\Controllers\ClanakController:postPregled')->setName('clanci.pregled');
+$app->get('/clanci/lista/{id}', '\App\Controllers\ClanakController:getLista')->setName('clanci.lista');
+$app->get('/clanci/arhiva/{mm}/{yy}', '\App\Controllers\ClanakController:getArhiva')->setName('clanci.arhiva');
+
 
 $app->group('', function () {
-
-    //Clanci
-    $this->post('/clanci/pregled', '\App\Controllers\ClanakController:postPregled')->setName('clanci.pregled');
-    $this->get('/clanci/lista/{id}', '\App\Controllers\ClanakController:getLista')->setName('clanci.lista');
-    $this->get('/clanci/arhiva/{mm}/{yy}', '\App\Controllers\ClanakController:getArhiva')->setName('clanci.arhiva');
     //Prijava
     $this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');
     $this->post('/prijava', '\App\Controllers\AuthController:postPrijava');
@@ -43,6 +43,9 @@ $app->group('', function () {
 
 // AUTORI
 $app->group('', function () {
+    // Dokumenta
+    
+
     // Objave
     $this->get('/autor/objave/lista', '\App\Controllers\AutorObjaveController:getObjaveLista')->setName('autor.objave.lista');
     $this->get('/autor/objave/dodavanje', '\App\Controllers\AutorObjaveController:getObjaveDodavanje')->setName('autor.objave.dodavanje');
