@@ -50,4 +50,10 @@ class Clanak extends Model
         $sql = "SELECT MAX(published_at) AS poslednja_objava FROM clanci";
         return $this->fetch($sql)[0]->poslednja_objava;
     }
+
+    public function objavljeniKomentari()
+    {
+        $sql = "SELECT * FROM komentari WHERE published_at IS NOT NULL AND id_clanka = {$this->id};";
+        return $this->fetch($sql);
+    }
 }

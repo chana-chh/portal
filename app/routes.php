@@ -5,14 +5,16 @@ use App\Middlewares\GuestMiddleware;
 use App\Middlewares\UserLevelMiddleware;
 
 $app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
-$app->get('/feed', '\App\Controllers\ClanakController:getFeed')->setName('feed');
-$app->get('/feed/pretraga', '\App\Controllers\ClanakController:getClanciPretraga')->setName('clanci.pretraga');
-$app->post('/feed/pretraga', '\App\Controllers\ClanakController:postClanciPretraga');
-//Clanci
-$app->post('/clanci/pregled', '\App\Controllers\ClanakController:postPregled')->setName('clanci.pregled');
-$app->get('/clanci/lista/{id}', '\App\Controllers\ClanakController:getLista')->setName('clanci.lista');
-$app->get('/clanci/arhiva/{mm}/{yy}', '\App\Controllers\ClanakController:getArhiva')->setName('clanci.arhiva');
 
+//Clanci
+$app->get('/clanci/pregled/{id}', '\App\Controllers\ClanakController:getPregled')->setName('clanci.pregled');
+$app->get('/clanci/tabela/{id}', '\App\Controllers\ClanakController:getTabelaKategorije')->setName('clanci.tabela.kategorije');
+$app->get('/clanci/arhiva/{mm}/{yy}', '\App\Controllers\ClanakController:getArhiva')->setName('clanci.arhiva');
+$app->get('/clanci/lista', '\App\Controllers\ClanakController:getLista')->setName('clanci.lista');
+$app->get('/clanci/pretraga', '\App\Controllers\ClanakController:getClanciPretraga')->setName('clanci.pretraga');
+$app->post('/clanci/pretraga', '\App\Controllers\ClanakController:postClanciPretraga');
+$app->get('/clanci/komentar/{id}', '\App\Controllers\ClanakController:getKomentar')->setName('clanci.komentar.get');
+$app->post('/clanci/komentar', '\App\Controllers\ClanakController:postKomentar')->setName('clanci.komentar.post');
 
 $app->group('', function () {
     //Prijava
@@ -29,6 +31,8 @@ $app->group('', function () {
 
 // ADMIN
 $app->group('', function () {
+    // Komentari
+    $this->get('/admin/komentari', '\App\Controllers\KomentariController:getLista')->setName('komentari');
     // Kategorije
     $this->get('/admin/kategorije', '\App\Controllers\KategorijaController:getKategorije')->setName('kategorija');
     $this->post('/admin/kategorije/dodavanje', '\App\Controllers\KategorijaController:postKategorijeDodavanje')->setName('kategorija.dodavanje');

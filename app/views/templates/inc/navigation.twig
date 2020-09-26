@@ -18,6 +18,7 @@
         <a class="nav-link" href="{{ path_for('autor.objave.lista') }}"><i class="fas fa-clipboard"></i> Објаве</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="{{ path_for('komentari') }}"><i class="fas fa-comments"></i> Коментари</a>
         <a class="nav-link" href=""><i class="fas fa-calendar-alt"></i> Документа</a>
       </li>
       {% if auth.user.nivo == 0 %}

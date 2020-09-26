@@ -16,15 +16,6 @@ class HomeController extends Controller
         $brojClanaka = $model->broj_objavljenih();
         $poslednjaObjava = $model->poslednja_objava();
 
-        $this->render($response, 'home.twig', compact('brojClanaka', 'poslednjaObjava'));
-    }
-
-    public function getBiraj($request, $response)
-    {
-        $model = new Clanak();
-        $brojClanaka = $model->broj_objavljenih();
-        $poslednjaObjava = $model->poslednja_objava();
-
-        $this->render($response, 'biraj.twig', compact('brojClanaka', 'poslednjaObjava'));
+        $this->render($response, 'home.twig', compact('brojClanaka', 'poslednjaObjavaClanak'));
     }
 }

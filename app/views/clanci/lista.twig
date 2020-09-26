@@ -1,89 +1,139 @@
 {% extends "templates/app.twig" %}
-{% block naslov %}
-<div class="row mt-md-2">
-  <div class="col">
-    <h1>
-      <i class="fas fa-list text-secondary"></i>&emsp;Преглед објављених чланака
-    </h1>
-    {% if data %}
-    <small><em class="text-warning">[филтрирано]</em></small>
-    {% else %}
-    <small><em class="text-success">[сви чланци]</em></small>
-    {% endif %}
-  </div>
-  <div class="col justify-content-end text-right">
-    <div class="btn-group btn-group mt-3">
-      <button type="button" class="btn btn-success btn-sm prikazi" id="prikazi" title="Prikaži formu za filtriranje">
-        <i class="fas fa-filter"></i> Филтер</button>
-      <a href="#" class="btn btn-secondary btn-sm pretraga_div"><i
-          class="fas fa-list"></i> Сви чланци</a>
+{% block sadrzaj %}
+{% for clanak in clanci.data %}
+<div class="row mb-5 mt-5">
+    <div class="col col-lg-10 offset-lg-1">
+        {% if data %}
+        <em class="text-warning">[Филтрирани подаци]</em>&emsp;<i class="fas fa-filter text-warning"></i>
+        {% endif %}
     </div>
-  </div>
 </div>
-<hr />
-<div class="card border-dark mb-3 pretraga_div" style="display: none;">
-  <div class="card-header">Филтрирање чланака</div>
-  <div class="card-body text-dark mobilni">
-    <form action="#" method="POST">
-      {{ csrf|raw }}
-      <div class="form-row">
-        <div class="form-group col-md-2">
-          <label for="naziv">Наслов</label>
-          <input type="text" name="naziv" id="naziv" class="form-control" value=" " autocomplete="off">
+<div class="row mb-5 mt-5">
+    <div class="col col-lg-10 offset-lg-1">
+        <h3>{{ clanak.naslov }}</h3>
+        <p class="lead">{{ clanak.rezime }}</p>
+        <blockquote class="blockquote text-right">
+            <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ clanak.published_at|date('d.m.Y') }}&emsp;<i class="fas fa-comments text-warning"></i> {{ clanak.objavljeniKomentari()|length }}</p>
+            <footer class="blockquote-footer">{{ clanak.kategorija.naziv }}, <cite title="Vrsta">{{ clanak.kategorija.vrsta }}</cite></footer>
+        </blockquote>
+        <hr class="my-4">
+        <p>{{ clanak.clanak|length < 410 ? clanak.clanak : clanak.clanak|slice(0, 400) ~ '...' }}</p> <div class="col text-right">
+                <a href="{{ path_for('clanci.pregled', { id: clanak.id}) }}" class="btn btn-outline-primary btn-sm" title="Прочитај цео чланак">
+                    Прочитај цео чланак <i class="fas fa-chevron-right"></i>
+                </a>
+    </div>
+</div>
+</div>
+{% endfor %}
+<div class="row  mt-5">
+    <nav class="col col-lg-5 offset-lg-1">
+        <ul class="pagination pagination-sm">
+            {% for button in clanci.links.buttons %}
+            <li class="page-item{{ button.current ? ' active' : '' }}">
+                <a class="page-link" href="{{ button.url }}">{{ button.page }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    <p class="col col-lg-5 justify-content-end text-right text-primary">
+        Prikazani redovi od
+        <em>{{ clanci.links.row_from }}</em> do
+        <em>{{ clanci.links.row_to }}</em> od ukupno
+        <em>{{ clanci.links.total_rows }}</em>
+    </p>
+</div>
+{% endblock sadrzaj %}
+
+{% block traka %}
+<div class="row mt-5 mb-4">
+    <div class="col col-lg-12 pl-5">
+        <form class="form" action="{{ path_for(clanci.pretraga)}}" method="POST">
+            {{ csrf|raw }}
+            <div class="row">
+                <div class="col col-lg-10">
+                    <input type="text" name="upit" id="upit" class="form-control" autocomplete="off" placeholder="...појам за претрагу" required>
+                </div>
+                <div class="col col-lg-2">
+                    <button type="submit" class="btn btn-default btn-sm">
+                        <i class="fas fa-search text-primary"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col col-lg-12 pl-5">
+        <h4 class="font-italic text-secondary">Категорије</h4>
+        <br>
+        <div class="list-group list-group-flush">
+            {% for kat in kategorije %}
+            <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
+                <a href="{{ path_for('clanci.lista', { id: kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
+                <span class="badge badge-pill badge-dark">{{ kat.broj_kategorije() }}</span>
+            </li>
+            {% endfor %}
         </div>
-        <div class="col-md-6 text-right mt-4">
-          <div class="btn-group">
-            <button type="submit" class="btn btn-success btn-sm">
-              <i class="fas fa-filter"></i> Филтрирај
-            </button>
-            <a href="#" class="btn btn-secondary btn-sm"><i class="fas fa-list"></i> Сви чланци</a>
-          </div>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col col-lg-12 pl-5">
+        <h4 class="font-italic text-secondary">Најпопуларнији чланци</h4>
+        <br>
+        <div class="list-group list-group-flush">
+            {% for pop in najpopularniji %}
+            <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
+                <a href="{{ path_for('clanci.pregled', { id: pop.id }) }}">{{ pop.naslov }}</a>
+                <span class="badge badge-pill badge-dark">{{ pop.pregledi }}</span>
+            </li>
+            {% endfor %}
         </div>
-      </div>
-    </form>
-  </div>
+    </div>
 </div>
-<div class="table-responsive">
-  <table class="table table-hover table-sm">
-    <thead class="thead-dark">
-      <tr>
-        <th class="w-5">ID</th>
-        <th class="w-30">Наслов</th>
-        <th class="w-30">Резиме</th>
-        <th class="w-15">Kategorija/vrsta</th>
-        <th class="w-10">Datum</th>
-        <th class="w-10 text-right"><i class="fas fa-cogs text-warning"></i></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for clanak in clanci %}
-      <tr>
-        <th class="text-danger">{{ clanak.id }}</th>
-        <td>{{ clanak.naslov }}</td>
-        <td>
-         <em>{{ clanak.rezime|nl2br }}</em>
-        </td>
-        <td class="text-success"><strong>{{ clanak.kategorija.naziv}}/{{ clanak.kategorija.vrsta}}</strong></td>
-        <td>{{ clanak.published_at|date('d.m.Y') }}</td>
-        <td class="text-right">
-          <div class="btn-group btn-group-sm">
-            <a class="btn btn-success btn-sm" href="{{ path_for('clanci.pregled', { id: clanak.id }) }}"
-              title="Detaljni pregled odabranog menija"><i class="fas fa-eye"></i></a>
-          </div>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="row mt-5">
+    <div class="col col-lg-12 pl-5">
+        <h4 class="font-italic text-secondary">Архива</h4>
+        <br>
+        <div class="list-group list-group-flush">
+            {% for arh in arhiva %}
+            <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
+                <a href="{{path_for('clanci.arhiva', { 'mm': arh.mm, 'yy': arh.godina})}}" class="text-reset">
+                    {% if arh.mesec == 'January' %}
+                    Јануар
+                    {% elseif arh.mesec == 'February' %}
+                    Фебруар
+                    {% elseif arh.mesec == 'March' %}
+                    Март
+                    {% elseif arh.mesec == 'April' %}
+                    Април
+                    {% elseif arh.mesec == 'May' %}
+                    Мај
+                    {% elseif arh.mesec == 'June' %}
+                    Јун
+                    {% elseif arh.mesec == 'July' %}
+                    Јул
+                    {% elseif arh.mesec == 'August' %}
+                    Август
+                    {% elseif arh.mesec == 'September' %}
+                    Септембар
+                    {% elseif arh.mesec == 'October' %}
+                    Октобар
+                    {% elseif arh.mesec == 'November' %}
+                    Новембар
+                    {% else %}
+                    Децембар
+                    {% endif %}, {{ arh.godina }}</a>
+                <span class="badge badge-pill badge-dark">{{ arh.broj }}</span>
+            </li>
+            {% endfor %}
+        </div>
+    </div>
 </div>
-{% endblock naslov %}
+{% endblock traka %}
 {% block skripta %}
 <script>
   $(document).ready(function () {
 
-    $('.prikazi').click(function () {
-      $('.pretraga_div').toggle();
-    });
-  });
+});
 </script>
 {% endblock skripta %}

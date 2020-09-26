@@ -1,0 +1,104 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row mt-5 md-2">
+    <div class="col-lg-7 offset-lg-1">
+        <h4>Остави коментар за чланак:</h4>
+        <h3 class="text-primary font-italic">{{ clanak.naslov }}</h3>
+        <p class="lead">({{ clanak.rezime }})</p>
+    </div>
+    <div class="col-lg-4 text-right mt-3 ne_stampaj">
+        <div class="btn-group">
+            <a href="{{ path_for('clanci.lista') }}" class="btn btn-secondary btn-sm" title="Повратак на листу чланака">
+                <i class="fas fa-list"></i> Листа чланака
+            </a>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row mt-5 md-2">
+    <div class="col-lg-9 offset-lg-1">
+        <div class="card border-dark mb-3">
+            <div class="card-header text-warning">* Молимо унесите неопходне податке</div>
+            <div class="card-body text-dark mobilni">
+                <form action="{{ path_for('clanci.komentar.post') }}" method="POST" class="needs-validation" novalidate>
+                    {{ csrf|raw }}
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="hidden" value="{{ clanak.id }}" name="id" id="id">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <label for="korisnik">Пуно име:</label>
+                            <input type="text" class="form-control{{ errors.korisnik[0] ? ' is-invalid' : '' }}" value="{{ old.korisnik ? : '' }}" name="korisnik" id="korisnik" aria-describedby="Назив категорије" required minlength="5">
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">
+                                {{ errors.korisnik[0] ? : 'Обавезно поље са најмање 5 карактера, а највише 100 карактера' }}
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label for="naslov">Наслов коментара:</label>
+                            <input type="text" class="form-control{{ errors.naslov[0] ? ' is-invalid' : '' }}" value="{{ old.naslov ? : '' }}" name="naslov" id="naslov" aria-describedby="Назив категорије">
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">
+                                {{ errors.naslov[0] ? : 'Највише 100 карактера' }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="komentar">Коментар</label>
+                        <textarea class="form-control{{ errors.komentar[0] ? ' is-invalid' : '' }}" name="komentar" id="komentar" rows="3" required minlength="10" maxlength="1000">{{ old.komentar ?  : '' }}</textarea>
+                        <div class="valid-feedback">Одговарајући податак</div>
+                        <div class="invalid-feedback">
+                            {{ errors.komentar[0] ? : 'Обавезно поље са најмање 5 карактера, а највише 1000 карактера' }}
+                        </div>
+                    </div>
+                    <div class="row justify-content-end text-right">
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary text-right"><i class="fas fa-plus-square" title="Прокоментариши"></i> &emsp;Остави коментар</button>
+                            <a href="{{ path_for('clanci.pregled', {id : clanak.id}) }}" class="btn btn-secondary"><i class="fas fa-ban"></i>
+                                &emsp;Откажи</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-5 md-2">
+    <div class="col-lg-9 offset-lg-1">
+        <small class="text-warning">&emsp;** Молимо вас да се у коментарима држите теме текста. Администратор портала задржава право да – уколико их процени као неумесне - скрати или не објави коментаре који садрже осврте на нечију личност и приватан живот, увреде на рачун аутора текста и/или чланова административног тима портала као и било какву претњу, непристојан речник, говор мржње, расне и националне увреде или било какав незаконит садржај. Коментаре писане верзалом и линкове на друге сајтове не објављујемо. Администратор портала нема никакву обавезу образлагања одлука везаних за скраћивање коментара и њихово објављивање. Администратор портала не одговара за ставове читалаца изнесене у коментарима. Ваш коментар може садржати највише 1.000 појединачних карактера, и сматра се да сте слањем коментара потврдили сагласност са горе наведеним правилима.</small>
+    </div>
+</div>
+{% endblock naslov %}
+{% block skripta %}
+<script>
+  $(document).ready(function () {
+
+    (function () {
+      "use strict";
+      window.addEventListener(
+        "load",
+        function () {
+          var forms = document.getElementsByClassName("needs-validation");
+          var validation = Array.prototype.filter.call(forms, function (form) {
+            form.addEventListener(
+              "submit",
+              function (event) {
+                if (form.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add("was-validated");
+              },
+              false
+            );
+          });
+        },
+        false
+      );
+    })();
+
+  });
+</script>
+{% endblock skripta %}

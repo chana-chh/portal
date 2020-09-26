@@ -3,10 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\Clanak;
-use App\Models\Kategorija;
 use App\Models\Komentar;
 
-class ClanakController extends Controller
+class KomentariController extends Controller
 {
 
     public function getLista($request, $response)
@@ -15,27 +14,12 @@ class ClanakController extends Controller
         parse_str($request->getUri()->getQuery(), $query);
         $page = isset($query['page']) ? (int)$query['page'] : 1;
 
-        $model_kategorije = new Kategorija();
-        $kategorije = $model_kategorije->all();
-
-        $model = new Clanak();
-        $clanci = $model->paginate($this->page(), 'page', 
-            "SELECT * FROM clanci
-            WHERE  objavljen = 1
-            AND deleted_at IS NULL
-            ORDER BY published_at DESC;");
-
-        $sql = "SELECT
-    			COUNT(id) as broj, MONTHNAME(t.published_at) as mesec, YEAR(t.published_at) as godina, MONTH (t.published_at) as mm
-				FROM clanci t 
-				WHERE  objavljen = 1
-            	AND deleted_at IS NULL
-				GROUP BY EXTRACT(YEAR_MONTH FROM t.published_at) DESC;";
-        $arhiva =$model->fetch($sql);
-
-        $najpopularniji = $model->najpopularniji();
-
-        $this->render($response, 'clanci/lista.twig', compact('kategorije', 'clanci', 'najpopularniji', 'arhiva'));
+        $model = new Komentar();
+        $komentari = $model->paginate($this->page(), 'page', 
+            "SELECT * FROM {$model->getTable()}
+            ORDER BY created_at DESC;");
+        
+        $this->render($response, 'komentari/tabela.twig', compact('komentari'));
     }
 
     public function postClanciPretraga($request, $response)
