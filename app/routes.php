@@ -16,15 +16,6 @@ $app->post('/clanci/pretraga', '\App\Controllers\ClanakController:postClanciPret
 $app->get('/clanci/komentar/{id}', '\App\Controllers\ClanakController:getKomentar')->setName('clanci.komentar.get');
 $app->post('/clanci/komentar', '\App\Controllers\ClanakController:postKomentar')->setName('clanci.komentar.post');
 
-$app->get('/feed', '\App\Controllers\ClanakController:getFeed')->setName('feed');
-$app->get('/feed/pretraga', '\App\Controllers\ClanakController:getClanciPretraga')->setName('clanci.pretraga');
-$app->post('/feed/pretraga', '\App\Controllers\ClanakController:postClanciPretraga');
-//Clanci
-$app->post('/clanci/pregled', '\App\Controllers\ClanakController:postPregled')->setName('clanci.pregled');
-$app->get('/clanci/lista/{id}', '\App\Controllers\ClanakController:getLista')->setName('clanci.lista');
-$app->get('/clanci/arhiva/{mm}/{yy}', '\App\Controllers\ClanakController:getArhiva')->setName('clanci.arhiva');
-
-
 $app->group('', function () {
     //Prijava
     $this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');
