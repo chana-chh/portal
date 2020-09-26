@@ -27,7 +27,6 @@ class AutorObjaveController extends Controller
     public function postObjaveDodavanje($request, $response)
     {
         $data = $this->data();
-        dd($data, true);
         // $validation_rules = [
         //     'termin_id' => ['required' => true,],
         //     'prezime' => ['required' => true,],
