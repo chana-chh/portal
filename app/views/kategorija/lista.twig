@@ -1,44 +1,21 @@
 {% extends "templates/app.twig" %}
-{% block stil %}
-<style>
-  @media (max-width: 575.98px) {
-    .mobilni {
-      font-size: 0.75rem !important;
-    }
-
-    .btn,
-    .btn-sm {
-      padding: .25rem .4rem;
-      font-size: .875rem;
-      line-height: .5;
-      border-radius: .2rem;
-    }
-  }
-</style>
-{% endblock stil %}
 {% block naslov %}
-<div class="row mt-md-2 d-none d-sm-flex">
+<div class="row mt-2">
   <div class="col">
-    <h1>
-      <i class="fas fa-birthday-cake text-secondary"></i> Pregled kategorija
-    </h1>
-  </div>
-</div>
-<div class="row mt-2 d-sm-none">
-  <div class="col">
-    <h4>
-      <i class="fas fa-birthday-cake text-secondary"></i> Pregled kategorija
-    </h4>
+    <h2>
+      <i class="fas fa-sitemap text-secondary"></i> Преглед категорија
+    </h2>
   </div>
 </div>
 <hr />
 {% endblock naslov %}
 {% block sadrzaj %}
-<table class="table mobilni">
+<table class="table table-striped table-sm">
   <thead class="thead-dark">
     <tr>
-      <th class="w-20" scope="col">ID</th>
-      <th class="w-60" scope="col">Naziv</th>
+      <th class="w-5" scope="col">ID</th>
+      <th class="w-55" scope="col">Назив</th>
+      <th class="w-20" scope="col">Врста</th>
       <th class="w-20" scope="col" style="text-align:right;"><i class="fas fa-cogs text-warning"></i></th>
     </tr>
   </thead>
@@ -47,13 +24,14 @@
     <tr>
       <th scope="row" class="text-danger">{{ kat.id }}</th>
       <td>{{ kat.naziv }}</td>
+      <td>{{ kat.vrsta }}</td>
       <td style="text-align:right;">
         <div class="btn-group btn-group-sm">
           <button class="btn btn-warning btn-sm otvori-izmenu" data-toggle="modal" data-target="#izmenaModal"
-            data-id="{{ kat.id }}" title="Izmena podataka odabrane kategorije">
+            data-id="{{ kat.id }}" title="Измена података одабране категорије">
             <i class="fas fa-edit"></i></button>
           <button class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
-            data-id="{{ kat.id }}" title="Brisanje odabranane kategorije">
+            data-id="{{ kat.id }}" title="Брисање одабране категорије">
             <i class="fas fa-trash-alt"></i>
           </button>
         </div>
@@ -67,14 +45,14 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-danger">Upozorenje!</h5>
+        <h5 class="modal-title text-danger">Упозорење!</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <h4>Da li želite trajno da obrišete kategoriju?</h4>
-        <p class="text-danger">* Ova akcija je nepovratna!</p>
+        <h4>Да ли желите трајно да обришете категорију?</h4>
+        <p class="text-danger">* Ова акција је неповратна!</p>
         <form id="brisanje-forma" action="{{ path_for('kategorija.brisanje') }}" method="POST">
           {{ csrf|raw }}
           <input type="hidden" id="idBrisanje" name="idBrisanje">
@@ -83,10 +61,10 @@
           <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
             <div class="form-group">
               <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
-                <i class="fas fa-trash-alt"></i>&emsp;Obriši
+                <i class="fas fa-trash-alt"></i>&emsp;Обриши
               </button>
               <a class="btn btn-secondary" data-dismiss="modal">
-                <i class="fas fa-ban"></i>&emsp;Otkaži
+                <i class="fas fa-ban"></i>&emsp;Откажи
               </a>
             </div>
           </div>
@@ -102,7 +80,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-danger">Izmeni stavku</h5>
+        <h5 class="modal-title text-danger">Измени ставку</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -113,22 +91,32 @@
           {{ csrf|raw }}
           <input type="hidden" id="idIzmena" name="idIzmena">
           <div class="form-group">
-            <label for="nazivModal">Naziv</label>
+            <label for="nazivModal">Назив</label>
             <input type="text" class="form-control{{ errors.nazivModal[0] ? ' is-invalid' : '' }}" name="nazivModal"
-              id="nazivModal" aria-describedby="Naziv kategorije" required minlength="5">
-            <div class="valid-feedback">Odgovarajući podatak</div>
+              id="nazivModal" aria-describedby="Назив категорије" required minlength="5">
+            <div class="valid-feedback">Одговарајући податак</div>
             <div class="invalid-feedback">
-              {{ errors.nazivModal[0] ? : 'Obavezno polje sa najmanje 5 karaktera' }}
+              {{ errors.nazivModal[0] ? : 'Обавезно поље са најмање 5 карактера' }}
             </div>
           </div>
+          <div class="form-group">
+          <label for="vrstaModal">Начин плаћања:</label>
+          <select class="custom-select mb-2 form-control{{ errors.iznosModal[0] ? ' is-invalid' : '' }}" name="vrstaModal" id="vrstaModal" class="form-control" required>
+            <option value=""></option>
+          </select>
+          <div class="valid-feedback">Одговарајући податак</div>
+          <div class="invalid-feedback">
+            {{ errors.vrstaModal[0] ? : 'Obavezno polje' }}
+          </div>
+        </div>
           <hr style="margin-top: 30px;">
           <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
             <div class="form-group">
               <button id="btn-brisanje-izmeni" type="submit" class="btn btn-warning">
-                <i class="fas fa-save"></i>&emsp;Snimi
+                <i class="fas fa-save"></i>&emsp;Сними
               </button>
               <a class="btn btn-secondary" data-dismiss="modal">
-                <i class="fas fa-ban"></i>&emsp;Otkaži
+                <i class="fas fa-ban"></i>&emsp;Откажи
               </a>
             </div>
           </div>
@@ -142,25 +130,38 @@
 {% endblock sadrzaj %}
 {% block traka %}
 <div class="card border-dark mb-3">
-  <div class="card-header">Dodavanje nove kategorije</div>
+  <div class="card-header">Додавање нове категорије</div>
   <div class="card-body text-dark mobilni">
     <form action="{{ path_for('kategorija.dodavanje') }}" method="POST" class="needs-validation" novalidate>
       {{ csrf|raw }}
       <div class="form-group">
-        <label for="naziv">Naziv</label>
+        <label for="naziv">Назив</label>
         <input type="text" class="form-control{{ errors.naziv[0] ? ' is-invalid' : '' }}" value="{{ old.naziv ? : '' }}"
-          name="naziv" id="naziv" aria-describedby="Naziv kategorije" required minlength="5">
-        <div class="valid-feedback">Odgovarajući podatak</div>
+          name="naziv" id="naziv" aria-describedby="Назив категорије" required minlength="5">
+        <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
-          {{ errors.naziv[0] ? : 'Obavezno polje sa najmanje 5, a najviše 50 karaktera' }}
+          {{ errors.naziv[0] ? : 'Обавезно поље са најмање 5 карактера, а највише 255 карактера' }}
         </div>
       </div>
+      <div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <label class="input-group-text" for="vrsta">Врста:</label>
+  </div>
+  <select class="custom-select {{ errors.vrsta[0] ? ' is-invalid' : '' }}" name="vrsta" id="vrsta" required>
+    <option value=""></option>
+          {% for vrs in vrste %}
+          <option value="{{vrs}}" {{ old.vrsta == vrs ? ' checked' : '' }}>{{vrs}}</option>
+          {% endfor %}
+  </select>
+  <div class="valid-feedback">Одговарајући податак</div>
+        <div class="invalid-feedback">{{ errors.vrsta[0] ? : 'Obavezno polje' }}</div>
+</div>
       <div class="row justify-content-end text-right">
         <div class="col">
           <button type="submit" class="btn btn-primary text-right"><i class="fas fa-plus-square"
-              title="Dodavanje nove kategorije"></i> &emsp;Dodaj</button>
+              title="Додавање нове категорије"></i> &emsp;Додај</button>
           <a href="{{ path_for('kategorija') }}" class="btn btn-secondary"><i class="fas fa-ban"></i>
-            &emsp;Otkaži</a>
+            &emsp;Откажи</a>
         </div>
       </div>
     </form>
@@ -225,6 +226,11 @@
           $(".csrf_value").val(data.cvalue);
           $("#idIzmena").val(data.kategorija.id);
           $("#nazivModal").val(data.kategorija.naziv);
+          $.each(data.vrste, function (index, lokObjekat) {
+          $("#vrstaModal").append('<option value="' + lokObjekat + '">' + lokObjekat + "</option>");
+          });
+
+          $("#vrstaModal").val(data.kategorija.vrsta);
         }
       });
 

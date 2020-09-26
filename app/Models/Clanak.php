@@ -13,6 +13,11 @@ class Clanak extends Model
         return $this->belongsTo('App\Models\Kategorija', 'kategorija_id');
     }
 
+    public function komentari()
+    {
+        return $this->hasMany('App\Models\Komentar', 'id_clanka');
+    }
+
     public function korisnik()
     {
         return $this->belongsTo('App\Models\Korisnik', 'korisnik_id');
