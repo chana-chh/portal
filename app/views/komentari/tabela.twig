@@ -24,19 +24,19 @@
 <div class="card border-dark mb-3 pretraga_div" style="display: none;">
   <div class="card-header">Филтрирање коментара</div>
   <div class="card-body text-dark mobilni">
-    <form action="#" method="POST">
+    <form class="form" action="{{ path_for('komentari.pretraga')}}" method="POST">
       {{ csrf|raw }}
       <div class="form-row">
         <div class="form-group col-md-2">
-          <label for="naziv">Наслов</label>
-          <input type="text" name="naziv" id="naziv" class="form-control" value=" " autocomplete="off">
+          <label for="upit">Појам за претрагу</label>
+          <input type="text" name="upit" id="upit" class="form-control" placeholder="...појам за претрагу" autocomplete="off">
         </div>
-        <div class="col-md-6 text-right mt-4">
+        <div class="col-md-6 text-right">
           <div class="btn-group">
             <button type="submit" class="btn btn-success btn-sm">
               <i class="fas fa-filter"></i> Филтрирај
             </button>
-            <a href="#" class="btn btn-secondary btn-sm"><i class="fas fa-list"></i> Сви чланци</a>
+            <a href="{{ path_for('komentari')}}" class="btn btn-secondary btn-sm"><i class="fas fa-list"></i> Сви коментари</a>
           </div>
         </div>
       </div>

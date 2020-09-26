@@ -33,6 +33,8 @@ $app->group('', function () {
 $app->group('', function () {
     // Komentari
     $this->get('/admin/komentari', '\App\Controllers\KomentariController:getLista')->setName('komentari');
+    $this->get('/admin//komentari/pretraga', '\App\Controllers\KomentariController:getKomentariPretraga')->setName('komentari.pretraga');
+    $this->post('/admin//komentari/pretraga', '\App\Controllers\KomentariController:postKomentariPretraga');
     // Kategorije
     $this->get('/admin/kategorije', '\App\Controllers\KategorijaController:getKategorije')->setName('kategorija');
     $this->post('/admin/kategorije/dodavanje', '\App\Controllers\KategorijaController:postKategorijeDodavanje')->setName('kategorija.dodavanje');

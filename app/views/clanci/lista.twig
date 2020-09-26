@@ -47,7 +47,7 @@
 {% block traka %}
 <div class="row mt-5 mb-4">
     <div class="col col-lg-12 pl-5">
-        <form class="form" action="{{ path_for(clanci.pretraga)}}" method="POST">
+        <form class="form" action="{{ path_for('clanci.pretraga')}}" method="POST">
             {{ csrf|raw }}
             <div class="row">
                 <div class="col col-lg-10">
