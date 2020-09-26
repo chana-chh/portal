@@ -10,7 +10,7 @@
 </div>
 <hr>
 
-<form action="{{ path_for('autor.objave.dodavanje') }}" method="POST" class="needs-validation mb-3" id="forma"
+<form action="{{ path_for('autor.objave.dodavanje') }}" method="POST" class="form needs-validation mb-3" id="forma"
 	novalidate>
 	{{ csrf | raw }}
 	<div class="form-row">
@@ -20,9 +20,9 @@
 			</label>
 			<input type="text" name="naslov" id="naslov" autocomplete="off"
 				class="form-control form-control-lg{{ errors.naslov[0] ? ' is-invalid' : '' }}"
-				value="{{ old.naslov ? : '' }}" />
+				value="{{ old.naslov ? : '' }}" maxlength="255" required autofocus>
 			<div class="valid-feedback">Исправно попуњено</div>
-			<div class="invalid-feedback">{{ errors.naslov[0] ? : 'Грешка' }}</div>
+			<div class="invalid-feedback">{{ errors.naslov[0] ? : 'Објава мора да има наслов' }}</div>
 		</div>
 	</div>
 	<div class="form-row">
@@ -30,10 +30,10 @@
 			<label for="rezime">
 				<h3>Резиме</h3>
 			</label>
-			<textarea name="rezime" id="rezime" rows="3"
-				class="form-control{{ errors.rezime[0] ? ' is-invalid' : '' }}">{{ old.rezime ? : '' }}</textarea>
+			<textarea name="rezime" id="rezime" rows="3" class="form-control{{ errors.rezime[0] ? ' is-invalid' : '' }}"
+				maxlength="255" required>{{ old.rezime ? : '' }}</textarea>
 			<div class="valid-feedback">Исправно попуњено</div>
-			<div class="invalid-feedback">{{ errors.rezime[0] ? : 'Грешка' }}</div>
+			<div class="invalid-feedback">{{ errors.rezime[0] ? : 'Објава мора да има резиме' }}</div>
 		</div>
 	</div>
 	<div class="form-row">
@@ -44,11 +44,27 @@
 			<textarea name="clanak" id="clanak" class="form-control{{ errors.clanak[0] ? ' is-invalid' : '' }}"
 				required>{{ old.clanak ? : '' }}</textarea>
 			<div class="valid-feedback">Исправно попуњено</div>
-			<div class="invalid-feedback">{{ errors.clanak[0] ? : 'Грешка' }}</div>
+			<div class="invalid-feedback">{{ errors.clanak[0] ? : 'Објава мора да има неки садржај' }}</div>
 		</div>
 	</div>
 	<div class="form-row mt-2">
-		<div class="col-12 text-right">
+		<div class="form-group col-lg-2">
+			<label class="mt-1">
+				<input class="form-check-inline" type="checkbox" name="objavljen" id="objavljen"> Објављен
+			</label>
+		</div>
+		<div class="form-group form-inline col-lg-7">
+			<label for="kategorija_id" class="mr-3">Категорија</label>
+			<select name="kategorija_id" id="kategorija_id"
+				class="custom-select {{ errors.kategorija_id[0] ? ' is-invalid' : '' }}" required>
+				{% for kat in kategorije %}
+				<option value="{{ kat.id }}" {{old.kategorija_id == kat.id ? ' selected' : ''}}>{{ kat.naziv }}</option>
+				{% endfor %}
+			</select>
+			<div class="valid-feedback">Исправно попуњено</div>
+			<div class="invalid-feedback">{{ errors.kategorija_id[0] ? : 'Објава мора да има категорију' }}</div>
+		</div>
+		<div class="form-group col-3 text-right">
 			<button type="submit" id="dugme-submit" class="btn btn-primary" title="Dodaj novi ugovor"><i
 					class="fas fa-save"></i> Сними објаву</button>
 			<a href="{{ path_for('autor.objave.lista') }}" class="btn btn-secondary">
@@ -80,5 +96,22 @@
 		// image_uploadtab: true,
 		// images_upload_url: 'pub/upload/tiny'
 	});
+	(function () {
+		"use strict";
+		window.addEventListener("load", function () {
+			var forms = document.getElementsByClassName("needs-validation");
+			var validation = Array.prototype.filter.call(forms, function (form) {
+				form.addEventListener("submit", function (event) {
+					if (form.checkValidity() === false) {
+						event.preventDefault();
+						event.stopPropagation();
+					}
+					form.classList.add("was-validated");
+				}, false
+				);
+			});
+		}, false
+		);
+	})();
 </script>
 {% endblock skripta %}

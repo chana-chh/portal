@@ -1,5 +1,15 @@
 # PORTAL
 
+## TODO
+
+Na pregledu objave sloziti po published_at DESC
+Objavu nije moguce seci na neku duzinu zbog tagova
+Nema teorije da bilo kako integrisem editor da moze da uploaduje fajlove.
+Generalno mora da se napravi mini file manager (sa uploadom) na stranici koji ce da vraca link na fajl (sliku), a onda rucno da se taj link ubaci u editor.
+Ovaj uploader za timyMCE skoro da radi, ali nemam pojma kako da prosledim csrf u php, a jos manje kako da vratim isti na stranicu.
+
+
+
 Za sada bih terao bez komentara.
 File manager i wysiwyg editor.
 
