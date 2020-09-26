@@ -76,7 +76,7 @@ function isValidJMBG(string $jmbg)
 
 function dd($var, $print = false, $die = true, $backtrace = false)
 {
-    echo '<h3 style="color:#900">VARIABLE</h1>';
+    echo '<h4 style="color:#900">VARIABLE</h4>';
     echo '<pre style="background-color:#fdd; color:#000; padding:1rem;">';
 
     if ($print) {
@@ -88,14 +88,14 @@ function dd($var, $print = false, $die = true, $backtrace = false)
     echo '</pre>';
 
     if (gettype($var) === 'object') {
-        echo '<h3 style="color:#090">OBJECT: ' . get_class($var) . '</h1>';
+        echo '<h4 style="color:#090">OBJECT: ' . get_class($var) . '</h4>';
         echo '<pre style="background-color:#dfd; color:#000; padding:1rem;">';
         print_r(get_class_methods($var));
         echo '</pre>';
     }
 
     if ($backtrace) {
-        echo '<h3 style="color:#009">BACKTRACE</h1>';
+        echo '<h4 style="color:#009">BACKTRACE</h4>';
         echo '<pre style="background-color:#ddf; color:#000; padding:1rem;">';
         print_r(debug_backtrace());
         echo '</pre>';
