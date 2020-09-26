@@ -49,9 +49,6 @@ $app->group('', function () {
 
 // AUTORI
 $app->group('', function () {
-    // Dokumenta
-    
-
     // Objave
     $this->get('/autor/objave/lista', '\App\Controllers\AutorObjaveController:getObjaveLista')->setName('autor.objave.lista');
     $this->get('/autor/objave/dodavanje', '\App\Controllers\AutorObjaveController:getObjaveDodavanje')->setName('autor.objave.dodavanje');

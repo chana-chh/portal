@@ -10,35 +10,52 @@
 </div>
 <hr>
 
-<div class="card border-dark mb-3">
-	<div class="card-body text-dark">
-		<form id="glavna" action="{{ path_for('autor.objave.dodavanje') }}" method="POST" class="needs-validation"
-			id="forma" novalidate>
-			{{ csrf | raw }}
-			<div class="form-row">
-				<div class="form-group col">
-					<label for="naslov">
-						<h3>Наслов</h3>
-					</label>
-					<input type="text" name="naslov" id="naslov" autocomplete="off"
-						class="form-control form-control-lg{{ errors.naslov[0] ? ' is-invalid' : '' }}"
-						value="{{ old.naslov ? : '' }}" />
-					<div class="valid-feedback">Исправно попуњено</div>
-					<div class="invalid-feedback">{{ errors.naslov[0] ? : 'Грешка' }}</div>
-				</div>
-			</div>
-			<hr>
-			<div class="form-row justify-content-between mt-2">
-				<div class="col-12 text-right align-self-end">
-					<button type="submit" id="dugme-submit" class="btn btn-primary" title="Dodaj novi ugovor"><i
-							class="fas fa-save"></i> Сними објаву</button>
-					<a href="{{ path_for('autor.objave.lista') }}" class="btn btn-secondary">
-						<i class="fas fa-ban"></i> Одустани</a>
-				</div>
-			</div>
-		</form>
+<form action="{{ path_for('autor.objave.dodavanje') }}" method="POST" class="needs-validation mb-3" id="forma"
+	novalidate>
+	{{ csrf | raw }}
+	<div class="form-row">
+		<div class="form-group col">
+			<label for="naslov">
+				<h3>Наслов</h3>
+			</label>
+			<input type="text" name="naslov" id="naslov" autocomplete="off"
+				class="form-control form-control-lg{{ errors.naslov[0] ? ' is-invalid' : '' }}"
+				value="{{ old.naslov ? : '' }}" />
+			<div class="valid-feedback">Исправно попуњено</div>
+			<div class="invalid-feedback">{{ errors.naslov[0] ? : 'Грешка' }}</div>
+		</div>
 	</div>
-</div>
+	<div class="form-row">
+		<div class="form-group col">
+			<label for="rezime">
+				<h3>Резиме</h3>
+			</label>
+			<textarea name="rezime" id="rezime" rows="3"
+				class="form-control{{ errors.rezime[0] ? ' is-invalid' : '' }}">{{ old.rezime ? : '' }}</textarea>
+			<div class="valid-feedback">Исправно попуњено</div>
+			<div class="invalid-feedback">{{ errors.rezime[0] ? : 'Грешка' }}</div>
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col">
+			<label for="clanak">
+				<h3>Чланак</h3>
+			</label>
+			<textarea name="clanak" id="clanak" class="form-control{{ errors.clanak[0] ? ' is-invalid' : '' }}"
+				required>{{ old.clanak ? : '' }}</textarea>
+			<div class="valid-feedback">Исправно попуњено</div>
+			<div class="invalid-feedback">{{ errors.clanak[0] ? : 'Грешка' }}</div>
+		</div>
+	</div>
+	<div class="form-row mt-2">
+		<div class="col-12 text-right">
+			<button type="submit" id="dugme-submit" class="btn btn-primary" title="Dodaj novi ugovor"><i
+					class="fas fa-save"></i> Сними објаву</button>
+			<a href="{{ path_for('autor.objave.lista') }}" class="btn btn-secondary">
+				<i class="fas fa-ban"></i> Одустани</a>
+		</div>
+	</div>
+</form>
 
 {% endblock naslov %}
 {% block sadrzaj %}
@@ -46,4 +63,22 @@
 {% block traka %}
 {% endblock traka %}
 {% block skripta %}
+<script src="{{ base_url() }}/js/tinymce/tinymce.min.js"></script>
+<script>
+	tinymce.init({
+		selector: '#clanak',
+		plugins: "lists hr wordcount",
+		menubar: "format edit",
+		toolbar: "removeformat | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist | outdent indent | hr | wordcount",
+		max_height: 800,
+		min_height: 500,
+		contextmenu: false,
+		language: 'sr',
+		default_link_target: '_blank',
+		// file_picker_types: 'file image',
+		// image_advtab: true,
+		// image_uploadtab: true,
+		// images_upload_url: 'pub/upload/tiny'
+	});
+</script>
 {% endblock skripta %}
