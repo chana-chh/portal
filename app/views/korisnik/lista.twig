@@ -19,12 +19,12 @@
 {% block naslov %}
 <div class="row mt-md-2 d-none d-sm-flex">
   <div class="col">
-    <h1><i class="fas fa-users text-secondary"></i> Korisnici aplikacije</h1>
+    <h1><i class="fas fa-users text-secondary"></i> Корисници апликације</h1>
   </div>
 </div>
 <div class="row mt-2 d-sm-none">
   <div class="col">
-    <h4><i class="fas fa-users text-secondary"></i> Korisnici aplikacije</h4>
+    <h4><i class="fas fa-users text-secondary"></i> Корисници апликације</h4>
   </div>
 </div>
 <hr />
@@ -34,10 +34,10 @@
   <thead class="thead-dark">
     <tr>
       <th class="w-5">ID</th>
-      <th class="w-30">Ime i prezime</th>
-      <th class="w-30">Email</th>
-      <th class="w-15">Korisničko ime</th>
-      <th class="w-10">Nivo prava</th>
+      <th class="w-30">Име и презиме</th>
+      <th class="w-30">Електронска адреса</th>
+      <th class="w-15">Корисничко име</th>
+      <th class="w-10">Ниво права</th>
       <th class="w-10 text-right"><i class="fas fa-cogs text-warning"></i></th>
     </tr>
   </thead>
@@ -50,25 +50,23 @@
       <td>{{ korisnik.korisnicko_ime }}</td>
       <td>
         {% if korisnik.nivo == 0 %}
-        Admin
+        Администратор
         {% elseif korisnik.nivo == 100 %}
-        Vlasnik
-        {% elseif korisnik.nivo == 200 %}
-        Zakazivač
+        Аутор
         {% else %}
-        Osoblje
+        X
         {% endif %}
       </td>
       <td class="text-right">
-        {% if korisnik.nivo == 100 %}
+        {% if korisnik.nivo == 0 %}
         {% if auth.user.nivo == 1000 %}
         <div class="btn-group btn-group-sm">
           <a class="btn btn-warning btn-sm" href="{{ path_for('admin.korisnik.izmena.get', { id: korisnik.id }) }}"
-            title="Izmena podataka o korisniku">
+            title="Измена података о кориснику">
             <i class="fas fa-edit"></i>
           </a>
           <button class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
-            value="{{ korisnik.id }}" title="Brisanje odabranog korisnika">
+            value="{{ korisnik.id }}" title="Брисање одабраног корисника">
             <i class="fas fa-trash-alt"></i>
           </button>
         </div>
@@ -80,7 +78,7 @@
             <i class="fas fa-edit"></i>
           </a>
           <button class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
-            value="{{ korisnik.id }}" title="Brisanje odabranog korisnika">
+            value="{{ korisnik.id }}" title="Брисање одабраног корисника">
             <i class="fas fa-trash"></i>
           </button>
         </div>
@@ -115,14 +113,14 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title text-danger">Upozorenje!</h2>
+        <h2 class="modal-title text-danger">Упозорење!</h2>
         <button type="button" class="close" data-dismiss="modal">
           <span>&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <h4>Da li želite da trajno obrišete korisnika?</h4>
-        <p class="text-danger lead">* Ova akcija je nepovratna!</p>
+        <h4>Да ли желите трајно да обришете корисника?</h4>
+        <p class="text-danger lead">* Ова акција је неповратна!</p>
         <form id="brisanje-forma" action="{{ path_for('admin.korisnik.brisanje') }}" method="POST">
           {{ csrf | raw }}
           <input type="hidden" id="idBrisanje" name="idBrisanje" />
@@ -130,10 +128,10 @@
       <div class="modal-footer">
         <div class="form-group">
           <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
-            <i class="fas fa-trash"></i> Obriši
+            <i class="fas fa-trash"></i> Обриши
           </button>
           <a class="btn btn-secondary" data-dismiss="modal">
-            <i class="fas fa-ban"></i> Otkaži
+            <i class="fas fa-ban"></i> Откажи
           </a>
         </div>
         </form>
@@ -146,96 +144,106 @@
 {% endblock sadrzaj %}
 {% block traka %}
 <div class="card border-dark mb-3">
-  <div class="card-header">Dodavanje novog korisnika</div>
+  <div class="card-header">Додавање новог корисника</div>
   <div class="card-body text-dark mobilni">
     <form action="{{ path_for('admin.korisnik.dodavanje') }}" method="POST" class="needs-validation" novalidate
-      oninput='lozinka_potvrda.setCustomValidity(lozinka_potvrda.value != lozinka.value ? "Lozika se ne poklapa!" : "")'>
+      oninput='lozinka_potvrda.setCustomValidity(lozinka_potvrda.value != lozinka.value ? "Лозинка се не поклапа!" : "")'>
       {{ csrf | raw }}
       <div class="form-row">
         <div class="form-group col-6">
-          <label for="ime">Ime</label>
+          <label for="ime">Име</label>
           <input class="form-control{{ errors.ime[0] ? ' is-invalid' : '' }}" type="text" name="ime" id="ime"
             value="{{ old.ime ? : ''  }}" autocomplete="off" required />
-          <div class="valid-feedback">Odgovarajući podatak</div>
+          <div class="valid-feedback">Одговарајући податак</div>
           <div class="invalid-feedback">
-            {{ errors.ime[0] ? : 'Obavezno polje.' }}
+            {{ errors.ime[0] ? : 'Обавезно поље.' }}
           </div>
         </div>
         <div class="form-group col-6">
-          <label for="prezime">Prezime</label>
+          <label for="prezime">Презиме</label>
           <input class="form-control{{ errors.prezime[0] ? ' is-invalid' : '' }}" type="text" name="prezime"
             id="prezime" value="{{ old.prezime ? : ''  }}" autocomplete="off" required />
-          <div class="valid-feedback">Odgovarajući podatak</div>
+          <div class="valid-feedback">Одговарајући податак</div>
           <div class="invalid-feedback">
-            {{ errors.prezime[0] ? : 'Obavezno polje.' }}
+            {{ errors.prezime[0] ? : 'Обавезно поље.' }}
           </div>
         </div>
       </div>
       <div class="form-group">
-        <label for="email">Email korisnika</label>
+        <label for="email">Електронска адреса корисника</label>
         <input class="form-control{{
             errors.email[0] ? ' is-invalid' : ''
           }}" type="email" name="email" id="email" value="{{ old.email ? : '' }}" autocomplete="off" required />
-        <div class="valid-feedback">Odgovarajući podatak</div>
+        <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
-          {{ errors.email[0] ? : 'Obavezno polje u formi elektronske adrese.' }}
+          {{ errors.email[0] ? : 'Обавезно поље у форми електронске адресе.' }}
         </div>
       </div>
       <div class="form-group">
-        <label for="korisnicko_ime">Korisničko ime</label>
+        <label for="korisnicko_ime">Кoрисничко име</label>
         <input class="form-control{{
             errors.korisnicko_ime[0] ? ' is-invalid' : ''
           }}" type="text" name="korisnicko_ime" id="korisnicko_ime" value="{{ old.korisnicko_ime ? : '' }}"
           autocomplete="off" required minlength="5" />
-        <div class="valid-feedback">Odgovarajući podatak</div>
+        <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
-          {{ errors.korisnicko_ime[0] ? : 'Obavezno polje sa najmanje 5, a najviše 50 karaktera' }}
+          {{ errors.korisnicko_ime[0] ? : 'Обавезно поље са најмање 5, а највише 50 карактера' }}
         </div>
       </div>
       <div class="form-group">
-        <label for="lozinka" class="uk-form-label">Lozinka</label>
+        <label for="lozinka" class="uk-form-label">Лозинка</label>
         <input class="form-control{{ errors.lozinka[0] ? ' is-invalid' : '' }}" type="password" name="lozinka"
           id="lozinka" autocomplete="new-password" required minlength="6" />
-        <div class="valid-feedback">Odgovarajući podatak</div>
+        <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
-          {{ errors.lozinka[0] ? : 'Obavezno polje sa najmanje 6 karaktera' }}
+          {{ errors.lozinka[0] ? : 'Обавезно поље са најмање 6 карактера' }}
         </div>
       </div>
       <div class="form-group">
-        <label for="lozinka_potvrda" class="uk-form-label">Potvrda lozinke</label>
+        <label for="lozinka_potvrda" class="uk-form-label">Потврда лозинке</label>
         <input class="form-control{{
             errors.lozinka_potvrda[0] ? ' is-invalid' : ''
           }}" type="password" name="lozinka_potvrda" id="lozinka_potvrda" autocomplete="off"
           required />
-        <div class="valid-feedback">Odgovarajući podatak</div>
+        <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
-          {{ errors.lozinka_potvrda[0] ? : 'Obavezno polje koje mora biti isto kao i polje "Lozinka"' }}
+          {{ errors.lozinka_potvrda[0] ? : 'Обавезно поље које мора бити исто као и поље "Лозинка"' }}
         </div>
       </div>
       <div class="form-group">
-        <label for="nivo">Nivo korisničkih prava</label>
+        <label for="nivo">Ниво корисничких права</label>
         <select class="custom-select{{ errors.nivo[0] ? ' is-invalid' : '' }}" id="nivo" name="nivo" required>
           <option value=""></option>
-          <option value="0">Admin</option>
-          {% if auth.user.nivo == 1000 %}
-          <option value="100">Vlasnik</option>
+          {% if auth.user.nivo == 0 %}
+          <option value="0">Администратор</option>
           {% endif %}
-          <option value="200">Zakazivač</option>
-          <option value="300">Osoblje</option>
+          <option value="100">Аутор</option>
+          <option value="200">X</option>
         </select>
-        <div class="valid-feedback">Odgovarajući podatak</div>
+        <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
           {{ errors.nivo[0] ? : 'Obavezno polje' }}
         </div>
       </div>
+      <div class="form-group">
+      <label for="dozvoljene_kategorije" class="mr-3">Категорија</label>
+      <select name="dozvoljene_kategorije[]" id="dozvoljene_kategorije"
+        class="custom-select {{ errors.dozvoljene_kategorije[0] ? ' is-invalid' : '' }}" required multiple="multiple">
+        {% for kat in kategorije %}
+        <option value="{{ kat.id }}" {{old.dozvoljene_kategorije == kat.id ? ' selected' : ''}}>{{ kat.naziv }}</option>
+        {% endfor %}
+      </select>
+      <div class="valid-feedback">Исправно попуњено</div>
+      <div class="invalid-feedback">{{ errors.dozvoljene_kategorije[0] ? : 'Аутор мора да има дефинисане категорије којима приступа.' }}</div>
+    </div>
       <div class="row justify-content-end text-right">
         <div class="col">
           <button type="submit" class="btn btn-primary text-right">
-            <i class="fas fa-plus-square" title="Dodavanje novog korisnika"></i>
-            &emsp;Dodaj
+            <i class="fas fa-plus-square" title="Додавање новог корисника"></i>
+            &emsp;Додај
           </button>
           <a href="{{ path_for('admin.korisnik.lista') }}" class="btn btn-secondary"><i class="fas fa-ban"></i>
-            &emsp;Otkaži</a>
+            &emsp;Откажи</a>
         </div>
       </div>
     </form>

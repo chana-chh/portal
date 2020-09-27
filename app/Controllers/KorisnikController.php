@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use \App\Models\Korisnik;
+use \App\Models\Kategorija;
 use App\Classes\Logger;
 
 class KorisnikController extends Controller
@@ -16,7 +17,10 @@ class KorisnikController extends Controller
             $data = $model->paginate($this->page(), 'page', "SELECT * FROM korisnici WHERE nivo != 1000;");
         }
 
-        $this->render($response, 'korisnik/lista.twig', compact('data'));
+        $model_kategorije = new Kategorija();
+        $kategorije = $model_kategorije->all();
+
+        $this->render($response, 'korisnik/lista.twig', compact('data', 'kategorije'));
     }
 
     public function postKorisnikDodavanje($request, $response)
@@ -57,16 +61,16 @@ class KorisnikController extends Controller
                 'required' => true,
             ]
         ];
-
+        $data['dozvoljene_kategorije'] = implode(', ', $data['dozvoljene_kategorije']);
         $data['korisnik_id'] = $this->auth->user()->id;
 
         $this->validator->validate($data, $validation_rules);
 
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja korisnika.');
+            $this->flash->addMessage('danger', 'Дошло је догрешке приликом додавања корисника.');
             return $response->withRedirect($this->router->pathFor('admin.korisnik.lista'));
         } else {
-            $this->flash->addMessage('success', 'Nov korisnik je uspešno dodat.');
+            $this->flash->addMessage('success', 'Нов корисник је успешно додат.');
             $modelKorisnik = new Korisnik();
             unset($data['lozinka_potvrda']);
             $data['lozinka'] = password_hash($data['lozinka'], PASSWORD_DEFAULT);
@@ -85,9 +89,9 @@ class KorisnikController extends Controller
         $success = $model->deleteOne($id);
         if ($success) {
             $this->log($this::BRISANJE, $korisnik, ['ime','prezime'], $korisnik);
-            $this->flash->addMessage('success', "Korisnik je uspešno obrisan.");
+            $this->flash->addMessage('success', "Корисник је успешно обрисан.");
         } else {
-            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja korisnika.");
+            $this->flash->addMessage('danger', "Дошло је до грешке приликом брисања корисника.");
         }
         return $response->withRedirect($this->router->pathFor('admin.korisnik.lista'));
     }
@@ -148,10 +152,10 @@ class KorisnikController extends Controller
         $this->validator->validate($data, $validation_rules);
 
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene podataka o korisniku.');
+            $this->flash->addMessage('danger', '"Дошло је до грешке приликом измене података о кориснику.');
             return $response->withRedirect($this->router->pathFor('admin.korisnik.izmena.get', ['id' => $id]));
         } else {
-            $this->flash->addMessage('success', 'Podaci o korisniku su uspešno izmenjeni.');
+            $this->flash->addMessage('success', 'Подаци о кориснику су успешно измењени.');
             $modelKorisnik = new Korisnik();
             $stari = $modelKorisnik->find($id);
             unset($data['lozinka_potvrda']);
