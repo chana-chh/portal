@@ -35,6 +35,8 @@ $app->group('', function () {
     $this->get('/admin/komentari', '\App\Controllers\KomentariController:getLista')->setName('komentari');
     $this->get('/admin//komentari/pretraga', '\App\Controllers\KomentariController:getKomentariPretraga')->setName('komentari.pretraga');
     $this->post('/admin//komentari/pretraga', '\App\Controllers\KomentariController:postKomentariPretraga');
+    $this->get('/admin/pregled/{id}', '\App\Controllers\KomentariController:getPregled')->setName('komentari.pregled');
+    $this->get('/admin/objava/{id}', '\App\Controllers\KomentariController:getObjava')->setName('komentari.objava');
     // Kategorije
     $this->get('/admin/kategorije', '\App\Controllers\KategorijaController:getKategorije')->setName('kategorija');
     $this->post('/admin/kategorije/dodavanje', '\App\Controllers\KategorijaController:postKategorijeDodavanje')->setName('kategorija.dodavanje');

@@ -75,6 +75,29 @@ class KomentariController extends Controller
         $sql = "SELECT * FROM {$model->getTable()}{$where} ORDER BY created_at DESC;";
         $komentari = $model->paginate($page, 'page', $sql, $params);
 
-        $this->render($response, 'komentari/tabela.twig', compact('komentari'));
+        $this->render($response, 'komentari/tabela.twig', compact('komentari', 'data'));
+    }
+
+    public function getPregled($request, $response, $args)
+    {
+        $id = (int)$args['id'];
+        $modelKomentar = new Komentar();
+        $komentar = $modelKomentar->find($id);
+        $this->render($response, 'komentari/pregled.twig', compact('komentar'));
+    }
+
+    public function getObjava($request, $response, $args)
+    {
+        $id = (int)$args['id'];
+        $datum = date('Y-m-d H:i:s');
+        $modelKomentar = new Komentar();
+        $komentar = $modelKomentar->find($id);
+        if($komentar->published_at == null){
+            $data['published_at'] = $datum;
+        }else{
+            $data['published_at'] = null;
+        }
+        $komentar->update($data, $id);
+        return $response->withRedirect($this->router->pathFor('komentari.pregled', ['id' => $id]));
     }
 }

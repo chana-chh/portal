@@ -80,7 +80,7 @@
         <div class="list-group list-group-flush">
             {% for kat in kategorije %}
             <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-                <a href="{{ path_for('clanci.lista', { id: kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
+                <a href="{{ path_for('clanci.tabela.kategorije', { id: kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
                 <span class="badge badge-pill badge-dark">{{ kat.broj_kategorije() }}</span>
             </li>
             {% endfor %}

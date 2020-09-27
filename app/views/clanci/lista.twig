@@ -1,6 +1,5 @@
 {% extends "templates/app.twig" %}
 {% block sadrzaj %}
-{% for clanak in clanci.data %}
 <div class="row mb-5 mt-5">
     <div class="col col-lg-10 offset-lg-1">
         {% if data %}
@@ -8,6 +7,7 @@
         {% endif %}
     </div>
 </div>
+{% for clanak in clanci.data %}
 <div class="row mb-5 mt-5">
     <div class="col col-lg-10 offset-lg-1">
         <h3>{{ clanak.naslov }}</h3>
@@ -24,6 +24,7 @@
     </div>
 </div>
 </div>
+<hr style="border-top: dotted 1px blue;">
 {% endfor %}
 <div class="row  mt-5">
     <nav class="col col-lg-5 offset-lg-1">
@@ -69,7 +70,7 @@
         <div class="list-group list-group-flush">
             {% for kat in kategorije %}
             <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-                <a href="{{ path_for('clanci.lista', { id: kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
+                <a href="{{ path_for('clanci.tabela.kategorije', { id: kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
                 <span class="badge badge-pill badge-dark">{{ kat.broj_kategorije() }}</span>
             </li>
             {% endfor %}

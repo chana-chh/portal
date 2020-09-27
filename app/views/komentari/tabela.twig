@@ -15,7 +15,7 @@
     <div class="btn-group btn-group mt-3">
       <button type="button" class="btn btn-success btn-sm prikazi" id="prikazi" title="Prikaži formu za filtriranje">
         <i class="fas fa-filter"></i> Филтер</button>
-      <a href="#" class="btn btn-secondary btn-sm pretraga_div"><i
+      <a href="{{ path_for('komentari')}}" class="btn btn-secondary btn-sm pretraga_div"><i
           class="fas fa-list"></i> Сви коментари</a>
     </div>
   </div>
@@ -27,11 +27,21 @@
     <form class="form" action="{{ path_for('komentari.pretraga')}}" method="POST">
       {{ csrf|raw }}
       <div class="form-row">
-        <div class="form-group col-md-2">
+        <div class="form-group col-lg-6">
           <label for="upit">Појам за претрагу</label>
           <input type="text" name="upit" id="upit" class="form-control" placeholder="...појам за претрагу" autocomplete="off">
         </div>
-        <div class="col-md-6 text-right">
+        <div class="col-lg-2 text-right" style="margin-top: 37px;">
+          <div class="btn-group">
+            <a href="{{ path_for('komentari')}}" class="btn btn-primary btn-sm"><i class="fas fa-check-circle"></i> ОБЈАВЉЕНИ</a>
+          </div>
+        </div>
+        <div class="col-lg-2 text-right" style="margin-top: 37px;">
+          <div class="btn-group">
+            <a href="{{ path_for('komentari')}}" class="btn btn-warning btn-sm"><i class="fas fa-ban"></i> НИСУ објављени</a>
+          </div>
+        </div>
+        <div class="col-lg-2 text-right" style="margin-top: 37px;">
           <div class="btn-group">
             <button type="submit" class="btn btn-success btn-sm">
               <i class="fas fa-filter"></i> Филтрирај
@@ -71,7 +81,7 @@
         <td>{{ komentar.published_at == null ? 'Није објављен!' : komentar.published_at|date('d.m.Y') }}</td>
         <td class="text-right">
           <div class="btn-group btn-group-sm">
-            <a class="btn btn-success btn-sm" href="{{ path_for('clanci.pregled', { id: komentar.id }) }}"
+            <a class="btn btn-success btn-sm" href="{{ path_for('komentari.pregled', { id: komentar.id }) }}"
               title="Детаљни преглед одабраног чланка"><i class="fas fa-eye"></i></a>
           </div>
         </td>
