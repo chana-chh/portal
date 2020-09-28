@@ -24,7 +24,7 @@
             <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ clanak.published_at|date('d.m.Y') }}&emsp;<a href="#komentari"><i class="fas fa-comments text-warning"></i></a> {{ clanak.objavljeniKomentari()|length }}</p>
             <footer class="blockquote-footer">{{ clanak.kategorija.naziv }}, <cite title="Vrsta">{{ clanak.kategorija.vrsta }}</cite></footer>
         </blockquote>
-        <p style="font-size: 1.125rem;">{{ clanak.clanak }}</p>
+        <p style="font-size: 1.125rem;">&emsp;&emsp;&emsp;{{ clanak.clanak }}</p>
     </div>
 </div>
 <div class="row mb-5 text-right ne_stampaj">

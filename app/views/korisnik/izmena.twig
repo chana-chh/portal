@@ -8,69 +8,68 @@
 	<div class="col-md-6">
 		<div class="row mt-5">
 			<div class="col">
-				<h1><i class="fas fa-user text-secondary"></i> Izmena podataka o korisniku</h1>
+				<h1><i class="fas fa-user text-secondary"></i> Измена података о кориснику</h1>
 			</div>
 		</div>
 		<hr />
 		<form id="izmena-forma" action="{{ path_for('admin.korisnik.izmena.post') }}" method="POST"
 			class="needs-validation" novalidate
-			oninput='lozinka_potvrda.setCustomValidity(lozinka_potvrda.value != lozinka.value ? "Lozika se ne poklapa!" : "")'>
+			oninput='lozinka_potvrda.setCustomValidity(lozinka_potvrda.value != lozinka.value ? "Лозинка се не поклапа!" : "")'>
 			{{ csrf | raw }}
 			<input type="hidden" id="id" name="id" value="{{ korisnik.id }}" />
 			<div class="form-row">
 				<div class="form-group col-6">
-					<label for="ime">Ime</label>
+					<label for="ime">Име</label>
 					<input class="form-control{{ errors.ime[0] ? ' is-invalid' : '' }}" type="text" name="ime" id="ime"
 						value="{{ old.ime ? : korisnik.ime  }}" autocomplete="off" required />
-					<div class="valid-feedback">Odgovarajući podatak</div>
+					<div class="valid-feedback">Одговарајући податак</div>
 					<div class="invalid-feedback">
 						{{ errors.ime[0] ? : 'Obavezno polje.' }}
 					</div>
 				</div>
 				<div class="form-group col-6">
-					<label for="prezime">Prezime</label>
+					<label for="prezime">Презиме</label>
 					<input class="form-control{{ errors.prezime[0] ? ' is-invalid' : '' }}" type="text" name="prezime"
 						id="prezime" value="{{ old.prezime ? : korisnik.prezime  }}" autocomplete="off" required />
-					<div class="valid-feedback">Odgovarajući podatak</div>
+					<div class="valid-feedback">Одговарајући податак</div>
 					<div class="invalid-feedback">
 						{{ errors.prezime[0] ? : 'Obavezno polje.' }}
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="email">Email korisnika</label>
+				<label for="email">Електронска адреса корисника</label>
 				<input class="form-control{{ errors.email[0] ? ' is-invalid' : '' }}" type="email" name="email"
 					id="email" value="{{ old.email ? : korisnik.email }}" autocomplete="off" required />
-				<div class="valid-feedback">Odgovarajući podatak</div>
+				<div class="valid-feedback">Одговарајући податак</div>
 				<div class="invalid-feedback">
-					{{ errors.email[0] ? : 'Obavezno polje u formi elektronske adrese.' }}
+					{{ errors.email[0] ? : 'Обавезно поље у форми електронске адресе.' }}
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-6">
-					<label for="korisnicko_ime">Korisničko ime</label>
+					<label for="korisnicko_ime">Кoрисничко име</label>
 					<input class="form-control{{ errors.korisnicko_ime[0] ? ' is-invalid' : '' }}" type="text"
 						name="korisnicko_ime" id="korisnicko_ime"
 						value="{{ old.korisnicko_ime ? : korisnik.korisnicko_ime }}" autocomplete="off" required
 						minlength="5" />
-					<div class="valid-feedback">Odgovarajući podatak</div>
+					<div class="valid-feedback">Одговарајући податак</div>
 					<div class="invalid-feedback">
-						{{ errors.korisnicko_ime[0] ? : 'Obavezno polje sa najmanje 5, a najviše 50 karaktera' }}
+						{{ errors.korisnicko_ime[0] ? : 'Обавезно поље са најмање 5, а највише 50 карактера' }}
 					</div>
 				</div>
 				<div class="form-group col-md-6">
-					<label for="nivo">Nivo korisničkih prava</label>
+					<label for="nivo">Ниво корисничких права</label>
 					<select class="custom-select{{ errors.nivo[0] ? ' is-invalid' : '' }}" id="nivo" name="nivo"
 						required>
 						<option value=""></option>
-						<option value="0" {{ korisnik.nivo == 0 ? ' selected' : '' }}>Admin</option>
-						{% if auth.user.nivo == 1000 %}
-						<option value="100" {{ korisnik.nivo == 100 ? ' selected' : '' }}>Vlasnik</option>
-						{% endif %}
-						<option value="200" {{ korisnik.nivo == 200 ? ' selected' : '' }}>Zakazivač</option>
-						<option value="300" {{ korisnik.nivo == 300 ? ' selected' : '' }}>Osoblje</option>
+          				{% if auth.user.nivo == 0 %}
+          				<option value="0" {{ korisnik.nivo == 0 ? ' selected' : '' }}>Администратор</option>
+          				{% endif %}
+          				<option value="100" {{ korisnik.nivo == 100 ? ' selected' : '' }}>Аутор</option>
+          				<option value="200" {{ korisnik.nivo == 200 ? ' selected' : '' }}>X</option>
 					</select>
-					<div class="valid-feedback">Odgovarajući podatak</div>
+					<div class="valid-feedback">Одговарајући податак</div>
 					<div class="invalid-feedback">
 						{{ errors.nivo[0] ? : 'Obavezno polje' }}
 					</div>
@@ -78,31 +77,44 @@
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-6">
-            		<label for="lozinka" class="uk-form-label">Lozinka</label>
+            		<label for="lozinka" class="uk-form-label">Лозинка</label>
             		<input class="form-control" type="password" name="lozinka" id="lozinka" class="form-control"
               		autocomplete="new-password" />
-              		<div class="valid-feedback">Odgovarajući podatak</div>
+              		<div class="valid-feedback">Одговарајући податак</div>
 					<div class="invalid-feedback">
-						{{ errors.lozinka[0] ? : 'Lozika se ne poklapa ili nije odgovarajuće dužine!' }}
+						{{ errors.lozinka[0] ? : 'Обавезно поље са најмање 6 карактера!' }}
 					</div>
           		</div>
           		<div class="form-group col-md-6">
-            		<label for="lozinka_potvrda" class="uk-form-label">Potvrda lozinke</label>
+            		<label for="lozinka_potvrda" class="uk-form-label">Потврда лозинке</label>
             		<input class="form-control" type="password" name="lozinka_potvrda" id="lozinka_potvrda" class="form-control"
               		autocomplete="off"/>
-              							<div class="valid-feedback">Odgovarajući podatak</div>
+              							<div class="valid-feedback">Одговарајући податак</div>
 					<div class="invalid-feedback">
-						{{ errors.lozinka_potvrda[0] ? : 'Lozika se ne poklapa ili nije odgovarajuće dužine!' }}
+						{{ errors.lozinka_potvrda[0] ? : 'Обавезно поље које мора бити исто као и поље "Лозинка"' }}
 					</div>
           	</div>
 			</div>
+			<div class="form-row">
+			<div class="form-group">
+      <label for="dozvoljene_kategorije" class="mr-3">Категорија</label>
+      <select name="dozvoljene_kategorije[]" id="dozvoljene_kategorije"
+        class="custom-select {{ errors.dozvoljene_kategorije[0] ? ' is-invalid' : '' }}" required multiple="multiple">
+        {% for kat in kategorije %}
+        <option value="{{ kat.id }}" {{kat.id in korisnik.dozvoljene_kategorije ? ' selected' : ''}}>{{ kat.naziv }}</option>
+        {% endfor %}
+      </select>
+      <div class="valid-feedback">Исправно попуњено</div>
+      <div class="invalid-feedback">{{ errors.dozvoljene_kategorije[0] ? : 'Аутор мора да има дефинисане категорије којима приступа.' }}</div>
+    </div>
+</div>
 			<div class="row justify-content-end text-right">
 				<div class="col">
 					<button type="submit" class="btn btn-primary text-right">
-						<i class="fas fa-save" title="Sačuvaj izmene podataka korisnika"></i> Snimi
+						<i class="fas fa-save" title="Sačuvaj izmene podataka korisnika"></i> Сними
 					</button>
 					<a href="{{ path_for('admin.korisnik.lista') }}" class="btn btn-secondary">
-						<i class="fas fa-ban"></i> Otkaži
+						<i class="fas fa-ban"></i> Откажи
 					</a>
 				</div>
 			</div>

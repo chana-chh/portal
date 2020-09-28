@@ -7,6 +7,39 @@ use App\Classes\Logger;
 
 class DokumentController extends Controller
 {
+    public function getLista($request, $response)
+    {
+        $query = [];
+        parse_str($request->getUri()->getQuery(), $query);
+        $page = isset($query['page']) ? (int)$query['page'] : 1;
+
+        $model = new Dokument();
+        $dokumenti = $model->paginate($this->page(), 'page', 
+            "SELECT * FROM dokumenti
+            ORDER BY created_at DESC;");
+        $vrste = $model->enumOrSetList('vrsta');
+
+        $d = $model->fetch("SELECT *
+                    FROM dokumenti
+                    LIMIT 1;")[0];
+
+        $sql = "SELECT
+                COUNT(id) as broj, MONTHNAME(t.created_at) as mesec, YEAR(t.created_at) as godina, MONTH (t.created_at) as mm
+                FROM dokumenti t
+                GROUP BY EXTRACT(YEAR_MONTH FROM t.created_at) DESC;";
+        $arhiva =$model->fetch($sql);
+
+        $this->render($response, 'dokumenti/lista.twig', compact('vrste', 'dokumenti', 'arhiva', 'd'));
+    }
+
+    public function getDokumentDodavanje($request, $response)
+    {
+        $model = new Dokument();
+        $vrste = $model->enumOrSetList('vrsta');
+
+        $this->render($response, 'autor/dokumenti/dodavanje.twig', compact('vrste'));
+    }
+
     public function postDokumentDodavanje($request, $response)
     {
         $data = $request->getParams();
@@ -15,13 +48,13 @@ class DokumentController extends Controller
         unset($data['csrf_value']);
 
         if ($dokument->getError() === UPLOAD_ERR_NO_FILE) {
-            $this->flash->addMessage('danger', 'Morate odabrati dokument.');
-            return $response->withRedirect($this->router->pathFor('termin.ugovor.detalj.get', ['id' => $data['ugovor_id']]));
+            $this->flash->addMessage('danger', 'Морате одабрати документ.');
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         }
         
         if ($dokument->getError() !== UPLOAD_ERR_OK) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom prebacivanja dokumenta.');
-            return $response->withRedirect($this->router->pathFor('termin.ugovor.detalj.get', ['id' => $data['ugovor_id']]));
+            $this->flash->addMessage('danger', 'Дошло је до грешке приликом отпремања документа.');
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         }
 
         $validation_rules = [
@@ -33,13 +66,13 @@ class DokumentController extends Controller
         $this->validator->validate($data, $validation_rules);
 
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja dokumenta.');
-            return $response->withRedirect($this->router->pathFor('termin.ugovor.detalj.get', ['id' => $data['ugovor_id']]));
+            $this->flash->addMessage('danger', 'Дошло је до грешке приликом додаванја докумената.');
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         } else {
             $unique = bin2hex(random_bytes(8));
             $extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
             $opis = str_replace(" ", "_", $data['opis']);
-            $name = "{$data['ugovor_id']}_{$opis}_{$unique}";
+            $name = "{$data['vrsta']}_{$opis}_{$unique}";
             $filename = "{$name}.{$extension}";
             $veza = URL . "doc/{$filename}";
             $data['link'] = $veza;
@@ -47,8 +80,8 @@ class DokumentController extends Controller
             $dokument->moveTo('doc/' . $filename);
             $modelDokument = new Dokument();
             $modelDokument->insert($data);
-            $this->flash->addMessage('success', 'Dokument je uspešno sačuvan.');
-            return $response->withRedirect($this->router->pathFor('termin.ugovor.detalj.get', ['id' => $data['ugovor_id']]));
+            $this->flash->addMessage('success', 'Докуменат је успешно сачуван.');
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         }
     }
 

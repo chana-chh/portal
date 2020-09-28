@@ -15,6 +15,8 @@ $app->get('/clanci/pretraga', '\App\Controllers\ClanakController:getClanciPretra
 $app->post('/clanci/pretraga', '\App\Controllers\ClanakController:postClanciPretraga');
 $app->get('/clanci/komentar/{id}', '\App\Controllers\ClanakController:getKomentar')->setName('clanci.komentar.get');
 $app->post('/clanci/komentar', '\App\Controllers\ClanakController:postKomentar')->setName('clanci.komentar.post');
+//Doks
+$app->get('/dokumenti/lista', '\App\Controllers\DokumentController:getLista')->setName('dokumenti.lista');
 
 $app->group('', function () {
     //Prijava
@@ -62,4 +64,6 @@ $app->group('', function () {
     $this->get('/autor/objave/dodavanje', '\App\Controllers\AutorObjaveController:getObjaveDodavanje')->setName('autor.objave.dodavanje');
     $this->post('/autor/objave/dodavanje', '\App\Controllers\AutorObjaveController:postObjaveDodavanje')->setName('autor.objave.dodavanje');
     // Dokumenti
+    $this->get('/autor/dokument/dodavanje', '\App\Controllers\DokumentController:getDokumentDodavanje')->setName('dokument.dodavanje.get');
+    $this->post('/autor/dokument/dodavanje', '\App\Controllers\DokumentController:postDokumentDodavanje')->setName('dokument.dodavanje.post');
 })->add(new UserLevelMiddleware($container, [0,100]));

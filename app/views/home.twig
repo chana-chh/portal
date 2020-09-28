@@ -6,7 +6,7 @@
         <h1>Одаберите неки од понуђених садржаја</h1>
     </div>
     <div class="col-lg-6 text-right">
-        <h4><img class="img-fluid" src="{{ base_url() }}/img/orao.png" alt="Grad Kragujevac - portal"></h4>
+        <h4><img class="img-fluid" src="{{ base_url() }}/img/orao.png" alt="Град Крагујевац - портал"></h4>
     </div>
 </div>
 <div class="card-deck mt-5">
@@ -14,13 +14,13 @@
         <img src="{{ base_url() }}/img/dok.png" class="card-img-top mx-auto d-block" alt="..." style="max-width: 200px;
   width:100%;">
         <div class="card-body">
-            <h5 class="card-title">Документа <small>({{ brojClanaka }})</small></h5>
+            <h5 class="card-title">Документа <small>({{ brojDoc }})</small></h5>
             <p class="card-text">Преглед листе сачуваних документа.</p>
         </div>
         <div class="card-footer">
             <blockquote class="blockquote text-right">
-                <a href="">Преглед <i class="fas fa-chevron-right"></i></a>
-                <footer class="blockquote-footer">Последње постављање: <cite title="Последња објава">{{ poslednjaObjavaClanak|date('d.m.Y H:m') }}</cite></footer>
+                <a href="{{ path_for('dokumenti.lista') }}">Преглед <i class="fas fa-chevron-right"></i></a>
+                <footer class="blockquote-footer">Последње постављање: <cite title="Последња објава">{{ poslednjiUp|date('d.m.Y H:i') }}</cite></footer>
             </blockquote>
         </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="card-footer">
             <blockquote class="blockquote text-right">
                 <a href="{{ path_for('clanci.lista') }}">Преглед <i class="fas fa-chevron-right"></i></a>
-                <footer class="blockquote-footer">Последња објава: <cite title="Последња објава">{{ poslednjaObjavaClanak|date('d.m.Y H:m') }}</cite></footer>
+                <footer class="blockquote-footer">Последња објава: <cite title="Последња објава">{{ poslednjaObjavaClanak|date('d.m.Y H:i') }}</cite></footer>
             </blockquote>
         </div>
     </div>
@@ -48,7 +48,7 @@
         <div class="card-footer">
             <blockquote class="blockquote text-right">
                 <a href="http://it.kg.grad/imenik">Преглед <i class="fas fa-chevron-right"></i></a>
-                <footer class="blockquote-footer">Последње ажурирање: <cite title="Последња објава">пре 3 минута</cite></footer>
+                <footer class="blockquote-footer">Последње ажурирање: <cite title="Последња објава">пре {{ imenik }} минута</cite></footer>
             </blockquote>
         </div>
     </div>

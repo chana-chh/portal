@@ -6,6 +6,7 @@ use App\Classes\Auth;
 use App\Classes\Logger;
 use App\Models\Kategorija;
 use App\Models\Clanak;
+use App\Models\Dokument;
 
 
 class HomeController extends Controller
@@ -14,8 +15,14 @@ class HomeController extends Controller
     {
         $model = new Clanak();
         $brojClanaka = $model->broj_objavljenih();
-        $poslednjaObjava = $model->poslednja_objava();
+        $poslednjaObjavaClanak = $model->poslednja_objava();
 
-        $this->render($response, 'home.twig', compact('brojClanaka', 'poslednjaObjavaClanak'));
+        $modelDoc = new Dokument();
+        $brojDoc = $modelDoc->broj_doc();
+        $poslednjiUp = $modelDoc->poslednjiUp();
+
+        $imenik = rand(1, 59);
+
+        $this->render($response, 'home.twig', compact('brojClanaka', 'poslednjaObjavaClanak', 'brojDoc', 'poslednjiUp', 'imenik'));
     }
 }

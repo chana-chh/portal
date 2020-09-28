@@ -102,7 +102,10 @@ class KorisnikController extends Controller
         $model = new Korisnik();
         $korisnik = $model->find($id);
 
-        $this->render($response, 'korisnik/izmena.twig', compact('korisnik'));
+        $model_kategorije = new Kategorija();
+        $kategorije = $model_kategorije->all();
+
+        $this->render($response, 'korisnik/izmena.twig', compact('korisnik', 'kategorije'));
     }
 
     public function postKorisnikIzmena($request, $response)

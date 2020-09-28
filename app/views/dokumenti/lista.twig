@@ -7,29 +7,30 @@
         {% endif %}
     </div>
 </div>
-{% for clanak in clanci.data %}
+{% for dok in dokumenti.data %}
 <div class="row mb-5 mt-5">
     <div class="col col-lg-10 offset-lg-1">
-        <h3>{{ clanak.naslov }}</h3>
-        <p class="lead">{{ clanak.rezime }}</p>
+        <h3>{{ dok.naslov }}</h3>
+        <p class="lead">{{ dok.rezime }}</p>
         <blockquote class="blockquote text-right">
-            <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ clanak.published_at|date('d.m.Y') }}&emsp;<i class="fas fa-comments text-warning"></i> {{ clanak.objavljeniKomentari()|length }}</p>
-            <footer class="blockquote-footer">{{ clanak.kategorija.naziv }}, <cite title="Vrsta">{{ clanak.kategorija.vrsta }}</cite></footer>
+            <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ dok.published_at|date('d.m.Y') }}&emsp;<i class="fas fa-user text-warning"></i> {{ dok.korisnik.imePrezime() }}</p>
+            <footer class="blockquote-footer">Врста: <cite title="Vrsta">{{ dok.vrsta }}</cite></footer>
         </blockquote>
         <hr class="my-4">
-        <p>&emsp;&emsp;&emsp;{{ clanak.clanak|length < 410 ? clanak.clanak|raw : clanak.clanak|slice(0, 400)|raw ~ '...' }}</p> <div class="col text-right">
-                <a href="{{ path_for('clanci.pregled', { id: clanak.id}) }}" class="btn btn-outline-primary btn-sm" title="Прочитај цео чланак">
-                    Прочитај цео чланак <i class="fas fa-chevron-right"></i>
+        <small>&emsp;&emsp;&emsp;{{ dok.opis }}</small>
+        <div class="col text-right">
+                <a href="{{ dok.link }}" class="btn btn-outline-primary btn-sm" title="Преглед" target="_blank">
+                    Преглед <i class="fas fa-eye"></i>
                 </a>
+        </div>
     </div>
-</div>
 </div>
 <hr style="border-top: dotted 1px blue;">
 {% endfor %}
 <div class="row  mt-5">
     <nav class="col col-lg-5 offset-lg-1">
         <ul class="pagination pagination-sm">
-            {% for button in clanci.links.buttons %}
+            {% for button in dokumenti.links.buttons %}
             <li class="page-item{{ button.current ? ' active' : '' }}">
                 <a class="page-link" href="{{ button.url }}">{{ button.page }}</a>
             </li>
@@ -38,9 +39,9 @@
     </nav>
     <p class="col col-lg-5 justify-content-end text-right text-primary">
         Prikazani redovi od
-        <em>{{ clanci.links.row_from }}</em> do
-        <em>{{ clanci.links.row_to }}</em> od ukupno
-        <em>{{ clanci.links.total_rows }}</em>
+        <em>{{ dokumenti.links.row_from }}</em> do
+        <em>{{ dokumenti.links.row_to }}</em> od ukupno
+        <em>{{ dokumenti.links.total_rows }}</em>
     </p>
 </div>
 {% endblock sadrzaj %}
@@ -65,32 +66,19 @@
 </div>
 <div class="row">
     <div class="col col-lg-12 pl-5">
-        <h4 class="font-italic text-secondary">Категорије</h4>
+        <h4 class="font-italic text-secondary">Врсте</h4>
         <br>
         <div class="list-group list-group-flush">
-            {% for kat in kategorije %}
+            {% for vrst in vrste %}
             <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-                <a href="{{ path_for('clanci.tabela.kategorije', { id: kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
-                <span class="badge badge-pill badge-dark">{{ kat.broj_kategorije() }}</span>
+                <a href="{{ path_for('clanci.tabela.kategorije', { id: kat.id }) }}" class="text-reset">{{ vrst }}</a>
+                <span class="badge badge-pill badge-dark">{{ d.broj_vrste(vrst) }}</span>
             </li>
             {% endfor %}
         </div>
     </div>
 </div>
-<div class="row mt-5">
-    <div class="col col-lg-12 pl-5">
-        <h4 class="font-italic text-secondary">Најпопуларнији чланци</h4>
-        <br>
-        <div class="list-group list-group-flush">
-            {% for pop in najpopularniji %}
-            <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-                <a href="{{ path_for('clanci.pregled', { id: pop.id }) }}">{{ pop.naslov }}</a>
-                <span class="badge badge-pill badge-dark">{{ pop.pregledi }}</span>
-            </li>
-            {% endfor %}
-        </div>
-    </div>
-</div>
+
 <div class="row mt-5 mb-5">
     <div class="col col-lg-12 pl-5">
         <h4 class="font-italic text-secondary">Архива</h4>

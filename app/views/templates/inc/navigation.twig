@@ -12,13 +12,22 @@
       <li class="nav-item">
         <a class="nav-link" href="{{ path_for('pocetna') }}"><i class="fas fa-home"></i> Почетна</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path_for('dokumenti.lista') }}" target="_blank"><i class="fas fa-file-alt"></i> Документа</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path_for('clanci.lista') }}"><i class="fas fa-newspaper"></i> Чланци</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="http://it.kg.grad/imenik"><i class="fas fa-address-book"></i> Именик ГУ</a>
+      </li>
       {% if auth.logged %}
       {# Korisnik #}
       <li class="nav-item">
         <a class="nav-link" href="{{ path_for('autor.objave.lista') }}"><i class="fas fa-clipboard"></i> Објаве</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href=""><i class="fas fa-file-alt"></i> Документа</a>
+        <a class="nav-link" href="{{ path_for('dokument.dodavanje.get') }}"><i class="fas fa-upload"></i> Отпремање документа</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{ path_for('komentari') }}"><i class="fas fa-comments"></i> Коментари</a>
