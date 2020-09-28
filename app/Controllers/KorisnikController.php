@@ -147,6 +147,8 @@ class KorisnikController extends Controller
                 'match_field' => 'lozinka',
             ]
         ];
+        
+        $data['dozvoljene_kategorije'] = implode(', ', $data['dozvoljene_kategorije']);
 
         if (!empty($data['lozinka'])) {
             array_push($validation_rules, $validation_pass);

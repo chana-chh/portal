@@ -1,67 +1,71 @@
 {% extends "templates/app.twig" %}
 {% block naslov %}
 <div class="row">
-    <div class="col">
+    <div class="col-lg-10 offset-1">
         <h1><i class="fas fa-file-signature text-secondary"></i> Отпремање докумената</h1>
     </div>
 </div>
 <hr>
-<div class="card border-dark mb-3">
-    <div class="card-header text-primary">
-        <h3>Додавање докумената</h3>
-    </div>
-    <div class="card-body text-dark">
-        <form id="dokument-forma" action="{{ path_for('dokument.dodavanje.post') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-            {{ csrf|raw }}
-            <div class="row mb-2">
-                <div class="col text-danger">
-                    <strong>Важно:</strong> Порука о дозвољеним типовима и величини фајла
-                </div>
+<div class="row">
+    <div class="col-lg-10 offset-1">
+        <div class="card border-dark mb-3">
+            <div class="card-header text-primary">
+                <h3>Додавање докумената</h3>
             </div>
-            <div class="form-row">
-                <div class="col form-group">
-                    <label for="naslov">Наслов</label>
-                    <input type="text" value="{{ old.naslov ? : '' }}" class="form-control{{ errors.naslov[0] ? ' is-invalid' : '' }}" name="naslov" id="naslov" required>
-                    <div class="valid-feedback">Одговарајући податак</div>
-                    <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
-                </div>
-                <div class="col form-group">
-                    <label for="opis">Опис</label>
-                    <input type="text" value="{{ old.opis ? : '' }}" class="form-control{{ errors.opis[0] ? ' is-invalid' : '' }}" name="opis" id="opis" required>
-                    <div class="valid-feedback">Одговарајући податак</div>
-                    <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
-                </div>
-                <div class="col form-group">
-                    <label for="vrsta" class="mr-3">Врста</label>
-                    <select name="vrsta" id="vrsta" class="custom-select {{ errors.vrsta[0] ? ' is-invalid' : '' }}" required>
-                    	<option value=""> </option>
-                        {% for vrs in vrste %}
-                        <option value="{{ vrs }}" {{old.vrsta == vrs ? ' selected' : ''}}>{{ vrs }}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="valid-feedback">Исправно попуњено</div>
-                    <div class="invalid-feedback">{{ errors.vrsta[0] ? : 'Обавезно поље.' }}</div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-lg-6">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input{{ errors.dokument[0] ? ' is-invalid' : '' }}" id="dokument" name="dokument" required>
-                        <label id="file-label" class="custom-file-label" for="dokument" data-browse="Pronađi">Изабери документ</label>
-                        <div class="valid-feedback">Одговарајући податак</div>
-                        <div class="invalid-feedback">{{ errors.dokument[0] ? : 'Морате одабрати документ' }}</div>
+            <div class="card-body text-dark">
+                <form id="dokument-forma" action="{{ path_for('dokument.dodavanje.post') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    {{ csrf|raw }}
+                    <div class="row mb-2">
+                        <div class="col text-danger">
+                            <strong>Важно:</strong> Порука о дозвољеним типовима и величини фајла
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-6 form-group text-right mb-0">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-file-upload"></i> Отпреми
-                    </button>
-                    <button type="reset" class="btn btn-secondary" id="otkazi-validation">
-                        <i class="fas fa-ban"></i> Откажи
-                    </button>
-                </div>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="naslov">Наслов документа</label>
+                            <input type="text" value="{{ old.naslov ? : '' }}" class="form-control{{ errors.naslov[0] ? ' is-invalid' : '' }}" name="naslov" id="naslov" required>
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
+                        </div>
+                        <div class="col form-group">
+                            <label for="opis">Опис / кратак садржај документа</label>
+                            <input type="text" value="{{ old.opis ? : '' }}" class="form-control{{ errors.opis[0] ? ' is-invalid' : '' }}" name="opis" id="opis" required>
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
+                        </div>
+                        <div class="col form-group">
+                            <label for="vrsta" class="mr-3">Врста документа</label>
+                            <select name="vrsta" id="vrsta" class="custom-select {{ errors.vrsta[0] ? ' is-invalid' : '' }}" required>
+                                <option value=""> </option>
+                                {% for vrs in vrste %}
+                                <option value="{{ vrs }}" {{old.vrsta == vrs ? ' selected' : ''}}>{{ vrs }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="valid-feedback">Исправно попуњено</div>
+                            <div class="invalid-feedback">{{ errors.vrsta[0] ? : 'Обавезно поље.' }}</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input{{ errors.dokument[0] ? ' is-invalid' : '' }}" id="dokument" name="dokument" required>
+                                <label id="file-label" class="custom-file-label" for="dokument" data-browse="Pronađi">Изабери документ</label>
+                                <div class="valid-feedback">Одговарајући податак</div>
+                                <div class="invalid-feedback">{{ errors.dokument[0] ? : 'Морате одабрати документ' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 form-group text-right mb-0">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-file-upload"></i> Отпреми
+                            </button>
+                            <button type="reset" class="btn btn-secondary" id="otkazi-validation">
+                                <i class="fas fa-ban"></i> Откажи
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock naslov %}

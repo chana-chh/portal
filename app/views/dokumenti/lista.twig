@@ -1,4 +1,25 @@
 {% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row m-2">
+    <div class="col-lg-10">
+        <h1 class="page-header">
+            <img src="{{ base_url() }}/img/dok.png" alt="Документа" style="max-width: 64px;
+  width:100%;"> &emsp;Документа
+        </h1>
+    </div>
+    <div class="col-lg-2 text-right">
+        <div class="btn-group mt-4">
+            <a class="btn btn-primary" onclick="window.history.back();" title="Повратак на претходну страну">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <a class="btn btn-primary" href="{{ path_for('pocetna') }}" title="Повратак на почетну страну">
+                <i class="fa fa-home"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<hr>
+{% endblock naslov %}
 {% block sadrzaj %}
 <div class="row mb-5 mt-5">
     <div class="col col-lg-10 offset-lg-1">
