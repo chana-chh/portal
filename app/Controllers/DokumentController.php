@@ -71,8 +71,8 @@ class DokumentController extends Controller
         } else {
             $unique = bin2hex(random_bytes(8));
             $extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
-            $opis = str_replace(" ", "_", $data['opis']);
-            $name = "{$data['vrsta']}_{$opis}_{$unique}";
+            $naslov = str_replace(" ", "_", $data['naslov']);
+            $name = "{$data['vrsta']}_{$naslov}_{$unique}";
             $filename = "{$name}.{$extension}";
             $veza = URL . "doc/{$filename}";
             $data['link'] = $veza;
