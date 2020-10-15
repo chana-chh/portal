@@ -35,7 +35,7 @@
         <p class="lead">{{ dok.rezime }}</p>
         <blockquote class="blockquote text-right">
             <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ dok.published_at|date('d.m.Y') }}&emsp;<i class="fas fa-user text-warning"></i> {{ dok.korisnik.imePrezime() }}</p>
-            <footer class="blockquote-footer">Врста: <cite title="Vrsta">{{ dok.vrsta }}</cite></footer>
+            <footer class="blockquote-footer">Врста: <cite title="Vrsta">{{ dok.vrsta.naziv }}</cite></footer>
         </blockquote>
         <hr class="my-4">
         <small>&emsp;&emsp;&emsp;{{ dok.opis }}</small>
@@ -87,13 +87,13 @@
 </div>
 <div class="row">
     <div class="col col-lg-12 pl-5">
-        <h4 class="font-italic text-secondary">Врсте</h4>
+        <h4 class="font-italic text-secondary">Категорије</h4>
         <br>
         <div class="list-group list-group-flush">
-            {% for vrst in vrste %}
+            {% for kat in kategorije %}
             <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-                <a href="{{ path_for('clanci.tabela.kategorije', { id: kat.id }) }}" class="text-reset">{{ vrst }}</a>
-                <span class="badge badge-pill badge-dark">{{ d.broj_vrste(vrst) }}</span>
+                <a href="{{ path_for('dokumenti.lista', { 'id_kat': kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
+                <span class="badge badge-pill badge-dark">{{ kat.broj_kategorije() }}</span>
             </li>
             {% endfor %}
         </div>

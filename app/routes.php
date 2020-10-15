@@ -16,7 +16,8 @@ $app->post('/clanci/pretraga', '\App\Controllers\ClanakController:postClanciPret
 $app->get('/clanci/komentar/{id}', '\App\Controllers\ClanakController:getKomentar')->setName('clanci.komentar.get');
 $app->post('/clanci/komentar', '\App\Controllers\ClanakController:postKomentar')->setName('clanci.komentar.post');
 //Doks
-$app->get('/dokumenti/lista', '\App\Controllers\DokumentController:getLista')->setName('dokumenti.lista');
+$app->get('/dokumenti/lista[/{id_kat}[/{id_vrs}]]', '\App\Controllers\DokumentController:getLista')->setName('dokumenti.lista');
+$app->get('/dokumenti/kategorija/{id}', '\App\Controllers\DokumentController:getDokumentiKategorija')->setName('dokumenti.kategorija');
 
 $app->group('', function () {
     //Prijava

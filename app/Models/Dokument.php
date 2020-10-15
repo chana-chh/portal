@@ -13,9 +13,25 @@ class Dokument extends Model
         return $this->belongsTo('App\Models\Korisnik', 'korisnik_id');
     }
 
+    public function kategorija()
+    {
+        return $this->belongsTo('App\Models\DokumentKategorija', 'kategorija_id');
+    }
+
+    public function vrsta()
+    {
+        return $this->belongsTo('App\Models\DokumentVrsta', 'vrsta_id');
+    }
+
     public function clanak()
     {
         return $this->belongsTo('App\Models\Clanak', 'clanak_id');
+    }
+
+    public function dokument_kategorija($id_kategorije)
+    {
+        $sql = "SELECT * FROM {$this->table()} WHERE kategorija_id = '{$id_kategorije}'";
+        return $this->fetch($sql);
     }
 
     public function broj_doc()
@@ -30,15 +46,4 @@ class Dokument extends Model
         return $this->fetch($sql)[0]->poslednjiUp;
     }
 
-    public function dok_vrsta($vrsta)
-    {
-        $sql = "SELECT * FROM {$this->table()} WHERE vrsta LIKE '%{$vrsta}%'";
-        return $this->fetch($sql);
-    }
-
-    public function broj_vrste($vrsta)
-    {
-        $sql = "SELECT COUNT(*) AS broj_vrste FROM {$this->table()} WHERE vrsta LIKE '%{$vrsta}%'";
-        return (int) $this->fetch($sql)[0]->broj_vrste;
-    }
 }

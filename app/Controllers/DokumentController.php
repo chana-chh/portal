@@ -3,25 +3,48 @@
 namespace App\Controllers;
 
 use App\Models\Dokument;
+use App\Models\DokumentKategorija;
 use App\Classes\Logger;
 
 class DokumentController extends Controller
 {
-    public function getLista($request, $response)
+    public function getLista($request, $response, $args)
     {
+
+        $where = " WHERE ";
+        $params = [];
+
+        if (!empty($args)) {
+
+        if (isset($args['id_kat'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "kategorija_id = :kategorija_id";
+            $params[':kategorija_id'] = (int) $args['id_kat'];
+        }
+
+        if (isset($args['id_vrs'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "vrsta_id = :vrsta_id";
+            $params[':vrsta_id'] = (int) $args['id_vrs'];
+        }
+        }
+        $where = $where === " WHERE " ? "" : $where;
+        
         $query = [];
         parse_str($request->getUri()->getQuery(), $query);
         $page = isset($query['page']) ? (int)$query['page'] : 1;
 
         $model = new Dokument();
-        $dokumenti = $model->paginate($this->page(), 'page', 
-            "SELECT * FROM dokumenti
-            ORDER BY created_at DESC;");
-        $vrste = $model->enumOrSetList('vrsta');
+        $sql = "SELECT * FROM {$model->getTable()}{$where} ORDER BY created_at DESC;";
 
-        $d = $model->fetch("SELECT *
-                    FROM dokumenti
-                    LIMIT 1;")[0];
+        $dokumenti = $model->paginate($page, 'page', $sql, $params);
+
+        $model_kategorije = new DokumentKategorija();
+        $kategorije = $model_kategorije->all();
 
         $sql = "SELECT
                 COUNT(id) as broj, MONTHNAME(t.created_at) as mesec, YEAR(t.created_at) as godina, MONTH (t.created_at) as mm
@@ -29,7 +52,26 @@ class DokumentController extends Controller
                 GROUP BY EXTRACT(YEAR_MONTH FROM t.created_at) DESC;";
         $arhiva =$model->fetch($sql);
 
-        $this->render($response, 'dokumenti/lista.twig', compact('vrste', 'dokumenti', 'arhiva', 'd'));
+        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva'));
+    }
+
+    public function getDokumentiKategorija($request, $response, $args)
+    {
+        $id_kategorije = (int) $args['id'];
+        $modelDokument = new Dokument();
+         $dokumenti = $modelDokument->paginate($this->page(), 'page', 
+            "SELECT * FROM dokumenti
+            WHERE kategorija_id = {$id_kategorije}
+            ORDER BY created_at DESC;");
+        $sql = "SELECT
+                COUNT(id) as broj, MONTHNAME(t.created_at) as mesec, YEAR(t.created_at) as godina, MONTH (t.created_at) as mm
+                FROM dokumenti t
+                GROUP BY EXTRACT(YEAR_MONTH FROM t.created_at) DESC;";
+        $arhiva =$modelDokument->fetch($sql);
+
+        $model_kategorije = new DokumentKategorija();
+        $kategorije = $model_kategorije->all();
+        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva'));
     }
 
     public function getDokumentDodavanje($request, $response)
