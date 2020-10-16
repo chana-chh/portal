@@ -13,7 +13,7 @@ class DokumentVrsta extends Model
         return $this->hasMany('App\Models\Dokument', 'vrsta_id');
     }
 
-    public function broj_vrste()
+    public function broj()
     {
         $sql = "SELECT COUNT(*) AS broj_vrste FROM dokumenti WHERE vrsta_id = {$this->id}";
         return (int) $this->fetch($sql)[0]->broj_vrste;

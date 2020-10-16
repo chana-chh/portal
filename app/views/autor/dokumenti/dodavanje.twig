@@ -28,25 +28,38 @@
                             <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
                         </div>
                         <div class="col form-group">
+                            <label for="kategorija_id" class="mr-3">Категорија документа</label>
+                            <select name="kategorija_id" id="kategorija_id" class="custom-select {{ errors.kategorija_id[0] ? ' is-invalid' : '' }}" required>
+                                <option value=""> </option>
+                                {% for kat in kategorije %}
+                                <option value="{{ kat.id }}" {{old.kategorija_id == kat ? ' selected' : ''}}>{{ kat.naziv }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="valid-feedback">Исправно попуњено</div>
+                            <div class="invalid-feedback">{{ errors.kategorija_id[0] ? : 'Обавезно поље.' }}</div>
+                        </div>
+                        <div class="col form-group">
+                            <label for="vrsta_id" class="mr-3">Врста документа</label>
+                            <select name="vrsta_id" id="vrsta_id" class="custom-select {{ errors.vrsta_id[0] ? ' is-invalid' : '' }}" required>
+                                <option value=""> </option>
+                                {% for vrs in vrste %}
+                                <option value="{{ vrs.id }}" {{old.vrsta_id == vrs ? ' selected' : ''}}>{{ vrs.naziv }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="valid-feedback">Исправно попуњено</div>
+                            <div class="invalid-feedback">{{ errors.vrsta_id[0] ? : 'Обавезно поље.' }}</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col form-group">
                             <label for="opis">Опис / кратак садржај документа</label>
                             <input type="text" value="{{ old.opis ? : '' }}" class="form-control{{ errors.opis[0] ? ' is-invalid' : '' }}" name="opis" id="opis" required>
                             <div class="valid-feedback">Одговарајући податак</div>
                             <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
                         </div>
-                        <div class="col form-group">
-                            <label for="vrsta" class="mr-3">Врста документа</label>
-                            <select name="vrsta" id="vrsta" class="custom-select {{ errors.vrsta[0] ? ' is-invalid' : '' }}" required>
-                                <option value=""> </option>
-                                {% for vrs in vrste %}
-                                <option value="{{ vrs }}" {{old.vrsta == vrs ? ' selected' : ''}}>{{ vrs }}</option>
-                                {% endfor %}
-                            </select>
-                            <div class="valid-feedback">Исправно попуњено</div>
-                            <div class="invalid-feedback">{{ errors.vrsta[0] ? : 'Обавезно поље.' }}</div>
-                        </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-lg-6">
+                        <div class="form-group col-lg-8">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input{{ errors.dokument[0] ? ' is-invalid' : '' }}" id="dokument" name="dokument" required>
                                 <label id="file-label" class="custom-file-label" for="dokument" data-browse="Pronađi">Изабери документ</label>
@@ -54,7 +67,7 @@
                                 <div class="invalid-feedback">{{ errors.dokument[0] ? : 'Морате одабрати документ' }}</div>
                             </div>
                         </div>
-                        <div class="col-lg-6 form-group text-right mb-0">
+                        <div class="col-lg-4 form-group text-right mb-0">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-file-upload"></i> Отпреми
                             </button>

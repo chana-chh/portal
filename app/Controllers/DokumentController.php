@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Dokument;
 use App\Models\DokumentKategorija;
+use App\Models\DokumentVrsta;
 use App\Classes\Logger;
 
 class DokumentController extends Controller
@@ -14,6 +15,9 @@ class DokumentController extends Controller
         $where = " WHERE ";
         $params = [];
 
+        $model_kategorije = new DokumentKategorija();
+        $kategorije = $model_kategorije->all();
+
         if (!empty($args)) {
 
         if (isset($args['id_kat'])) {
@@ -22,6 +26,14 @@ class DokumentController extends Controller
             }
             $where .= "kategorija_id = :kategorija_id";
             $params[':kategorija_id'] = (int) $args['id_kat'];
+
+            $modelKat = new DokumentKategorija();
+            $kategorija = $modelKat->find((int) $args['id_kat']);
+
+            $modelVrs = new DokumentVrsta();
+            $kategorije = $modelVrs->all();
+        }else{
+            $kategorija = null;
         }
 
         if (isset($args['id_vrs'])) {
@@ -30,7 +42,13 @@ class DokumentController extends Controller
             }
             $where .= "vrsta_id = :vrsta_id";
             $params[':vrsta_id'] = (int) $args['id_vrs'];
+
+            $modelVrs = new DokumentVrsta();
+            $vrsta = $modelVrs->find((int) $args['id_vrs']);
+        }else{
+            $vrsta = null;
         }
+
         }
         $where = $where === " WHERE " ? "" : $where;
         
@@ -43,16 +61,13 @@ class DokumentController extends Controller
 
         $dokumenti = $model->paginate($page, 'page', $sql, $params);
 
-        $model_kategorije = new DokumentKategorija();
-        $kategorije = $model_kategorije->all();
-
         $sql = "SELECT
                 COUNT(id) as broj, MONTHNAME(t.created_at) as mesec, YEAR(t.created_at) as godina, MONTH (t.created_at) as mm
                 FROM dokumenti t
                 GROUP BY EXTRACT(YEAR_MONTH FROM t.created_at) DESC;";
         $arhiva =$model->fetch($sql);
 
-        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva'));
+        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva', 'kategorija', 'vrsta'));
     }
 
     public function getDokumentiKategorija($request, $response, $args)
@@ -76,10 +91,13 @@ class DokumentController extends Controller
 
     public function getDokumentDodavanje($request, $response)
     {
-        $model = new Dokument();
-        $vrste = $model->enumOrSetList('vrsta');
+        $modelK = new DokumentKategorija();
+        $kategorije = $modelK->all();
 
-        $this->render($response, 'autor/dokumenti/dodavanje.twig', compact('vrste'));
+        $modelV = new DokumentVrsta();
+        $vrste = $modelV->all();
+
+        $this->render($response, 'autor/dokumenti/dodavanje.twig', compact('vrste', 'kategorije'));
     }
 
     public function postDokumentDodavanje($request, $response)
@@ -103,7 +121,16 @@ class DokumentController extends Controller
             'opis' => [
                 'required' => true,
             ],
+            'vrsta_id' => [
+                'required' => true,
+            ],
+            'kategorija_id' => [
+                'required' => true,
+            ],
         ];
+        $modelVrs = new DokumentVrsta();
+        $vrstam = $modelVrs->find((int) $data['vrsta_id']);
+        $vrsta = $vrstam->naziv;
 
         $this->validator->validate($data, $validation_rules);
 
@@ -114,7 +141,7 @@ class DokumentController extends Controller
             $unique = bin2hex(random_bytes(8));
             $extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
             $naslov = str_replace(" ", "_", $data['naslov']);
-            $name = "{$data['vrsta']}_{$naslov}_{$unique}";
+            $name = "{$vrsta}_{$naslov}_{$unique}";
             $filename = "{$name}.{$extension}";
             $veza = URL . "doc/{$filename}";
             $data['link'] = $veza;

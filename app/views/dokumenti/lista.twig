@@ -4,8 +4,11 @@
     <div class="col-lg-10">
         <h1 class="page-header">
             <img src="{{ base_url() }}/img/dok.png" alt="Документа" style="max-width: 64px;
-  width:100%;"> &emsp;Документа
+  width:100%;"> &emsp;Преглед докумената у категорији <small>{{kategorija ? '('~ kategorija.naziv ~')' : ''}}</small>
         </h1>
+        {% if vrsta %}
+        <h4>&emsp;&emsp;Врста документа: {{vrsta.naziv}}</h4>
+        {% endif %}
     </div>
     <div class="col-lg-2 text-right">
         <div class="btn-group mt-4">
@@ -87,13 +90,17 @@
 </div>
 <div class="row">
     <div class="col col-lg-12 pl-5">
-        <h4 class="font-italic text-secondary">Категорије</h4>
+        <h4 class="font-italic text-secondary">{{ kategorija ? "Врсте докумената" : "Категорије"}}</h4>
         <br>
         <div class="list-group list-group-flush">
             {% for kat in kategorije %}
             <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-                <a href="{{ path_for('dokumenti.lista', { 'id_kat': kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
-                <span class="badge badge-pill badge-dark">{{ kat.broj_kategorije() }}</span>
+                {% if kategorija %}
+                    <a href="{{ path_for('dokumenti.lista', { 'id_kat': kategorija.id, 'id_vrs' : kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
+                {% else %}
+                    <a href="{{ path_for('dokumenti.lista', { 'id_kat': kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
+                {% endif %}
+                <span class="badge badge-pill badge-dark">{{ kat.broj() }}</span>
             </li>
             {% endfor %}
         </div>

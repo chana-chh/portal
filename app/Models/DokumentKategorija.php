@@ -13,7 +13,7 @@ class DokumentKategorija extends Model
         return $this->hasMany('App\Models\Dokument', 'kategorija_id');
     }
 
-    public function broj_kategorije()
+    public function broj()
     {
         $sql = "SELECT COUNT(*) AS broj_kategorije FROM dokumenti WHERE kategorija_id = {$this->id}";
         return (int) $this->fetch($sql)[0]->broj_kategorije;
