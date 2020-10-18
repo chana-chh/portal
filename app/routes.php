@@ -40,12 +40,24 @@ $app->group('', function () {
     $this->post('/admin//komentari/pretraga', '\App\Controllers\KomentariController:postKomentariPretraga');
     $this->get('/admin/pregled/{id}', '\App\Controllers\KomentariController:getPregled')->setName('komentari.pregled');
     $this->get('/admin/objava/{id}', '\App\Controllers\KomentariController:getObjava')->setName('komentari.objava');
-    // Kategorije
+    // Clanci Kategorije
     $this->get('/admin/kategorije', '\App\Controllers\KategorijaController:getKategorije')->setName('kategorija');
     $this->post('/admin/kategorije/dodavanje', '\App\Controllers\KategorijaController:postKategorijeDodavanje')->setName('kategorija.dodavanje');
     $this->post('/admin/kategorije/brisanje', '\App\Controllers\KategorijaController:postKategorijeBrisanje')->setName('kategorija.brisanje');
     $this->post('/admin/kategorije/detalj', '\App\Controllers\KategorijaController:postKategorijeDetalj')->setName('kategorija.detalj');
     $this->post('/admin/kategorije/izmena', '\App\Controllers\KategorijaController:postKategorijeIzmena')->setName('kategorija.izmena');
+    // Dokumenti vrste
+    $this->get('/admin/vrste', '\App\Controllers\DokumentVrsteController:getVrste')->setName('vrste');
+    $this->post('/admin/vrste/dodavanje', '\App\Controllers\DokumentVrsteController:postVrsteDodavanje')->setName('vrste.dodavanje');
+    $this->post('/admin/vrste/brisanje', '\App\Controllers\DokumentVrsteController:postVrsteBrisanje')->setName('vrste.brisanje');
+    $this->post('/admin/vrste/detalj', '\App\Controllers\DokumentVrsteController:postVrsteDetalj')->setName('vrste.detalj');
+    $this->post('/admin/vrste/izmena', '\App\Controllers\DokumentVrsteController:postVrsteIzmena')->setName('vrste.izmena');
+    // Dokumenti Kategorije
+    $this->get('/admin/dokukategorije', '\App\Controllers\DokumentKatController:getKategorije')->setName('dokument.kategorija');
+    $this->post('/admin/dokukategorije/dodavanje', '\App\Controllers\DokumentKatController:postKategorijeDodavanje')->setName('dokument.kategorija.dodavanje');
+    $this->post('/admin/dokukategorije/brisanje', '\App\Controllers\DokumentKatController:postKategorijeBrisanje')->setName('dokument.kategorija.brisanje');
+    $this->post('/admin/dokukategorije/detalj', '\App\Controllers\DokumentKatController:postKategorijeDetalj')->setName('dokument.kategorija.detalj');
+    $this->post('/admin/dokukategorije/izmena', '\App\Controllers\DokumentKatController:postKategorijeIzmena')->setName('dokument.kategorija.izmena');
     // Korisnici
     $this->get('/admin/korisnik-lista', '\App\Controllers\KorisnikController:getKorisnikLista')->setName('admin.korisnik.lista');
     $this->post('/admin/korisnik-brisanje', '\App\Controllers\KorisnikController:postKorisnikBrisanje')->setName('admin.korisnik.brisanje');

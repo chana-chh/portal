@@ -1,0 +1,211 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row mt-2">
+  <div class="col">
+    <h2>
+      <i class="fas fa-sitemap text-secondary"></i> Преглед категорија докумената
+    </h2>
+  </div>
+</div>
+<hr />
+{% endblock naslov %}
+{% block sadrzaj %}
+<table class="table table-striped table-sm">
+  <thead class="thead-dark">
+    <tr>
+      <th class="w-10" scope="col">ID</th>
+      <th class="w-70" scope="col">Назив</th>
+      <th class="w-20" scope="col" style="text-align:right;"><i class="fas fa-cogs text-warning"></i></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for kat in kategorije %}
+    <tr>
+      <th scope="row" class="text-danger">{{ kat.id }}</th>
+      <td>{{ kat.naziv }}</td>
+      <td style="text-align:right;">
+        <div class="btn-group btn-group-sm">
+          <button class="btn btn-warning btn-sm otvori-izmenu" data-toggle="modal" data-target="#izmenaModal"
+            data-id="{{ kat.id }}" title="Измена података одабране категорије">
+            <i class="fas fa-edit"></i></button>
+          <button class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
+            data-id="{{ kat.id }}" title="Брисање одабране категорије">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{# Modal za brisanje #}
+<div id="brisanjeModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Упозорење!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4>Да ли желите трајно да обришете категорију?</h4>
+        <p class="text-danger">* Ова акција је неповратна!</p>
+        <form id="brisanje-forma" action="{{ path_for('dokument.kategorija.brisanje') }}" method="POST">
+          {{ csrf|raw }}
+          <input type="hidden" id="idBrisanje" name="idBrisanje">
+          <hr style="margin-top: 30px;">
+
+          <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+            <div class="form-group">
+              <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i>&emsp;Обриши
+              </button>
+              <a class="btn btn-secondary" data-dismiss="modal">
+                <i class="fas fa-ban"></i>&emsp;Откажи
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{# Kraj modala za brisanje #}
+
+{# Modal za izmenu #}
+<div id="izmenaModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Измени ставку</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="izmena-forma" action="{{ path_for('dokument.kategorija.izmena') }}" method="POST" class="needs-validation"
+          novalidate>
+          {{ csrf|raw }}
+          <input type="hidden" id="idIzmena" name="idIzmena">
+          <div class="form-group">
+            <label for="nazivModal">Назив</label>
+            <input type="text" class="form-control{{ errors.nazivModal[0] ? ' is-invalid' : '' }}" name="nazivModal"
+              id="nazivModal" aria-describedby="Назив категорије" required minlength="5">
+            <div class="valid-feedback">Одговарајући податак</div>
+            <div class="invalid-feedback">
+              {{ errors.nazivModal[0] ? : 'Обавезно поље са најмање 5 карактера' }}
+            </div>
+          </div>
+          <hr style="margin-top: 30px;">
+          <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+            <div class="form-group">
+              <button id="btn-brisanje-izmeni" type="submit" class="btn btn-warning">
+                <i class="fas fa-save"></i>&emsp;Сними
+              </button>
+              <a class="btn btn-secondary" data-dismiss="modal">
+                <i class="fas fa-ban"></i>&emsp;Откажи
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{# Kraj modala za izmenu #}
+
+{% endblock sadrzaj %}
+{% block traka %}
+<div class="card border-dark mb-3">
+  <div class="card-header">Додавање нове категорије</div>
+  <div class="card-body text-dark mobilni">
+    <form action="{{ path_for('dokument.kategorija.dodavanje') }}" method="POST" class="needs-validation" novalidate>
+      {{ csrf|raw }}
+      <div class="form-group">
+        <label for="naziv">Назив</label>
+        <input type="text" class="form-control{{ errors.naziv[0] ? ' is-invalid' : '' }}" value="{{ old.naziv ? : '' }}"
+          name="naziv" id="naziv" aria-describedby="Назив категорије" required minlength="5">
+        <div class="valid-feedback">Одговарајући податак</div>
+        <div class="invalid-feedback">
+          {{ errors.naziv[0] ? : 'Обавезно поље са најмање 5 карактера, а највише 255 карактера' }}
+        </div>
+      </div>
+      <div class="row justify-content-end text-right">
+        <div class="col">
+          <button type="submit" class="btn btn-primary text-right"><i class="fas fa-plus-square"
+              title="Додавање нове категорије"></i> &emsp;Додај</button>
+          <a href="{{ path_for('kategorija') }}" class="btn btn-secondary"><i class="fas fa-ban"></i>
+            &emsp;Откажи</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock traka %}
+{% block skripta %}
+<script>
+  $(document).ready(function () {
+
+    (function () {
+      "use strict";
+      window.addEventListener(
+        "load",
+        function () {
+          var forms = document.getElementsByClassName("needs-validation");
+          var validation = Array.prototype.filter.call(forms, function (form) {
+            form.addEventListener(
+              "submit",
+              function (event) {
+                if (form.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add("was-validated");
+              },
+              false
+            );
+          });
+        },
+        false
+      );
+    })();
+
+
+    $(document).on('click', '.otvori-brisanje', function () {
+      var id = $(this).data("id");
+      $('#idBrisanje').val(id);
+    });
+
+
+    $(document).on('click', '.otvori-izmenu', function () {
+
+      var csrfName = $(".csrf_name").val();
+      var csrfValue = $(".csrf_value").val();
+      var id = $(this).data("id");
+
+      var csrfAndData = {
+        "csrf_name": csrfName,
+        "csrf_value": csrfValue,
+        "id": id
+      };
+
+      var ruta = ["{{ path_for('dokument.kategorija.detalj') }}"];
+
+      $.ajax({
+        url: ruta,
+        type: "POST",
+        data: csrfAndData,
+        success: function (data) {
+          $(".csrf_name").val(data.cname);
+          $(".csrf_value").val(data.cvalue);
+          $("#idIzmena").val(data.kategorija.id);
+          $("#nazivModal").val(data.kategorija.naziv);
+        }
+      });
+
+    });
+
+  });
+</script>
+{% endblock skripta %}
