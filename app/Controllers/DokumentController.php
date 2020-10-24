@@ -70,6 +70,92 @@ class DokumentController extends Controller
         $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva', 'kategorija', 'vrsta'));
     }
 
+    public function postDokumentiPretraga($request, $response)
+    {
+        $_SESSION['DATA_DOKUMENTI_PRETRAGA'] = $request->getParams();
+        return $response->withRedirect($this->router->pathFor('dokumenti.pretraga'));
+    }
+
+    public function getDokumentiPretraga($request, $response)
+    {
+        $data = $_SESSION['DATA_DOKUMENTI_PRETRAGA'];
+        array_shift($data);
+        array_shift($data);
+
+        if (empty($data['upit'])) {
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
+        }
+
+        $data['upit'] = str_replace('%', '', $data['upit']);
+
+        $upit = '%' . filter_var($data['upit'], FILTER_SANITIZE_STRING) . '%';
+
+        $query = [];
+        parse_str($request->getUri()->getQuery(), $query);
+        $page = isset($query['page']) ? (int)$query['page'] : 1;
+
+        $where = " WHERE ";
+        $params = [];
+
+        $model_kategorije = new DokumentKategorija();
+        $kategorije = $model_kategorije->all();
+
+        if (!empty($data['upit'])) {
+            $where .= "naslov LIKE :naslov";
+            $params[':naslov'] = $upit;
+        }
+
+        if (!empty($data['upit'])) {
+            if ($where !== " WHERE ") {
+                $where .= " OR ";
+            }
+            $where .= "opis LIKE :opis";
+            $params[':opis'] = $upit;
+        }
+
+        if (!empty($data['id_kat'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "kategorija_id = :id_kat";
+            $params[':id_kat'] = $data['id_kat'];
+
+            $modelKat = new DokumentKategorija();
+            $kategorija = $modelKat->find((int) $data['id_kat']);
+
+            $modelVrs = new DokumentVrsta();
+            $kategorije = $modelVrs->all();
+        }else{
+            $kategorija = null;
+        }
+
+        if (!empty($data['id_vrs'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "vrsta_id = :id_vrs";
+            $params[':id_vrs'] = $data['id_vrs'];
+            $modelVrs = new DokumentVrsta();
+            $vrsta = $modelVrs->find((int) $data['id_vrs']);
+        }else{
+            $vrsta = null;
+        }
+
+        $where = $where === " WHERE " ? "" : $where;
+        $model = new Dokument();
+        $sql = "SELECT * FROM {$model->getTable()}{$where} ORDER BY created_at DESC;";
+        $dokumenti = $model->paginate($page, 'page', $sql, $params);
+
+
+        $sql = "SELECT
+                COUNT(id) as broj, MONTHNAME(t.created_at) as mesec, YEAR(t.created_at) as godina, MONTH (t.created_at) as mm
+                FROM dokumenti t
+                GROUP BY EXTRACT(YEAR_MONTH FROM t.created_at) DESC;";
+        $arhiva =$model->fetch($sql);
+
+        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva', 'data', 'kategorija', 'vrsta'));
+    }
+
     public function getDokumentiKategorija($request, $response, $args)
     {
         $id_kategorije = (int) $args['id'];

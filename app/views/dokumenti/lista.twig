@@ -7,18 +7,18 @@
   width:100%;"> &emsp;Преглед докумената
         </h1>
         {% if kategorija %}
-        <h4 class="text-secondary">Категорија документа: {{kategorija.naziv}}</h4>
+        <h4 class="text-secondary"><i class="fas fa-folder-open text-warning"></i> Категорија документа: {{kategorija.naziv}}</h4>
         {% endif %}
         {% if vrsta %}
-        <h5 class="text-secondary">Врста документа: {{vrsta.naziv}}</h5>
+        <h5 class="text-secondary"><i class="fas fa-folder-open text-warning"></i> Врста документа: {{vrsta.naziv}}</h5>
         {% endif %}
     </div>
     <div class="col-lg-2 text-right">
         <div class="btn-group mt-4">
-            <a class="btn btn-outline-secondary" onclick="window.history.back();" title="Повратак на претходну страну">
+            <a class="btn btn-outline-secondary text-warning" onclick="window.history.back();" title="Повратак на претходну страну">
                 <i class="fa fa-arrow-left"></i>
             </a>
-            <a class="btn btn-outline-secondary" href="{{ path_for('pocetna') }}" title="Повратак на почетну страну">
+            <a class="btn btn-outline-secondary text-warning" href="{{ path_for('pocetna') }}" title="Повратак на почетну страну">
                 <i class="fa fa-home"></i>
             </a>
         </div>
@@ -76,8 +76,10 @@
 {% block traka %}
 <div class="row mt-5 mb-4">
     <div class="col col-lg-12 pl-5">
-        <form class="form" action="{{ path_for('clanci.pretraga')}}" method="POST">
+        <form class="form" action="{{ path_for('dokumenti.pretraga')}}" method="POST">
             {{ csrf|raw }}
+            <input type="hidden" id="id_kat" name="id_kat" value="{{ kategorija.id }}" />
+            <input type="hidden" id="id_vrs" name="id_vrs" value="{{ vrsta.id }}" />
             <div class="row">
                 <div class="col col-lg-10">
                     <input type="text" name="upit" id="upit" class="form-control" autocomplete="off" placeholder="...појам за претрагу" required>
@@ -100,14 +102,26 @@
             {% for kat in kategorije %}
             <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
                 {% if kategorija %}
-                    <a href="{{ path_for('dokumenti.lista', { 'id_kat': kategorija.id, 'id_vrs' : kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
+                    <a href="{{ path_for('dokumenti.lista', { 'id_kat': kategorija.id, 'id_vrs' : kat.id }) }}" class="text-reset">
+                        <i class="fas fa-folder text-warning"></i> {{ kat.naziv }}</a>
                 {% else %}
-                    <a href="{{ path_for('dokumenti.lista', { 'id_kat': kat.id }) }}" class="text-reset">{{ kat.naziv }}</a>
+                    <a href="{{ path_for('dokumenti.lista', { 'id_kat': kat.id }) }}" class="text-reset">
+                        <i class="fas fa-folder text-warning"></i> {{ kat.naziv }}</a>
                 {% endif %}
                 <span class="badge badge-pill badge-dark">{{ kategorija ? kat.broj(kategorija.id): kat.broj() }}
             </li>
             {% endfor %}
         </div>
+    </div>
+</div>
+{% endif %}
+{% if vrsta and kategorija %}
+<div class="row mt-5 mb-5">
+    <div class="col col-lg-12 text-center">
+    <h4>Повратак на категорије </h4>
+        <a class="btn btn-outline-secondary" href="{{ path_for('dokumenti.lista') }}" title="Повратак на категорије">
+            <i class="fa fa-list text-warning"></i>
+        </a>
     </div>
 </div>
 {% endif %}

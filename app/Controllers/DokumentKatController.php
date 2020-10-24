@@ -24,7 +24,7 @@ class DokumentKatController extends Controller
                 'required' => true,
                 'minlen' => 5,
                 'maxlen' => 255,
-                'unique' => 'kategorije.naziv'
+                'unique' => 'dokumenti_kategorije.naziv'
             ],
             'korisnik_id' => [
                 'required' => true,
@@ -95,7 +95,7 @@ class DokumentKatController extends Controller
                 'required' => true,
                 'minlen' => 5,
                 'maxlen' => 50,
-                'unique' => 'kategorije.naziv#id:' . $id,
+                'unique' => 'dokumenti_kategorije.naziv#id:' . $id,
             ]
         ];
 
