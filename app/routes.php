@@ -55,10 +55,10 @@ $app->group('', function () {
     $this->post('/admin/vrste/detalj', '\App\Controllers\DokumentVrsteController:postVrsteDetalj')->setName('vrste.detalj');
     $this->post('/admin/vrste/izmena', '\App\Controllers\DokumentVrsteController:postVrsteIzmena')->setName('vrste.izmena');
     // Dokumenti Kategorije
-    $this->get('/admin/dokukategorije', '\App\Controllers\DokumentKatController:getKategorije')->setName('dokument.kategorija');
+    $this->get('/admin/dokukategorije[/{poslednji}]', '\App\Controllers\DokumentKatController:getKategorije')->setName('dokument.kategorija');
     $this->post('/admin/dokukategorije/dodavanje', '\App\Controllers\DokumentKatController:postKategorijeDodavanje')->setName('dokument.kategorija.dodavanje');
     $this->post('/admin/dokukategorije/brisanje', '\App\Controllers\DokumentKatController:postKategorijeBrisanje')->setName('dokument.kategorija.brisanje');
-    $this->post('/admin/dokukategorije/detalj', '\App\Controllers\DokumentKatController:postKategorijeDetalj')->setName('dokument.kategorija.detalj');
+    $this->get('/admin/dokukategorije/izmena/{id}', '\App\Controllers\DokumentKatController:getKategorijeIzmena')->setName('dokument.kategorija.detalj');
     $this->post('/admin/dokukategorije/izmena', '\App\Controllers\DokumentKatController:postKategorijeIzmena')->setName('dokument.kategorija.izmena');
     // Korisnici
     $this->get('/admin/korisnik-lista', '\App\Controllers\KorisnikController:getKorisnikLista')->setName('admin.korisnik.lista');

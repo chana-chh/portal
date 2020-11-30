@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Classes\Model;
+use App\Classes\ModelNestedSet;
 
-class DokumentKategorija extends Model
+class DokumentKategorija extends ModelNestedSet
 {
     protected $table = 'dokumenti_kategorije';
 

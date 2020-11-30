@@ -1,0 +1,30 @@
+{% for d in data %}
+<li class="mt-2 mb-1">
+	{% if d.children %}
+	<a href="" data-toggle="collapse" data-target="#id-{{ d.id }}-collapse" style="text-decoration: none;">
+		<img src="{{ base_url() }}/img/021-folder-19.png" alt="folder" height="24px">
+	</a> {{ d.id }} {{ d.naziv }} &nbsp;&nbsp;
+	<small>
+		<button class="btn btn-outline-success btn-sm otvori-dodavanje" data-toggle="modal" data-target="#dodajModal"
+            data-parent="{{ d.id }}" title="Додавање подкатегорије">
+            <i class="fas fa-plus"></i></button>&nbsp;
+		<a href="{{ path_for('dokument.kategorija.detalj', { id: d.id }) }}" class="text-warning"><i class="fas fa-pencil-alt" title="Измени"></i></a>&nbsp;
+		<a href="" class="text-danger"><i class="fas fa-trash" title="Обриши"></i></a>
+	</small>
+	<ul class="collapse list-unstyled ml-5" id="id-{{ d.id }}-collapse">
+		{% include "templates/inc/recursion.twig" with {'data': d.children} %}
+	</ul>
+	{% else %}
+	<a href="" data-toggle="collapse" data-target="#id-{{ d.id }}-collapse" style="text-decoration: none;">
+		<img src="{{ base_url() }}/img/025-folder-15.png" alt="folder" height="24px">
+	</a> {{ d.id }} {{ d.naziv }} &nbsp;&nbsp;
+	<small>
+		<button class="btn btn-outline-success btn-sm otvori-dodavanje" data-toggle="modal" data-target="#dodajModal"
+            data-parent="{{ d.id }}" title="Додавање подкатегорије">
+            <i class="fas fa-plus"></i></button>&nbsp;
+		<a href="{{ path_for('dokument.kategorija.detalj', { id: d.id }) }}" class="text-warning"><i class="fas fa-pencil-alt" title="Измени"></i></a>&nbsp;
+		<a href="" class="text-danger"><i class="fas fa-trash" title="Обриши"></i></a>
+	</small>
+	{% endif %}
+</li>
+{% endfor %}

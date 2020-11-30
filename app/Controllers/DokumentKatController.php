@@ -7,17 +7,37 @@ use App\Classes\Logger;
 
 class DokumentKatController extends Controller
 {
-    public function getKategorije($request, $response)
+    public function getKategorije($request, $response, $args)
     {
         $model = new DokumentKategorija();
-        $kategorije = $model->all();
+        $data = $model->getListNS();
 
-        $this->render($response, 'dokkategorije/lista.twig', compact('kategorije'));
+        if (!empty($args)) {
+
+            if (isset($args['poslednji'])) {
+                $id_poslednjeg = (int) $args['poslednji'];
+                $roditelji = $model->getWithParentsNS($id_poslednjeg);
+                $roditelji_id = array_column($roditelji, 'id');
+                array_pop($roditelji_id);
+                json_encode($roditelji_id);
+            }else{
+                $roditelji_id = null;
+            }
+        }
+        $this->render($response, 'dokkategorije/lista.twig', compact('data', 'roditelji_id'));
     }
 
     public function postKategorijeDodavanje($request, $response)
     {
         $data = $this->data();
+
+        if ($data['modal'] == 1) {
+            $data = [
+            "naziv" => $data['dnModal'],
+            "parent_id" => $data['parentModal'],
+            ];
+        }
+
 
         $validation_rules = [
             'naziv' => [
@@ -32,19 +52,20 @@ class DokumentKatController extends Controller
         ];
 
         $data['korisnik_id'] = $this->auth->user()->id;
+        unset($data['modal']);
 
         $this->validator->validate($data, $validation_rules);
 
         if ($this->validator->hasErrors()) {
             $this->flash->addMessage('danger', 'Дошло је до грешке приликом додавања категорије ДОКУМЕНТА.');
-            return $response->withRedirect($this->router->pathFor('kategorija'));
+            return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
         } else {
             $this->flash->addMessage('success', 'Нова категорија ДОКУМЕНТА је успешно додата.');
             $model = new DokumentKategorija();
-            $model->insert($data);
-            $kategorija = $model->find($model->lastId());
+            $poslednji  = $model->insertNS($data['parent_id'], $data['naziv'], $data['korisnik_id']);
+            $kategorija = $model->find($poslednji);
             $this->log($this::DODAVANJE, $kategorija, 'naziv');
-            return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+            return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $kategorija->id]));
         }
     }
 
@@ -65,18 +86,28 @@ class DokumentKatController extends Controller
         }
     }
 
-    public function postKategorijeDetalj($request, $response)
+    public function getKategorijeIzmena($request, $response, $args)
     {
-        $data = $request->getParams();
-        $cName = $this->csrf->getTokenName();
-        $cValue = $this->csrf->getTokenValue();
-        $id = $data['id'];
+        $id = (int) $args['id'];
         $model = new DokumentKategorija();
         $kategorija = $model->find($id);
 
-        $ar = ["cname" => $cName, "cvalue"=>$cValue, "kategorija"=>$kategorija];
+        $kategorije = $model->getFlatListNS();
 
-        return $response->withJson($ar);
+        $sql = "SELECT MAX(level) AS maks FROM {$model->getTable()};";
+        $nivo_query = $model->fetch($sql);
+        $nivo = $nivo_query[0]->maks;
+
+        $sql = "SELECT MAX(position) AS maks FROM {$model->getTable()};";
+        $pozicija_query = $model->fetch($sql);
+        $pozicija = $pozicija_query[0]->maks;
+
+        $roditelji = $model->getWithParentsNS($id);
+        $roditelji_nazivi = array_column($roditelji, 'naziv');
+        array_pop($roditelji_nazivi);
+        $putanja = implode("\\", $roditelji_nazivi);
+
+        $this->render($response, 'dokkategorije/izmena.twig', compact('kategorija', 'putanja', 'kategorije', 'nivo', 'pozicija'));
     }
 
     public function postKategorijeIzmena($request, $response)
@@ -86,10 +117,24 @@ class DokumentKatController extends Controller
         $id = $data['idIzmena'];
         unset($data['idIzmena']);
 
-        $datam = [
-            "naziv" => $data['nazivModal'],
-        ];
+        $model = new DokumentKategorija();
+        $stari = $model->find($id);
 
+        if ($stari->parent_id != $data['parent_id']) {
+            $sql = "SELECT MAX(position) AS maks FROM {$model->getTable()} WHERE parent_id = {$data['parent_id']};";
+            $pozicija_query = $model->fetch($sql);
+            $pozicija_maks = $pozicija_query[0]->maks;
+            dd($pozicija_maks);
+                if ($data['position']>$pozicija_maks) {
+                    $data['position'] = $pozicija_maks+1;
+                }else{
+                    $sqla = "UPDATE {$model->getTable()} SET position = position + 1 WHERE parent_id = {$data['parent_id']} AND position >= {$data['position']}";
+                    $preraspodela_pozicija = $model->fetch($sqla);
+                }
+        }
+        
+
+        dd($data);
         $validation_rules = [
             'naziv' => [
                 'required' => true,
