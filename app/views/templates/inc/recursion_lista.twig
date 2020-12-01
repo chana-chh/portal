@@ -1,0 +1,34 @@
+{% for d in kategorije %}
+<li class="mt-2 mb-1">
+    {% if d.children %}
+    <a href="" data-toggle="collapse" data-target="#id-{{ d.id }}-collapse" style="text-decoration: none;">
+        <img src="{{ base_url() }}/img/021-folder-19.png" alt="folder" height="24px">
+    </a>&emsp;
+	    {% if kategorija %}
+	    <a href="{{ path_for('dokumenti.lista', { 'id_kat': kategorija.id, 'id_vrs' : d.id }) }}" class="text-reset">
+	        {{ d.naziv }}</a>
+	    {% else %}
+	    <a href="{{ path_for('dokumenti.lista', { 'id_kat': d.id }) }}" class="text-reset">
+	        {{ d.naziv }}</a>
+	    {% endif %}
+	    &emsp;<span class="badge badge-pill badge-warning">{{ kategorija ? d.broj(kategorija.id): radni.brojdok(d.id) }}</span>
+	    &nbsp;&nbsp;
+    <ul class="collapse list-unstyled ml-5" id="id-{{ d.id }}-collapse">
+        {% include "templates/inc/recursion_lista.twig" with {'kategorije': d.children, 'kategorija':kategorija, 'vrsta':vrsta, 'radni':radni} %}
+    </ul>
+    {% else %}
+    <a href="" data-toggle="collapse" data-target="#id-{{ d.id }}-collapse" style="text-decoration: none;">
+        <img src="{{ base_url() }}/img/025-folder-15.png" alt="folder" height="24px">
+    </a>&emsp;
+    {% if kategorija %}
+    <a href="{{ path_for('dokumenti.lista', { 'id_kat': kategorija.id, 'id_vrs' : d.id }) }}" class="text-reset">
+        {{ d.naziv }}</a>
+    {% else %}
+    <a href="{{ path_for('dokumenti.lista', { 'id_kat': d.id }) }}" class="text-reset">
+        {{ d.naziv }}</a>
+    {% endif %}
+    &emsp;<span class="badge badge-pill badge-warning">{{ kategorija ? d.broj(kategorija.id): radni.brojdok(d.id) }}</span>
+    &nbsp;&nbsp;
+    {% endif %}
+</li>
+{% endfor %}

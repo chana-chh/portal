@@ -98,7 +98,10 @@
     <div class="col col-lg-12 pl-5">
         <h4 class="font-italic text-secondary">{{ kategorija ? "Врсте докумената" : "Категорије"}}</h4>
         <br>
-        <div class="list-group list-group-flush">
+        <ul class="list-unstyled">
+            {% include "templates/inc/recursion_lista.twig" with {'kategorije': kategorije, 'kategorija':kategorija, 'vrsta':vrsta, 'radni':radni} %}
+        </ul>
+{#         <div class="list-group list-group-flush">
             {% for kat in kategorije %}
             <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
                 {% if kategorija %}
@@ -111,7 +114,7 @@
                 <span class="badge badge-pill badge-dark">{{ kategorija ? kat.broj(kategorija.id): kat.broj() }}
             </li>
             {% endfor %}
-        </div>
+        </div> #}
     </div>
 </div>
 {% endif %}

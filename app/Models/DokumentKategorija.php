@@ -13,9 +13,9 @@ class DokumentKategorija extends ModelNestedSet
         return $this->hasMany('App\Models\Dokument', 'kategorija_id');
     }
 
-    public function broj()
+    public function brojdok($id)
     {
-        $sql = "SELECT COUNT(*) AS broj_kategorije FROM dokumenti WHERE kategorija_id = {$this->id}";
+        $sql = "SELECT COUNT(*) AS broj_kategorije FROM dokumenti WHERE kategorija_id = $id";
         return (int) $this->fetch($sql)[0]->broj_kategorije;
     }
 }

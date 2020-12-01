@@ -112,10 +112,9 @@ class ModelNestedSet extends Model
         }
 
         $this->update($data, $id);
-        $result = $this->lastId();
         $this->rebuild();
 
-        return $result;
+        return $isNewParentOK;
     }
 
     // KORISTE SE METODE DOVDE

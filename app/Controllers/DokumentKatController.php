@@ -115,26 +115,13 @@ class DokumentKatController extends Controller
 
         $data = $this->data();
         $id = $data['idIzmena'];
+        $roditelj = $data['parent_id'];
+        $pozicija = $data['position'];
         unset($data['idIzmena']);
 
         $model = new DokumentKategorija();
         $stari = $model->find($id);
 
-        if ($stari->parent_id != $data['parent_id']) {
-            $sql = "SELECT MAX(position) AS maks FROM {$model->getTable()} WHERE parent_id = {$data['parent_id']};";
-            $pozicija_query = $model->fetch($sql);
-            $pozicija_maks = $pozicija_query[0]->maks;
-            dd($pozicija_maks);
-                if ($data['position']>$pozicija_maks) {
-                    $data['position'] = $pozicija_maks+1;
-                }else{
-                    $sqla = "UPDATE {$model->getTable()} SET position = position + 1 WHERE parent_id = {$data['parent_id']} AND position >= {$data['position']}";
-                    $preraspodela_pozicija = $model->fetch($sqla);
-                }
-        }
-        
-
-        dd($data);
         $validation_rules = [
             'naziv' => [
                 'required' => true,
@@ -144,19 +131,46 @@ class DokumentKatController extends Controller
             ]
         ];
 
-        $this->validator->validate($datam, $validation_rules);
+        if ($stari->parent_id != $data['parent_id']) {
+            dd('razlicit roditelj - promeniti naziv, roditelja, uraditi rebuild pa razresiti poziciju');
+        }elseif ($stari->parent_id == $data['parent_id'] && $stari->position != $data['position']) {
+            // Slučaj kada se menja --POZICIJA i (naziv)-- kategorije
+            $sql = "SELECT MAX(position) AS maks FROM {$model->getTable()} WHERE parent_id = {$data['parent_id']};";
+            $pozicija_query = $model->fetch($sql);
+            $pozicija_maks = $pozicija_query[0]->maks;
 
-        if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене категорије ДОКУМЕНТА.');
-            return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
-        } else {
-            $this->flash->addMessage('success', 'Подаци о категорији ДОКУМЕНТА су успешно измењени.');
-            $model = new DokumentKategorija();
-            $stari = $model->find($id);
-            $model->update($datam, $id);
-            $kategorija = $model->find($id);
-            $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
-            return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+                if (((int) $pozicija) >= $pozicija_maks) {
+                    $data['position'] = $pozicija_maks+1;
+                    unset($data['parent_id']);
+                    $model->update($data, $id);
+
+                    $sqlb = "SELECT * FROM {$model->getTable()} WHERE parent_id = $roditelj;";
+                    $za_nove_pozicije = $model->fetch($sqlb);
+                    dd($za_nove_pozicije);
+
+                }elseif(((int) $pozicija) > $model->position){
+                    dd('stop');
+                    $sqla = "UPDATE {$model->getTable()} SET position = position + 1 WHERE parent_id = {$data['parent_id']} AND id <> {$id}";
+                    $preraspodela_pozicija = $model->fetch($sqla);
+                }else{
+
+                }
+        }else{
+            // Slučaj kada se menja samo --NAZIV-- kategorije
+            unset($data['parent_id']);
+            unset($data['position']);
+            $this->validator->validate($data, $validation_rules);
+
+            if ($this->validator->hasErrors()) {
+                $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене назива категорије ДОКУМЕНТА.');
+                return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+            } else {
+                $this->flash->addMessage('success', 'Назив категорије ДОКУМЕНТА је успешно измењен.');
+                $model->update($data, $id);
+                $kategorija = $model->find($id);
+                $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
+                return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $id]));
+            }
         }
     }
 }

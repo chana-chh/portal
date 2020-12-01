@@ -29,10 +29,11 @@
                         </div>
                         <div class="col form-group">
                             <label for="kategorija_id" class="mr-3">Категорија документа</label>
-                            <select name="kategorija_id" id="kategorija_id" class="custom-select {{ errors.kategorija_id[0] ? ' is-invalid' : '' }}" required>
+                            <select name="parent_id" id="parent_id" class="custom-select izbor-sa-stilom">
                                 <option value=""> </option>
                                 {% for kat in kategorije %}
-                                <option value="{{ kat.id }}" {{old.kategorija_id == kat ? ' selected' : ''}}>{{ kat.naziv }}</option>
+                                <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.parent_id == kat.id ? ' selected' : ''}}
+                                {{kategorija.parent_id == kat.id ? ' selected' : ''}}>{{ kat.naziv }}</option>
                                 {% endfor %}
                             </select>
                             <div class="valid-feedback">Исправно попуњено</div>
@@ -92,6 +93,16 @@
 		$("#otkazi-validation").on("click", function () {
 			$("#dokument-forma").removeClass("was-validated");
 		});
+
+        var n = "{{nivo}}";
+        var i;
+        for (i = 2; i < n+1; i++) {
+           $('.level_'+i).each(
+                function(){
+                    $(this).text("-".repeat(i*3)+" "+$(this).text());
+                }
+           );
+        };
 
 	(function () {
 		"use strict";

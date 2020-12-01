@@ -16,7 +16,8 @@ class DokumentController extends Controller
         $params = [];
 
         $model_kategorije = new DokumentKategorija();
-        $kategorije = $model_kategorije->all();
+        $kategorije = $model_kategorije->getListNS();
+        $radni = $model_kategorije->find(1);
 
         if (!empty($args)) {
 
@@ -67,7 +68,7 @@ class DokumentController extends Controller
                 GROUP BY EXTRACT(YEAR_MONTH FROM t.created_at) DESC;";
         $arhiva =$model->fetch($sql);
 
-        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva', 'kategorija', 'vrsta'));
+        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva', 'kategorija', 'vrsta', 'radni'));
     }
 
     public function postDokumentiPretraga($request, $response)
@@ -178,12 +179,16 @@ class DokumentController extends Controller
     public function getDokumentDodavanje($request, $response)
     {
         $modelK = new DokumentKategorija();
-        $kategorije = $modelK->all();
+        $kategorije = $modelK->getFlatListNS();
+
+        $sql = "SELECT MAX(level) AS maks FROM {$modelK->getTable()};";
+        $nivo_query = $modelK->fetch($sql);
+        $nivo = $nivo_query[0]->maks;
 
         $modelV = new DokumentVrsta();
         $vrste = $modelV->all();
 
-        $this->render($response, 'autor/dokumenti/dodavanje.twig', compact('vrste', 'kategorije'));
+        $this->render($response, 'autor/dokumenti/dodavanje.twig', compact('vrste', 'kategorije', 'nivo'));
     }
 
     public function postDokumentDodavanje($request, $response)
