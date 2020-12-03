@@ -26,7 +26,7 @@
             </div>
             <div class="form-group col">
                 <label for="parent_id" class="mr-3">Основни фолдер</label>
-                    <select name="parent_id" id="parent_id" class="custom-select izbor-sa-stilom" disabled readonly>
+                    <select name="parent_id" id="parent_id" class="custom-select izbor-sa-stilom">
                         <option value=""> </option>
                         {% for kat in kategorije %}
                         <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.parent_id == kat.id ? ' selected' : ''}}
@@ -36,7 +36,7 @@
             </div>
             <div class="form-group col">
                 <label for="position" class="mr-3">Позиција</label>
-                    <select name="position" id="position" class="custom-select izbor-sa-stilom" disabled readonly>
+                    <select name="position" id="position" class="custom-select izbor-sa-stilom">
                         <option value=""> </option>
                         {% for i in 1..pozicija %}
                         <option value={{i}} {{old.position == i ? ' selected' : ''}}
