@@ -66,7 +66,7 @@ DELETE FROM `dokumenti`;
 /*!40000 ALTER TABLE `dokumenti` DISABLE KEYS */;
 INSERT INTO `dokumenti` (`id`, `clanak_id`, `vrsta_id`, `kategorija_id`, `naslov`, `link`, `opis`, `korisnik_id`, `created_at`) VALUES
 	(2, NULL, 1, 1, 'Закон о раду', 'http://localhost/portal/pub/doc/закони_ЗАКОН_О_РАДУ_35f689fb5d790f14.pdf', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mattis, sapien in consequat ultrices, mauris orci egestas leo, eu vestibulum odio nunc non turpis. Donec vitae elementum arcu, id auctor elit. In feugiat gravida purus pulvinar bibendum. Don', 1, '2020-09-28 08:26:29'),
-	(3, NULL, 3, 6, 'Општи Акт о безбедности на раду', 'http://localhost/portal/pub/doc/_Општи_Акт_о_безбедности_на_раду_7ad227d5524a3502.pdf', 'Опис 123', 1, '2020-10-16 12:29:02'),
+	(3, NULL, 3, 1, 'Општи Акт о безбедности на раду', 'http://localhost/portal/pub/doc/_Општи_Акт_о_безбедности_на_раду_7ad227d5524a3502.pdf', 'Опис 123', 1, '2020-10-16 12:29:02'),
 	(4, NULL, 1, 1, 'Zakon o planiranju i izgradnji', 'http://localhost/portal/pub/doc/Закон_Zakon_o_planiranju_i_izgradnji_062f90d0f7f2a68e.pdf', 'Zakon o planiranju i izgradnji', 1, '2020-10-16 14:37:29');
 /*!40000 ALTER TABLE `dokumenti` ENABLE KEYS */;
 
@@ -74,32 +74,62 @@ DROP TABLE IF EXISTS `dokumenti_kategorije`;
 CREATE TABLE IF NOT EXISTS `dokumenti_kategorije` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `naziv` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `parent_id` bigint(20) NOT NULL DEFAULT '0' COMMENT 'refer to this table column id. this column value must be integer. if it is root then this value must be 0, it can not be NULL.',
+  `position` int(9) NOT NULL DEFAULT '0' COMMENT 'position when sort/order tags item.',
+  `level` int(10) NOT NULL DEFAULT '1' COMMENT 'deep level of taxonomy hierarchy. begins at 1 (no sub items).',
+  `left` int(10) NOT NULL DEFAULT '0' COMMENT 'for nested set model calculation. this will be able to select filtered parent id and all of its children.',
+  `right` int(10) NOT NULL DEFAULT '0' COMMENT 'for nested set model calculation. this will be able to select filtered parent id and all of its children.',
   `korisnik_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_kat_dokumenta_korisnici` (`korisnik_id`),
   CONSTRAINT `FK_kat_dokumenta_korisnici` FOREIGN KEY (`korisnik_id`) REFERENCES `korisnici` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DELETE FROM `dokumenti_kategorije`;
 /*!40000 ALTER TABLE `dokumenti_kategorije` DISABLE KEYS */;
-INSERT INTO `dokumenti_kategorije` (`id`, `naziv`, `korisnik_id`) VALUES
-	(1, 'Становање, урбанизам и просторно планирање', 1),
-	(2, 'Комуналне делатности', 1),
-	(3, 'Локални економски развој', 1),
-	(4, 'Развој туризма', 1),
-	(5, 'Пољопривреда и рурални развој', 1),
-	(6, 'Заштита животне средине', 1),
-	(7, 'Организација саобраћаја и саобраћајна инфраструктура', 1),
-	(8, 'Предшколско васпитање и образовање', 1),
-	(9, 'Основно образовање и васпитање', 1),
-	(10, 'Средње образовање и васпитање', 1),
-	(12, 'Социјална и дечија заштита', 1),
-	(13, 'Здравствена заштита', 1),
-	(14, 'Развој културе и информисања', 1),
-	(15, 'Развој спорта и омладине', 1),
-	(16, 'Опште услуге локалне самоуправе', 1),
-	(17, 'Политички систем локалне самоуправе', 1),
-	(18, 'Енергетска ефикасност и обновљиви извори енергије', 1);
+INSERT INTO `dokumenti_kategorije` (`id`, `naziv`, `parent_id`, `position`, `level`, `left`, `right`, `korisnik_id`) VALUES
+	(1, 'Нераспоређени', 0, 1, 1, 1, 2, 1),
+	(2, 'ВИЗИЈА, МИСИЈА, ПЛАН РАЗВОЈА, СТРАТЕГИЈА', 0, 2, 1, 3, 4, 1),
+	(3, 'ОРГАНИ ГРАДА КРАГУЈЕВЦА', 0, 3, 1, 5, 14, 1),
+	(4, 'Скупштина Града', 3, 1, 2, 6, 7, 1),
+	(5, 'Градоначелник', 3, 2, 2, 8, 9, 1),
+	(6, 'Градско веће', 3, 3, 2, 10, 11, 1),
+	(7, 'Градска управа', 3, 4, 2, 12, 13, 1),
+	(8, 'ПОЛИТИЧКИ СИСТЕМ ', 0, 4, 1, 15, 16, 1),
+	(9, 'МЕСНЕ ЗАЈЕДНИЦЕ', 0, 5, 1, 17, 18, 1),
+	(10, 'ОРГАНИЗАЦИЈА ЦИВИЛНОГ ДРУШТВА', 0, 6, 1, 19, 20, 1),
+	(11, 'ГРАДСКИ ОМБУДСМАН', 0, 7, 1, 21, 22, 1),
+	(12, 'ЈАВНО ПРАВОБРАНИЛАШТВО', 0, 8, 1, 23, 24, 1),
+	(13, 'ИНТЕРНА РЕВИЗИЈА', 0, 9, 1, 25, 26, 1),
+	(14, 'БУЏЕТСКА ИНСПЕКЦИЈА', 0, 10, 1, 27, 28, 1),
+	(15, 'КОНТРОЛА И НАДЗОР ПРАВНИХ СУБЈЕКАТА ЧИЈИ ЈЕ ОСНИВАЧ ГРАД', 0, 11, 1, 29, 30, 1),
+	(16, 'ПРОТОКОЛ, МЕЂУНАРОДНА И УНУТРАШЊА САРАДЊА', 0, 12, 1, 31, 32, 1),
+	(17, 'ЈАВНОСТ РАДА', 0, 13, 1, 33, 34, 1),
+	(18, 'ОРГАНИЗАЦИОНА СТРУКТУРА', 0, 14, 1, 35, 38, 1),
+	(19, 'ЈАВНИ ПРИХОДИ И ИНСПЕКЦИЈСКИ ПОСЛОВИ', 18, 1, 2, 36, 37, 1),
+	(20, 'ЉУДСКИ РЕСУРСИ', 0, 15, 1, 39, 42, 1),
+	(21, 'ЈАВНИ ПРИХОДИ И ИНСПЕКЦИЈСКИ ПОСЛОВИ1', 20, 1, 2, 40, 41, 1),
+	(22, 'УЗБУЊИВАЊЕ', 0, 16, 1, 43, 44, 1),
+	(23, 'ФИНАНСИЈСКО УПРАВЉАЊЕ И КОНТРОЛА', 0, 17, 1, 45, 46, 1),
+	(24, 'ФИНАНСИЈЕ', 0, 18, 1, 47, 48, 1),
+	(25, 'ЈАВНИ ПРИХОДИ', 0, 19, 1, 49, 60, 1),
+	(26, 'ПОРЕЗ НА ИМОВИНУ', 25, 1, 2, 50, 51, 1),
+	(27, 'ЛОКАЛНА КОМУНАЛН ТАКСА', 25, 2, 2, 52, 53, 1),
+	(28, 'НАКНАДА ЗА ЗАШТИТУ ЖИВОТНЕ СРЕДИНЕ', 25, 3, 2, 54, 55, 1),
+	(29, 'НАКНАДА ЗА КОРИШЋЕЊЕ ЈАВНИХ ДОБАРА', 25, 4, 2, 56, 57, 1),
+	(30, 'БОРАВИШНА ТАКСА', 25, 5, 2, 58, 59, 1),
+	(31, 'ЈАВНЕ НАБАВКЕ', 0, 20, 1, 61, 62, 1),
+	(32, 'ЛОКАЛНИ ЕКОНОМСКИ РАЗВОЈ', 0, 21, 1, 63, 64, 1),
+	(33, 'ИНВЕСТИЦИЈЕ И ПРОЈЕКТИ', 0, 22, 1, 65, 76, 1),
+	(34, 'Изградња објеката', 33, 1, 2, 66, 67, 1),
+	(35, 'Изградња комуналне инфраструктуре', 33, 2, 2, 68, 69, 1),
+	(36, 'Становање и одржавање зграда', 33, 3, 2, 70, 71, 1),
+	(37, 'Изградња станова за социјално угрожене категорије', 33, 4, 2, 72, 73, 1),
+	(38, 'Изградња за рањиве категорије', 33, 5, 2, 74, 75, 1),
+	(39, 'УПРАВЉАЊЕ ИМОВИНОМ ', 0, 23, 1, 77, 84, 1),
+	(40, 'Пољопривредно земљиште', 39, 1, 2, 78, 79, 1),
+	(41, 'Грађевинско земљиште', 39, 2, 2, 80, 81, 1),
+	(42, 'Путеви', 39, 3, 2, 82, 83, 1);
 /*!40000 ALTER TABLE `dokumenti_kategorije` ENABLE KEYS */;
 
 DROP TABLE IF EXISTS `dokumenti_vrste`;
@@ -211,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `logovi` (
   PRIMARY KEY (`id`),
   KEY `FK_logovi_korisnici` (`korisnik_id`),
   CONSTRAINT `FK_logovi_korisnici` FOREIGN KEY (`korisnik_id`) REFERENCES `korisnici` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DELETE FROM `logovi`;
 /*!40000 ALTER TABLE `logovi` DISABLE KEYS */;
@@ -224,7 +254,67 @@ INSERT INTO `logovi` (`id`, `opis`, `datum`, `izmene`, `tip`, `korisnik_id`) VAL
 	(6, '16, kategorije - naziv: Chanky 2', '2020-09-28 08:48:12', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:6:"Chanky";s:13:"nova_vrednost";s:8:"Chanky 2";}}', 'izmena', 1),
 	(7, '9, clanci - naslov: Test', '2020-09-28 08:54:30', '', 'dodavanje', 1),
 	(8, '2, korisnici - ime: pera, prezime: pekic, ', '2020-09-28 13:22:24', '', 'dodavanje', 1),
-	(9, '16, kategorije - naziv: Chanky 2', '2020-09-29 09:01:59', 'a:4:{s:2:"id";i:16;s:5:"naziv";s:8:"Chanky 2";s:5:"vrsta";s:10:"опште";s:11:"korisnik_id";i:1;}', 'brisanje', 1);
+	(9, '16, kategorije - naziv: Chanky 2', '2020-09-29 09:01:59', 'a:4:{s:2:"id";i:16;s:5:"naziv";s:8:"Chanky 2";s:5:"vrsta";s:10:"опште";s:11:"korisnik_id";i:1;}', 'brisanje', 1),
+	(10, '19, dokumenti_kategorije - naziv: Sanjina kategorija', '2020-10-18 12:10:03', '', 'dodavanje', 1),
+	(11, '19, dokumenti_kategorije - naziv: Sanjina kategorija II', '2020-10-18 12:19:09', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:18:"Sanjina kategorija";s:13:"nova_vrednost";s:21:"Sanjina kategorija II";}}', 'izmena', 1),
+	(12, '19, dokumenti_kategorije - naziv: Sanjina kategorija II', '2020-10-18 12:19:16', 'a:3:{s:2:"id";i:19;s:5:"naziv";s:21:"Sanjina kategorija II";s:11:"korisnik_id";i:1;}', 'brisanje', 1),
+	(13, '9, dokumenti_kategorije - naziv: Log kategorija II', '2020-11-26 13:23:38', '', 'dodavanje', 1),
+	(14, '12, dokumenti_kategorije - naziv: Poslednji ID', '2020-11-26 18:37:22', '', 'dodavanje', 1),
+	(15, '13, dokumenti_kategorije - naziv: test2 3 nivo', '2020-11-27 08:37:11', '', 'dodavanje', 1),
+	(16, '14, dokumenti_kategorije - naziv: Korenska sa forme', '2020-11-29 08:38:46', '', 'dodavanje', 1),
+	(17, '15, dokumenti_kategorije - naziv: Poslednji TEST 01', '2020-11-29 08:57:45', '', 'dodavanje', 1),
+	(18, '16, dokumenti_kategorije - naziv: Poslednji TEST 02', '2020-11-29 09:01:48', '', 'dodavanje', 1),
+	(19, '17, dokumenti_kategorije - naziv: Poslednji TEST 03', '2020-11-29 09:03:16', '', 'dodavanje', 1),
+	(20, '18, dokumenti_kategorije - naziv: Poslednji TEST 04', '2020-11-29 09:03:42', '', 'dodavanje', 1),
+	(21, '19, dokumenti_kategorije - naziv: Poslednji TEST 05', '2020-11-29 09:06:13', '', 'dodavanje', 1),
+	(22, '20, dokumenti_kategorije - naziv: Poslednji TEST 06', '2020-11-29 09:07:04', '', 'dodavanje', 1),
+	(23, '21, dokumenti_kategorije - naziv: Poslednji TEST 07', '2020-11-29 09:08:24', '', 'dodavanje', 1),
+	(24, '22, dokumenti_kategorije - naziv: Poslednji TEST 08', '2020-11-29 09:14:52', '', 'dodavanje', 1),
+	(25, '1, dokumenti_kategorije - naziv: Нераспоређени', '2020-12-03 08:49:09', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:73:"Визија, мисија, план развоја, стратегија";s:13:"nova_vrednost";s:26:"Нераспоређени";}}', 'izmena', 1),
+	(26, '23, dokumenti_kategorije - naziv: Визија, мисија, план развоја, стратегија', '2020-12-03 08:49:16', '', 'dodavanje', 1),
+	(27, '3, dokumenti_kategorije - naziv: Органи Града Крагујевца', '2020-12-03 10:30:06', '', 'dodavanje', 1),
+	(28, '4, dokumenti_kategorije - naziv: Скупштина Града', '2020-12-03 10:30:27', '', 'dodavanje', 1),
+	(29, '5, dokumenti_kategorije - naziv: Градоначелник', '2020-12-04 13:17:52', '', 'dodavanje', 1),
+	(30, '6, dokumenti_kategorije - naziv: Градско веће', '2020-12-04 13:18:40', '', 'dodavanje', 1),
+	(31, '7, dokumenti_kategorije - naziv: Градска управа', '2020-12-04 13:18:59', '', 'dodavanje', 1),
+	(32, '8, dokumenti_kategorije - naziv: ПОЛИТИЧКИ СИСТЕМ ', '2020-12-04 13:19:46', '', 'dodavanje', 1),
+	(33, '2, dokumenti_kategorije - naziv: ВИЗИЈА, МИСИЈА, ПЛАН РАЗВОЈА, СТРАТЕГИЈА', '2020-12-04 13:25:05', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:73:"Визија, мисија, план развоја, стратегија";s:13:"nova_vrednost";s:73:"ВИЗИЈА, МИСИЈА, ПЛАН РАЗВОЈА, СТРАТЕГИЈА";}}', 'izmena', 1),
+	(34, '3, dokumenti_kategorije - naziv: ОРГАНИ ГРАДА КРАГУЈЕВЦА', '2020-12-04 13:25:27', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:44:"Органи Града Крагујевца";s:13:"nova_vrednost";s:44:"ОРГАНИ ГРАДА КРАГУЈЕВЦА";}}', 'izmena', 1),
+	(35, '9, dokumenti_kategorije - naziv: МЕСНЕ ЗАЈЕДНИЦЕ', '2020-12-04 13:25:51', '', 'dodavanje', 1),
+	(36, '10, dokumenti_kategorije - naziv: ОРГАНИЗАЦИЈА ЦИВИЛНОГ ДРУШТВА', '2020-12-04 13:26:27', '', 'dodavanje', 1),
+	(37, '11, dokumenti_kategorije - naziv: ГРАДСКИ ОМДУСМАН', '2020-12-04 13:26:48', '', 'dodavanje', 1),
+	(38, '11, dokumenti_kategorije - naziv: ГРАДСКИ ОМБУДСМАН', '2020-12-04 13:31:04', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:31:"ГРАДСКИ ОМДУСМАН";s:13:"nova_vrednost";s:33:"ГРАДСКИ ОМБУДСМАН";}}', 'izmena', 1),
+	(39, '12, dokumenti_kategorije - naziv: ЈАВНО ПРАВОБРАНИЛАШТВО', '2020-12-04 13:31:26', '', 'dodavanje', 1),
+	(40, '13, dokumenti_kategorije - naziv: ИНТЕРНА РЕВИЗИЈА', '2020-12-04 13:31:40', '', 'dodavanje', 1),
+	(41, '14, dokumenti_kategorije - naziv: БУЏЕТСКА ИНСПЕКЦИЈА', '2020-12-04 13:31:55', '', 'dodavanje', 1),
+	(42, '15, dokumenti_kategorije - naziv: КОНТРОЛА И НАДЗОР ПРАВНИХ СУБЈЕКАТА ЧИЈИ ЈЕ ОСНИВАЧ ГРАД', '2020-12-04 13:32:17', '', 'dodavanje', 1),
+	(43, '16, dokumenti_kategorije - naziv: ПРОТОКОЛ, МЕЂУНАРОДНА И УНУТРАШЊА САРАДЊА', '2020-12-04 13:32:45', '', 'dodavanje', 1),
+	(44, '17, dokumenti_kategorije - naziv: ЈАВНОСТ РАДА', '2020-12-04 13:33:01', '', 'dodavanje', 1),
+	(45, '18, dokumenti_kategorije - naziv: ОРГАНИЗАЦИОНА СТРУКТУРА', '2020-12-04 13:33:14', '', 'dodavanje', 1),
+	(46, '19, dokumenti_kategorije - naziv: ЈАВНИ ПРИХОДИ И ИНСПЕКЦИЈСКИ ПОСЛОВИ', '2020-12-04 13:34:02', '', 'dodavanje', 1),
+	(47, '20, dokumenti_kategorije - naziv: ЉУДСКИ РЕСУРСИ', '2020-12-04 13:34:30', '', 'dodavanje', 1),
+	(48, '21, dokumenti_kategorije - naziv: ЈАВНИ ПРИХОДИ И ИНСПЕКЦИЈСКИ ПОСЛОВИ1', '2020-12-04 13:36:45', '', 'dodavanje', 1),
+	(49, '22, dokumenti_kategorije - naziv: УЗБУЊИВАЊЕ', '2020-12-04 13:45:41', '', 'dodavanje', 1),
+	(50, '23, dokumenti_kategorije - naziv: ФИНАНСИЈСКО УПРАВЉАЊЕ И КОНТРОЛА', '2020-12-04 13:50:32', '', 'dodavanje', 1),
+	(51, '24, dokumenti_kategorije - naziv: ФИНАНСИЈЕ', '2020-12-04 13:50:49', '', 'dodavanje', 1),
+	(52, '25, dokumenti_kategorije - naziv: ЈАВНИ ПРИХОДИ', '2020-12-04 13:51:31', '', 'dodavanje', 1),
+	(53, '26, dokumenti_kategorije - naziv: ПОРЕЗ НА ИМОВИНУ', '2020-12-04 13:52:03', '', 'dodavanje', 1),
+	(54, '27, dokumenti_kategorije - naziv: ЛОКАЛНА КОМУНАЛН ТАКСА', '2020-12-04 13:52:25', '', 'dodavanje', 1),
+	(55, '28, dokumenti_kategorije - naziv: НАКНАДА ЗА ЗАШТИТУ ЖИВОТНЕ СРЕДИНЕ', '2020-12-04 13:52:46', '', 'dodavanje', 1),
+	(56, '29, dokumenti_kategorije - naziv: НАКНАДА ЗА КОРИШЋЕЊЕ ЈАВНИХ ДОБАРА', '2020-12-04 13:53:07', '', 'dodavanje', 1),
+	(57, '30, dokumenti_kategorije - naziv: БОРАВИШНА ТАКСА', '2020-12-04 13:53:28', '', 'dodavanje', 1),
+	(58, '31, dokumenti_kategorije - naziv: ЈАВНЕ НАБАВКЕ', '2020-12-04 13:54:34', '', 'dodavanje', 1),
+	(59, '32, dokumenti_kategorije - naziv: ЛОКАЛНИ ЕКОНОМСКИ РАЗВОЈ', '2020-12-04 13:55:00', '', 'dodavanje', 1),
+	(60, '33, dokumenti_kategorije - naziv: ИНВЕСТИЦИЈЕ И ПРОЈЕКТИ', '2020-12-04 13:55:16', '', 'dodavanje', 1),
+	(61, '34, dokumenti_kategorije - naziv: Изградња објеката', '2020-12-04 13:57:32', '', 'dodavanje', 1),
+	(62, '35, dokumenti_kategorije - naziv: Изградња комуналне инфраструктуре', '2020-12-04 13:58:02', '', 'dodavanje', 1),
+	(63, '36, dokumenti_kategorije - naziv: Становање и одржавање зграда', '2020-12-04 13:58:22', '', 'dodavanje', 1),
+	(64, '37, dokumenti_kategorije - naziv: Изградња станова за социјално угрожене категорије', '2020-12-04 13:58:48', '', 'dodavanje', 1),
+	(65, '38, dokumenti_kategorije - naziv: Изградња за рањиве категорије', '2020-12-04 13:59:11', '', 'dodavanje', 1),
+	(66, '39, dokumenti_kategorije - naziv: УПРАВЉАЊЕ ИМОВИНОМ ', '2020-12-04 13:59:34', '', 'dodavanje', 1),
+	(67, '40, dokumenti_kategorije - naziv: Пољопривредно земљиште', '2020-12-04 14:06:23', '', 'dodavanje', 1),
+	(68, '41, dokumenti_kategorije - naziv: Грађевинско земљиште', '2020-12-04 14:06:37', '', 'dodavanje', 1),
+	(69, '42, dokumenti_kategorije - naziv: Путеви', '2020-12-04 14:06:54', '', 'dodavanje', 1);
 /*!40000 ALTER TABLE `logovi` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
