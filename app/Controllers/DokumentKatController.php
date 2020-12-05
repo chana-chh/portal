@@ -132,18 +132,58 @@ class DokumentKatController extends Controller
             ]
         ];
 
+        $sql = "SELECT MAX(position) AS maks FROM {$model->getTable()} WHERE parent_id = {$data['parent_id']};";
+        $pozicija_query = $model->fetch($sql);
+        $pozicija_maks = $pozicija_query[0]->maks;
+
         if ($stari->parent_id != $data['parent_id']) {
-            dd('razlicit roditelj - promeniti naziv, roditelja, uraditi rebuild pa razresiti poziciju');
+            
+            if ($model->isParentUnderMyChildren($id, $data['parent_id'])) {
+                $this->flash->addMessage('danger', 'Дошло је до грешке приликом премештања категорије. Немогуће премештање у сопствену поткатегорију!');
+                return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+            }else{
+                if (((int) $pozicija) > $pozicija_maks) {
+                    $data['position'] = $pozicija_maks+1;
+
+                    $this->validator->validate($data, $validation_rules);
+                    if ($this->validator->hasErrors()) {
+                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ДОКУМЕНТА.');
+                        return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+                    } else {
+                    $model->update($data, $id);
+                    $model->rebuild();
+                    $this->flash->addMessage('success', 'Подаци категорије ДОКУМЕНТА су успешно измењени.');
+                    $kategorija = $model->find($id);
+                    $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
+                    return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $id]));
+                    }
+                }else{
+                    $this->validator->validate($data, $validation_rules);
+                    if ($this->validator->hasErrors()) {
+                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ДОКУМЕНТА.');
+                        return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+                    } else {
+                        $model->update($data, $id);
+                        $sqla = "UPDATE {$model->getTable()} SET position = position + 1 
+                                WHERE parent_id = $roditelj
+                                AND position >= $pozicija
+                                AND id != $id;";
+
+                        $preraspodela_pozicija = $model->fetch($sqla);
+                        $model->rebuild();
+                        $this->flash->addMessage('success', 'Подаци категорије ДОКУМЕНТА су успешно измењени.');
+                        $kategorija = $model->find($id);
+                        $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
+                        return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $id]));
+                    }  
+                } 
+            }
         }elseif ($stari->parent_id == $data['parent_id'] && $stari->position != $data['position']) {
-            // Slučaj kada se menja --POZICIJA i (naziv)-- kategorije
-
-            $sql = "SELECT MAX(position) AS maks FROM {$model->getTable()} WHERE parent_id = {$data['parent_id']};";
-            $pozicija_query = $model->fetch($sql);
-            $pozicija_maks = $pozicija_query[0]->maks;
-
-            unset($data['parent_id']);
+                // Slučaj kada se menja --POZICIJA i (naziv)-- kategorije
+                unset($data['parent_id']);
 
                 if (((int) $pozicija) >= $pozicija_maks) {
+
                     // Kada je nova pozicija veće ili jednaka MAKSIMALNOJ u roditeljskoj kategoriji
                     $data['position'] = $pozicija_maks+1;
                     
@@ -172,6 +212,7 @@ class DokumentKatController extends Controller
                     }
                 }elseif(((int) $pozicija) > $stari->position){
                     // Kada je nova pozicija VEĆA od stare u roditeljskoj kategoriji
+
                     unset($data['parent_id']);
                     $data['position'] = $pozicija;
 
@@ -183,9 +224,10 @@ class DokumentKatController extends Controller
                         $model->update($data, $id);
                         $sqla = "UPDATE {$model->getTable()} SET position = position - 1 
                                 WHERE parent_id = $roditelj
-                                AND position >= {$stari->position} 
-                                AND NOT position > $pozicija
+                                AND position > {$stari->position} 
+                                AND position <= $pozicija
                                 AND id != $id;";
+
                         $preraspodela_pozicija = $model->fetch($sqla);
                         $model->rebuild();
                     $this->flash->addMessage('success', 'Подаци категорије ДОКУМЕНТА су успешно измењени.');
@@ -206,7 +248,7 @@ class DokumentKatController extends Controller
                         $sqlc = "UPDATE {$model->getTable()} SET position = position + 1 
                                 WHERE parent_id = $roditelj
                                 AND position >= $pozicija
-                                AND NOT position > {$stari->position}
+                                AND position < {$stari->position}
                                 AND id != $id;";
                         $preraspodela_pozicija = $model->fetch($sqlc);
                         $model->rebuild();
