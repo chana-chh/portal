@@ -11,7 +11,7 @@ class DokumentKatController extends Controller
     {
         $model = new DokumentKategorija();
         $data = $model->getListNS();
-
+        $id_poslednjeg = null;
         if (!empty($args)) {
 
             if (isset($args['poslednji'])) {
@@ -24,7 +24,7 @@ class DokumentKatController extends Controller
                 $roditelji_id = null;
             }
         }
-        $this->render($response, 'dokkategorije/lista.twig', compact('data', 'roditelji_id'));
+        $this->render($response, 'dokkategorije/lista.twig', compact('data', 'roditelji_id', 'id_poslednjeg'));
     }
 
     public function postKategorijeDodavanje($request, $response)
@@ -42,7 +42,7 @@ class DokumentKatController extends Controller
         $validation_rules = [
             'naziv' => [
                 'required' => true,
-                'minlen' => 5,
+                'minlen' => 4,
                 'maxlen' => 255,
                 'multi_unique' => 'dokumenti_kategorije.naziv,parent_id'
             ],
@@ -126,7 +126,7 @@ class DokumentKatController extends Controller
         $validation_rules = [
             'naziv' => [
                 'required' => true,
-                'minlen' => 5,
+                'minlen' => 4,
                 'maxlen' => 50,
                 'multi_unique' => 'dokumenti_kategorije.naziv,parent_id#id:' . $id
             ]

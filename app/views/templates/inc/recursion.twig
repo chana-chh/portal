@@ -7,7 +7,7 @@
         {% else %}
 	    <img src="{{ base_url() }}/img/021-folder-19.png" alt="folder" height="24px">
 	    {% endif %}
-	</a> {{ d.id }} {{ d.naziv }} &nbsp;&nbsp;
+	</a>&emsp;{{ d.naziv }} &nbsp;&nbsp;
 	<small>
 		<button class="btn btn-outline-success btn-sm otvori-dodavanje" data-toggle="modal" data-target="#dodajModal"
             data-parent="{{ d.id }}" title="Додавање подкатегорије">
@@ -26,7 +26,7 @@
         {% else %}
 	    <img src="{{ base_url() }}/img/025-folder-15.png" alt="folder" height="24px">
 	    {% endif %}
-	</a> {{ d.id }} {{ d.naziv }} &nbsp;&nbsp;
+	</a>&emsp;{{ d.naziv }} &nbsp;&nbsp;
 	<small>
 		<button class="btn btn-outline-success btn-sm otvori-dodavanje" data-toggle="modal" data-target="#dodajModal"
             data-parent="{{ d.id }}" title="Додавање подкатегорије">

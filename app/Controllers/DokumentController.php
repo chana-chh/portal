@@ -256,7 +256,6 @@ class DokumentController extends Controller
         $dok = $modelDokument->find($id);
         $tmp = explode('/', $dok->link);
         $file = DIR . 'pub' . DS . 'doc' . DS . end($tmp);
-        dd($modelDokument->isti(end($tmp)));
         $success = $modelDokument->deleteOne($id);
         if ($success) {
             if ($modelDokument->isti(end($tmp)) == 1) {

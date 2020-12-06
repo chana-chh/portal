@@ -18,16 +18,16 @@ input.parsley-error
 <div class="row mt-2">
   <div class="col">
     <h2>
-      <i class="fas fa-sitemap text-secondary"></i> Преглед категорија докумената {{id_poslednjeg}}
+      <i class="fas fa-sitemap text-secondary"></i> Преглед категорија докумената
     </h2>
   </div>
 </div>
 <hr />
 {% endblock naslov %}
 {% block sadrzaj %}
-<div class="row">
+<div class="row m-4">
     <div class="col">
-      <ul class="list-unstyled" style="font-size: 1.4rem;">
+      <ul class="list-unstyled" style="font-size: 1.2rem;">
         {% include "templates/inc/recursion.twig" with {'data': data, 'id_poslednjeg':id_poslednjeg} only %}
       </ul>
     </div>
@@ -51,7 +51,7 @@ input.parsley-error
           <input type="hidden" id="parentModal" name="parentModal" readonly>
           <div class="form-group">
             <label for="dnModal">Назив</label>
-            <input type="text" class="form-control" name="dnModal" id="dnModal" aria-describedby="Назив категорије" value="{{ old.dnModal ? : '' }}" required minlength="5">
+            <input type="text" class="form-control" name="dnModal" id="dnModal" aria-describedby="Назив категорије" value="{{ old.dnModal ? : '' }}" required minlength="4">
           </div>
           <hr style="margin-top: 30px;">
           <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">

@@ -51,11 +51,9 @@
                 </a>
                 {% if auth.logged %}
                 {% if auth.user.nivo == 0 %}
-                    <button class="btn btn-outline-success btn-sm otvori-dodavanje" data-toggle="modal" data-target="#dodajModal"
-            data-parent="{{ dok.id }}" title="Додавање подкатегорије">
-            <i class="fas fa-plus"></i></button>
+                    <a href="" class="btn btn-outline-success btn-sm" title="Измена података документа"><i class="fas fa-edit"></i></a>
         <button class="btn btn-outline-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
-            data-id="{{ dok.id }}" title="Брисање одабране категорије"><i class="fas fa-trash"></i></button>
+            data-id="{{ dok.id }}" title="Брисање документа"><i class="fas fa-trash"></i></button>
                 {% endif %}
                 {% endif %}
         </div>
