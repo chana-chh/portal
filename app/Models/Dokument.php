@@ -36,14 +36,21 @@ class Dokument extends Model
 
     public function broj_doc()
     {
-        $sql = "SELECT COUNT(*) AS broj_doc FROM dokumenti;";
+        $sql = "SELECT COUNT(*) AS broj_doc FROM {$this->table()};";
         return (int) $this->fetch($sql)[0]->broj_doc;
     }
 
     public function poslednjiUp()
     {
-        $sql = "SELECT MAX(created_at) AS poslednjiUp FROM dokumenti";
+        $sql = "SELECT MAX(created_at) AS poslednjiUp FROM {$this->table()}";
         return $this->fetch($sql)[0]->poslednjiUp;
+    }
+
+    public function isti(string $naziv_link)
+    {
+        $zaupit = '%'.$naziv_link.'%';
+        $sql = "SELECT COUNT(*) AS broj FROM {$this->table()} WHERE link LIKE '$zaupit';";
+        return (int) $this->fetch($sql)[0]->broj;
     }
 
 }

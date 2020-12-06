@@ -81,4 +81,5 @@ $app->group('', function () {
     // Dokumenti
     $this->get('/autor/dokument/dodavanje', '\App\Controllers\DokumentController:getDokumentDodavanje')->setName('dokument.dodavanje.get');
     $this->post('/autor/dokument/dodavanje', '\App\Controllers\DokumentController:postDokumentDodavanje')->setName('dokument.dodavanje.post');
+    $this->post('/autor/dokument/brisanje', '\App\Controllers\DokumentController:postDokumentiBrisanje')->setName('dokument.brisanje');
 })->add(new UserLevelMiddleware($container, [0,100]));

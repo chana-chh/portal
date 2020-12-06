@@ -52,10 +52,10 @@
                 {% if auth.logged %}
                 {% if auth.user.nivo == 0 %}
                     <button class="btn btn-outline-success btn-sm otvori-dodavanje" data-toggle="modal" data-target="#dodajModal"
-            data-parent="{{ d.id }}" title="Додавање подкатегорије">
+            data-parent="{{ dok.id }}" title="Додавање подкатегорије">
             <i class="fas fa-plus"></i></button>
         <button class="btn btn-outline-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
-            data-id="{{ d.id }}" title="Брисање одабране категорије"><i class="fas fa-trash"></i></button>
+            data-id="{{ dok.id }}" title="Брисање одабране категорије"><i class="fas fa-trash"></i></button>
                 {% endif %}
                 {% endif %}
         </div>
@@ -80,6 +80,41 @@
         <em>{{ dokumenti.links.total_rows }}</em>
     </p>
 </div>
+
+{# Modal za brisanje #}
+<div id="brisanjeModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Упозорење!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4>Да ли желите трајно да обришете одабрани документ?</h4>
+        <p class="text-danger">* Ова акција је неповратна!</p>
+        <form id="brisanje-forma" action="{{ path_for('dokument.brisanje') }}" method="POST">
+          {{ csrf|raw }}
+          <input type="hidden" id="idBrisanje" name="idBrisanje">
+          <hr style="margin-top: 30px;">
+
+          <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+            <div class="form-group">
+              <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i>&emsp;Обриши
+              </button>
+              <a class="btn btn-secondary" data-dismiss="modal">
+                <i class="fas fa-ban"></i>&emsp;Откажи
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{# Kraj modala za brisanje #}
 {% endblock sadrzaj %}
 
 {% block traka %}
@@ -110,20 +145,6 @@
         <ul class="list-unstyled">
             {% include "templates/inc/recursion_lista.twig" with {'kategorije': kategorije, 'kategorija':kategorija, 'vrsta':vrsta, 'radni':radni} %}
         </ul>
-{#         <div class="list-group list-group-flush">
-            {% for kat in kategorije %}
-            <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-                {% if kategorija %}
-                    <a href="{{ path_for('dokumenti.lista', { 'id_kat': kategorija.id, 'id_vrs' : kat.id }) }}" class="text-reset">
-                        <i class="fas fa-folder text-warning"></i> {{ kat.naziv }}</a>
-                {% else %}
-                    <a href="{{ path_for('dokumenti.lista', { 'id_kat': kat.id }) }}" class="text-reset">
-                        <i class="fas fa-folder text-warning"></i> {{ kat.naziv }}</a>
-                {% endif %}
-                <span class="badge badge-pill badge-dark">{{ kategorija ? kat.broj(kategorija.id): kat.broj() }}
-            </li>
-            {% endfor %}
-        </div> #}
     </div>
 </div>
 {% endif %}
@@ -180,7 +201,10 @@
 {% block skripta %}
 <script>
 $(document).ready(function () {
-
+    $(document).on('click', '.otvori-brisanje', function () {
+      var id = $(this).data("id");
+      $('#idBrisanje').val(id);
+    });
 });
 </script>
 {% endblock skripta %}
