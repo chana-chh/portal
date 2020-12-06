@@ -27,7 +27,7 @@
 <hr>
 {% endblock naslov %}
 {% block sadrzaj %}
-<div class="row mb-5 mt-5">
+<div class="row mb-2 mt-2">
     <div class="col col-lg-10 offset-lg-1">
         {% if data %}
         <em class="text-warning">[Филтрирани подаци]</em>&emsp;<i class="fas fa-filter text-warning"></i>
@@ -35,12 +35,12 @@
     </div>
 </div>
 {% for dok in dokumenti.data %}
-<div class="row mb-5 mt-5">
+<div class="row mb-2">
     <div class="col col-lg-10 offset-lg-1">
         <h3>{{ dok.naslov }}</h3>
         <p class="lead">{{ dok.rezime }}</p>
         <blockquote class="blockquote text-right" style="font-size: 0.875em">
-            <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ dok.published_at|date('d.m.Y') }}&emsp;<i class="fas fa-user text-warning"></i> {{ dok.korisnik.imePrezime() }}</p>
+            <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ dok.created_at|date('d.m.Y') }}&emsp;<i class="fas fa-user text-warning"></i> {{ dok.korisnik.imePrezime() }}</p>
             <footer class="blockquote-footer">Категорија: <cite title="Категорија">{{ dok.kategorija.naziv }}</cite>; Врста: <cite title="Vrsta">{{ dok.vrsta.naziv }}</cite></footer>
         </blockquote>
         <hr>
@@ -49,6 +49,15 @@
                 <a href="{{ dok.link }}" class="btn btn-outline-primary btn-sm" title="Преглед" target="_blank">
                     Преглед <i class="fas fa-eye"></i>
                 </a>
+                {% if auth.logged %}
+                {% if auth.user.nivo == 0 %}
+                    <button class="btn btn-outline-success btn-sm otvori-dodavanje" data-toggle="modal" data-target="#dodajModal"
+            data-parent="{{ d.id }}" title="Додавање подкатегорије">
+            <i class="fas fa-plus"></i></button>
+        <button class="btn btn-outline-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
+            data-id="{{ d.id }}" title="Брисање одабране категорије"><i class="fas fa-trash"></i></button>
+                {% endif %}
+                {% endif %}
         </div>
     </div>
 </div>
