@@ -18,7 +18,7 @@ input.parsley-error
 <div class="row mt-2">
   <div class="col">
     <h2>
-      <i class="fas fa-sitemap text-secondary"></i> Преглед категорија докумената
+      <i class="fas fa-sitemap text-secondary"></i> Преглед категорија докумената {{id_poslednjeg}}
     </h2>
   </div>
 </div>
@@ -28,7 +28,7 @@ input.parsley-error
 <div class="row">
     <div class="col">
       <ul class="list-unstyled" style="font-size: 1.4rem;">
-        {% include "templates/inc/recursion.twig" with {'data': data} only %}
+        {% include "templates/inc/recursion.twig" with {'data': data, 'id_poslednjeg':id_poslednjeg} only %}
       </ul>
     </div>
   </div>
@@ -71,6 +71,41 @@ input.parsley-error
 </div>
 {# Kraj modala za dodavanje podkategorije #}
 
+{# Modal za brisanje #}
+<div id="brisanjeModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Упозорење!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4>Да ли желите трајно да обришете категорију?</h4>
+        <p class="text-danger">* Ова акција је неповратна!</p>
+        <form id="brisanje-forma" action="{{ path_for('dokument.kategorija.brisanje') }}" method="POST">
+          {{ csrf|raw }}
+          <input type="hidden" id="idBrisanje" name="idBrisanje">
+          <hr style="margin-top: 30px;">
+
+          <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+            <div class="form-group">
+              <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i>&emsp;Обриши
+              </button>
+              <a class="btn btn-secondary" data-dismiss="modal">
+                <i class="fas fa-ban"></i>&emsp;Откажи
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{# Kraj modala za brisanje #}
+
 {% endblock sadrzaj %}
 {% block traka %}
 <div class="card border-dark mb-3">
@@ -111,6 +146,11 @@ $(document).ready(function () {
     $(document).on('click', '.otvori-dodavanje', function () {
       var parent = $(this).data("parent");
       $('#parentModal').val(parent);
+    });
+
+    $(document).on('click', '.otvori-brisanje', function () {
+      var id = $(this).data("id");
+      $('#idBrisanje').val(id);
     });
 
 });

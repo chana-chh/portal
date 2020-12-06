@@ -226,7 +226,7 @@ class DokumentController extends Controller
         $this->validator->validate($data, $validation_rules);
 
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Дошло је до грешке приликом додаванја докумената.');
+            $this->flash->addMessage('danger', 'Дошло је до грешке приликом додавања докумената.');
             return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         } else {
             $unique = bin2hex(random_bytes(8));
@@ -251,20 +251,22 @@ class DokumentController extends Controller
 
     public function postDokumentiBrisanje($request, $response)
     {
-        $id = (int)$request->getParam('modal_dokument_id');
-        $ugovor_id = (int)$request->getParam('modal_dokument_ugovor_id');
+        $id = (int)$request->getParam('idBrisanje');
         $modelDokument = new Dokument();
         $dok = $modelDokument->find($id);
         $tmp = explode('/', $dok->link);
         $file = DIR . 'pub' . DS . 'doc' . DS . end($tmp);
+        dd($modelDokument->isti(end($tmp)));
         $success = $modelDokument->deleteOne($id);
         if ($success) {
-            unlink($file);
-            $this->flash->addMessage('success', "Dokument je uspešno obrisan.");
-            return $response->withRedirect($this->router->pathFor('termin.ugovor.detalj.get', ['id' => $ugovor_id]));
+            if ($modelDokument->isti(end($tmp)) == 1) {
+                unlink($file);
+            }
+            $this->flash->addMessage('success', "Докуменат је успешно обрисан.");
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         } else {
-            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja dokumenta.");
-            return $response->withRedirect($this->router->pathFor('termin.ugovor.detalj.get', ['id' => $ugovor_id]));
+            $this->flash->addMessage('danger', "Дошло је до грешке приликом брисања докумената.");
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         }
     }
 
