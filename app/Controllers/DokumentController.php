@@ -11,7 +11,6 @@ class DokumentController extends Controller
 {
     public function getLista($request, $response, $args)
     {
-
         $where = " WHERE ";
         $params = [];
 
@@ -20,39 +19,37 @@ class DokumentController extends Controller
         $radni = $model_kategorije->find(1);
 
         if (!empty($args)) {
+            if (isset($args['id_kat'])) {
+                if ($where !== " WHERE ") {
+                    $where .= " AND ";
+                }
+                $where .= "kategorija_id = :kategorija_id";
+                $params[':kategorija_id'] = (int) $args['id_kat'];
 
-        if (isset($args['id_kat'])) {
-            if ($where !== " WHERE ") {
-                $where .= " AND ";
+                $modelKat = new DokumentKategorija();
+                $kategorija = $modelKat->find((int) $args['id_kat']);
+
+                $modelVrs = new DokumentVrsta();
+                $kategorije = $modelVrs->all();
+            } else {
+                $kategorija = null;
             }
-            $where .= "kategorija_id = :kategorija_id";
-            $params[':kategorija_id'] = (int) $args['id_kat'];
 
-            $modelKat = new DokumentKategorija();
-            $kategorija = $modelKat->find((int) $args['id_kat']);
+            if (isset($args['id_vrs'])) {
+                if ($where !== " WHERE ") {
+                    $where .= " AND ";
+                }
+                $where .= "vrsta_id = :vrsta_id";
+                $params[':vrsta_id'] = (int) $args['id_vrs'];
 
-            $modelVrs = new DokumentVrsta();
-            $kategorije = $modelVrs->all();
-        }else{
-            $kategorija = null;
-        }
-
-        if (isset($args['id_vrs'])) {
-            if ($where !== " WHERE ") {
-                $where .= " AND ";
+                $modelVrs = new DokumentVrsta();
+                $vrsta = $modelVrs->find((int) $args['id_vrs']);
+            } else {
+                $vrsta = null;
             }
-            $where .= "vrsta_id = :vrsta_id";
-            $params[':vrsta_id'] = (int) $args['id_vrs'];
-
-            $modelVrs = new DokumentVrsta();
-            $vrsta = $modelVrs->find((int) $args['id_vrs']);
-        }else{
-            $vrsta = null;
-        }
-
         }
         $where = $where === " WHERE " ? "" : $where;
-        
+
         $query = [];
         parse_str($request->getUri()->getQuery(), $query);
         $page = isset($query['page']) ? (int)$query['page'] : 1;
@@ -126,7 +123,7 @@ class DokumentController extends Controller
 
             $modelVrs = new DokumentVrsta();
             $kategorije = $modelVrs->all();
-        }else{
+        } else {
             $kategorija = null;
         }
 
@@ -138,7 +135,7 @@ class DokumentController extends Controller
             $params[':id_vrs'] = $data['id_vrs'];
             $modelVrs = new DokumentVrsta();
             $vrsta = $modelVrs->find((int) $data['id_vrs']);
-        }else{
+        } else {
             $vrsta = null;
         }
 
@@ -161,10 +158,13 @@ class DokumentController extends Controller
     {
         $id_kategorije = (int) $args['id'];
         $modelDokument = new Dokument();
-         $dokumenti = $modelDokument->paginate($this->page(), 'page', 
+        $dokumenti = $modelDokument->paginate(
+            $this->page(),
+            'page',
             "SELECT * FROM dokumenti
             WHERE kategorija_id = {$id_kategorije}
-            ORDER BY created_at DESC;");
+            ORDER BY created_at DESC;"
+        );
         $sql = "SELECT
                 COUNT(id) as broj, MONTHNAME(t.created_at) as mesec, YEAR(t.created_at) as godina, MONTH (t.created_at) as mm
                 FROM dokumenti t
@@ -202,7 +202,7 @@ class DokumentController extends Controller
             $this->flash->addMessage('danger', 'Морате одабрати документ.');
             return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         }
-        
+
         if ($dokument->getError() !== UPLOAD_ERR_OK) {
             $this->flash->addMessage('danger', 'Дошло је до грешке приликом отпремања документа.');
             return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
@@ -231,10 +231,14 @@ class DokumentController extends Controller
         } else {
             $unique = bin2hex(random_bytes(8));
             $extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
+            $velicina_tekst = human_filesize($dokument->getSize());
+            $velicina_mb = $dokument->getSize() / 1024 / 1024;
             $naslov = str_replace(" ", "_", $data['naslov']);
             $name = "{$vrsta}_{$naslov}_{$unique}";
             $filename = "{$name}.{$extension}";
             $veza = URL . "doc/{$filename}";
+            $data['velicina_tekst'] = $velicina_tekst;
+            $data['velicina_mb'] = $velicina_mb;
             $data['link'] = $veza;
             $data['korisnik_id'] = $this->auth->user()->id;
             $dokument->moveTo('doc/' . $filename);

@@ -29,11 +29,12 @@
                         </div>
                         <div class="col form-group">
                             <label for="kategorija_id" class="mr-3">Категорија документа</label>
-                            <select name="parent_id" id="parent_id" class="custom-select izbor-sa-stilom">
+                            <select name="kategorija_id" id="kategorija_id" class="custom-select izbor-sa-stilom">
                                 <option value=""> </option>
                                 {% for kat in kategorije %}
-                                <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.parent_id == kat.id ? ' selected' : ''}}
-                                {{kategorija.parent_id == kat.id ? ' selected' : ''}}>{{ kat.naziv }}</option>
+                                <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.parent_id == kat.id ? ' selected' : ''}}>
+                                    {{ kat.naziv }}
+                                </option>
                                 {% endfor %}
                             </select>
                             <div class="valid-feedback">Исправно попуњено</div>

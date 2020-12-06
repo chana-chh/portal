@@ -44,7 +44,7 @@ class DokumentKatController extends Controller
                 'required' => true,
                 'minlen' => 5,
                 'maxlen' => 255,
-                'unique' => 'dokumenti_kategorije.naziv'
+                'multi_unique' => 'dokumenti_kategorije.naziv,parent_id'
             ],
             'korisnik_id' => [
                 'required' => true,
@@ -128,7 +128,7 @@ class DokumentKatController extends Controller
                 'required' => true,
                 'minlen' => 5,
                 'maxlen' => 50,
-                'unique' => 'dokumenti_kategorije.naziv#id:' . $id,
+                'multi_unique' => 'dokumenti_kategorije.naziv,parent_id#id:' . $id
             ]
         ];
 
@@ -137,7 +137,7 @@ class DokumentKatController extends Controller
         $pozicija_maks = $pozicija_query[0]->maks;
 
         if ($stari->parent_id != $data['parent_id']) {
-            
+
             if ($model->isParentUnderMyChildren($id, $data['parent_id'])) {
                 $this->flash->addMessage('danger', 'Дошло је до грешке приликом премештања категорије. Немогуће премештање у сопствену поткатегорију!');
                 return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
@@ -164,7 +164,7 @@ class DokumentKatController extends Controller
                         return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
                     } else {
                         $model->update($data, $id);
-                        $sqla = "UPDATE {$model->getTable()} SET position = position + 1 
+                        $sqla = "UPDATE {$model->getTable()} SET position = position + 1
                                 WHERE parent_id = $roditelj
                                 AND position >= $pozicija
                                 AND id != $id;";
@@ -175,8 +175,8 @@ class DokumentKatController extends Controller
                         $kategorija = $model->find($id);
                         $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
                         return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $id]));
-                    }  
-                } 
+                    }
+                }
             }
         }elseif ($stari->parent_id == $data['parent_id'] && $stari->position != $data['position']) {
                 // Slučaj kada se menja --POZICIJA i (naziv)-- kategorije
@@ -186,14 +186,14 @@ class DokumentKatController extends Controller
 
                     // Kada je nova pozicija veće ili jednaka MAKSIMALNOJ u roditeljskoj kategoriji
                     $data['position'] = $pozicija_maks+1;
-                    
+
                     $this->validator->validate($data, $validation_rules);
                     if ($this->validator->hasErrors()) {
                         $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ДОКУМЕНТА.');
                         return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
                     } else {
                     $model->update($data, $id);
-                
+
                     $sqlb = "SELECT * FROM {$model->getTable()} WHERE parent_id = $roditelj ORDER BY position;";
                     $za_nove_pozicije = $model->fetch($sqlb);
 
@@ -222,9 +222,9 @@ class DokumentKatController extends Controller
                         return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
                     } else {
                         $model->update($data, $id);
-                        $sqla = "UPDATE {$model->getTable()} SET position = position - 1 
+                        $sqla = "UPDATE {$model->getTable()} SET position = position - 1
                                 WHERE parent_id = $roditelj
-                                AND position > {$stari->position} 
+                                AND position > {$stari->position}
                                 AND position <= $pozicija
                                 AND id != $id;";
 
@@ -245,7 +245,7 @@ class DokumentKatController extends Controller
                         return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
                     } else {
                         $model->update($data, $id);
-                        $sqlc = "UPDATE {$model->getTable()} SET position = position + 1 
+                        $sqlc = "UPDATE {$model->getTable()} SET position = position + 1
                                 WHERE parent_id = $roditelj
                                 AND position >= $pozicija
                                 AND position < {$stari->position}
