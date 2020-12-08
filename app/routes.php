@@ -82,4 +82,8 @@ $app->group('', function () {
     $this->get('/autor/dokument/dodavanje', '\App\Controllers\DokumentController:getDokumentDodavanje')->setName('dokument.dodavanje.get');
     $this->post('/autor/dokument/dodavanje', '\App\Controllers\DokumentController:postDokumentDodavanje')->setName('dokument.dodavanje.post');
     $this->post('/autor/dokument/brisanje', '\App\Controllers\DokumentController:postDokumentiBrisanje')->setName('dokument.brisanje');
+    $this->get('/autor/dokument/izmena/{id}', '\App\Controllers\DokumentController:getDokumentiIzmena')->setName('dokument.detalj');
+    $this->post('/autor/dokument/izmena', '\App\Controllers\DokumentController:postDokumentiIzmena')->setName('dokument.izmena');
+    $this->get('/autor/dokument/linkovanje/{id}', '\App\Controllers\DokumentController:getDokumentiLink')->setName('dokument.link.get');
+    $this->post('/autor/dokument/linkovanje', '\App\Controllers\DokumentController:postDokumentiLink')->setName('dokument.link.post');
 })->add(new UserLevelMiddleware($container, [0,100]));

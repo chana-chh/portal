@@ -35,28 +35,40 @@
     </div>
 </div>
 {% for dok in dokumenti.data %}
-<div class="row mb-2">
+<div class="row">
     <div class="col col-lg-10 offset-lg-1">
         <h3>{{ dok.naslov }}</h3>
-        <p class="lead">{{ dok.rezime }}</p>
         <blockquote class="blockquote text-right" style="font-size: 0.875em">
             <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ dok.created_at|date('d.m.Y') }}&emsp;<i class="fas fa-user text-warning"></i> {{ dok.korisnik.imePrezime() }}</p>
             <footer class="blockquote-footer">Категорија: <cite title="Категорија">{{ dok.kategorija.naziv }}</cite>; Врста: <cite title="Vrsta">{{ dok.vrsta.naziv }}</cite></footer>
         </blockquote>
         <hr>
         <p>&emsp;&emsp;&emsp;{{ dok.opis }}</p>
-        <div class="col text-right">
-                <a href="{{ dok.link }}" class="btn btn-outline-primary btn-sm" title="Преглед" target="_blank">
-                    Преглед <i class="fas fa-eye"></i>
-                </a>
-                {% if auth.logged %}
-                {% if auth.user.nivo == 0 %}
-                    <a href="" class="btn btn-outline-success btn-sm" title="Измена података документа"><i class="fas fa-edit"></i></a>
-        <button class="btn btn-outline-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
-            data-id="{{ dok.id }}" title="Брисање документа"><i class="fas fa-trash"></i></button>
-                {% endif %}
-                {% endif %}
-        </div>
+        <hr>
+    </div>
+</div>
+<div class="row mb-2">
+    <div class="col col-lg-2 offset-lg-1">
+        {% if dok.tip == "doc" or dok.tip == "docx"%}
+        <img src="{{ base_url() }}/img/doc.png" height="32px">
+        {% elseif dok.tip == "pdf" %}
+        <img src="{{ base_url() }}/img/pdf.png" height="32px">
+        {% else %}
+        <img src="{{ base_url() }}/img/txt.png" height="32px">
+        {% endif %}
+        <span class="badge bg-light text-dark">&emsp;{{ dok.velicina_tekst }}</span>
+    </div>
+    <div class="col-lg-9 text-right">
+        <a href="{{ dok.link }}" class="btn btn-outline-primary btn-sm" title="Преглед" target="_blank">
+            Преглед <i class="fas fa-eye"></i>
+        </a>
+        {% if auth.logged %}
+        {% if auth.user.nivo == 0 %}
+        <a href="{{ path_for('dokument.detalj', { id: dok.id }) }}" class="btn btn-outline-warning btn-sm" title="Измена података документа"><i class="fas fa-pencil-alt"></i></a>
+        <a href="{{ path_for('dokument.link.get', { id: dok.id }) }}" class="btn btn-outline-success btn-sm" title="Постављање линка за другу категорију"><i class="fas fa-link"></i></a>
+        <button class="btn btn-outline-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal" data-id="{{ dok.id }}" title="Брисање документа"><i class="fas fa-trash"></i></button>
+        {% endif %}
+        {% endif %}
     </div>
 </div>
 <hr style="border-top: dotted 1px blue;">

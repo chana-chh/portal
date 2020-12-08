@@ -1,0 +1,67 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row">
+    <div class="col-lg-10 offset-1">
+        <h2><i class="fas fa-link text-secondary"></i> Додавање линка документа <span class="text-success">{{ dokument.naslov }}</span> на другу категорију</h2>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-lg-10 offset-1">
+        <div class="card border-dark mb-3">
+            <div class="card-header text-primary">
+                <h4>Врста документа: {{ dokument.vrsta.naziv }}</h4>
+                <hr>
+                <small>Опис: {{ dokument.opis }}</small>
+            </div>
+            <div class="card-body text-dark">
+                <form id="dokument-forma" action="{{ path_for('dokument.link.post') }}" method="POST" data-parsley-validate>
+                    {{ csrf|raw }}
+                    <input type="hidden" id="idIzmena" name="idIzmena" value="{{ dokument.id }}" readonly>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="kategorija_id">Категорија документа</label>
+                            <select name="kategorija_id" id="kategorija_id" class="custom-select izbor-sa-stilom">
+                                <option value=""> </option>
+                                {% for kat in kategorije %}
+                                <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.kategorija_id == kat.id ? ' selected' : ''}}
+                                {{dokument.kategorija_id == kat.id ? ' selected' : ''}}>
+                                    {{ kat.naziv }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                                <hr style="margin-top: 30px;">
+            <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" title="Постави линк">
+                      <i class="fas fa-paperclip"></i>&emsp;Постави линк
+                    </button>
+                    <a href="{{ path_for('dokumenti.lista') }}" class="btn btn-secondary"><i class="fas fa-ban"></i> &emsp;Откажи</a>
+                </div>
+            </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock naslov %}
+
+{% block skripta %}
+<script src="{{ base_url() }}/js/parsley.js"></script>
+<script src="{{ base_url() }}/js/parsley_sr.js"></script>
+<script>
+$( document ).ready(function() {
+        var n = "{{nivo}}";
+        var i;
+        for (i = 2; i < n+1; i++) {
+           $('.level_'+i).each(
+                function(){
+                    $(this).text("-".repeat(i*3)+" "+$(this).text());
+                }
+           );
+        };
+});
+</script>
+{% endblock skripta %}

@@ -96,7 +96,8 @@ class DokumentController extends Controller
         $params = [];
 
         $model_kategorije = new DokumentKategorija();
-        $kategorije = $model_kategorije->all();
+        $kategorije = $model_kategorije->getListNS();
+        $radni = $model_kategorije->find(1);
 
         if (!empty($data['upit'])) {
             $where .= "naslov LIKE :naslov";
@@ -151,7 +152,7 @@ class DokumentController extends Controller
                 GROUP BY EXTRACT(YEAR_MONTH FROM t.created_at) DESC;";
         $arhiva =$model->fetch($sql);
 
-        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva', 'data', 'kategorija', 'vrsta'));
+        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva', 'data', 'kategorija', 'vrsta', 'radni'));
     }
 
     public function getDokumentiKategorija($request, $response, $args)
@@ -209,7 +210,7 @@ class DokumentController extends Controller
         }
 
         $validation_rules = [
-            'opis' => [
+            'naslov' => [
                 'required' => true,
             ],
             'vrsta_id' => [
@@ -239,6 +240,7 @@ class DokumentController extends Controller
             $veza = URL . "doc/{$filename}";
             $data['velicina_tekst'] = $velicina_tekst;
             $data['velicina_mb'] = $velicina_mb;
+            $data['tip'] = $extension;
             $data['link'] = $veza;
             $data['korisnik_id'] = $this->auth->user()->id;
             $dokument->moveTo('doc/' . $filename);
@@ -269,48 +271,118 @@ class DokumentController extends Controller
         }
     }
 
-    public function postDokumentDetalj($request, $response)
+    public function getDokumentiIzmena($request, $response, $args)
     {
-        $data = $request->getParams();
-        $cName = $this->csrf->getTokenName();
-        $cValue = $this->csrf->getTokenValue();
-        $id = $data['id'];
+
+        $id = (int) $args['id'];
         $modelDokument = new Dokument();
         $dokument = $modelDokument->find($id);
-        $ar = ["cname" => $cName, "cvalue"=>$cValue, "dokument"=>$dokument];
-        return $response->withJson($ar);
+
+        $modelK = new DokumentKategorija();
+        $kategorije = $modelK->getFlatListNS();
+
+        $sql = "SELECT MAX(level) AS maks FROM {$modelK->getTable()};";
+        $nivo_query = $modelK->fetch($sql);
+        $nivo = $nivo_query[0]->maks;
+
+        $modelV = new DokumentVrsta();
+        $vrste = $modelV->all();
+        
+        $this->render($response, 'autor/dokumenti/izmena.twig', compact('dokument',  'kategorije', 'vrste', 'nivo'));
     }
 
-    public function postDokumentIzmena($request, $response)
+    public function postDokumentiIzmena($request, $response)
     {
-        $data = $request->getParams();
-        $id = $data['idIzmenaDokumenta'];
-        $ugovor_id = $data['idUgovorDokumenta'];
-        unset($data['idUgovorDokumenta']);
-        unset($data['idIzmenaDokumenta']);
-        unset($data['csrf_name']);
-        unset($data['csrf_value']);
-
-        $datam = ["opis"=>$data['opisModal']];
+        $data = $this->data();
+        $id = $data['idIzmena'];
+        unset($data['idIzmena']);
 
         $validation_rules = [
-            'opis' => [
-                'required' => true
-            ]
+            'naslov' => [
+                'required' => true,
+            ],
+            'vrsta_id' => [
+                'required' => true,
+            ],
+            'kategorija_id' => [
+                'required' => true,
+            ],
         ];
 
-        $this->validator->validate($datam, $validation_rules);
+        $this->validator->validate($data, $validation_rules);
 
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene podataka dokumenta.');
-            return $response->withRedirect($this->router->pathFor('termin.ugovor.detalj.get', ['id' => $ugovor_id]));
+            $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података документа.');
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         } else {
-            $this->flash->addMessage('success', 'Podaci o dokumentu su uspešno izmenjeni.');
+            $this->flash->addMessage('success', 'Подаци о документу су успешно промењени.');
             $modelDokument = new Dokument();
-            $modelDokument->update($datam, $id);
+            $stari = $modelDokument->find($id);
+            $modelDokument->update($data, $id);
             $dokument = $modelDokument->find($id);
-            $this->log(Logger::IZMENA, $dokument, 'opis');
-            return $response->withRedirect($this->router->pathFor('termin.ugovor.detalj.get', ['id' => $ugovor_id]));
+            $this->log($this::IZMENA, $dokument, 'naslov', $stari);
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
+        }
+    }
+
+    public function getDokumentiLink($request, $response, $args)
+    {
+
+        $id = (int) $args['id'];
+        $modelDokument = new Dokument();
+        $dokument = $modelDokument->find($id);
+
+        $modelK = new DokumentKategorija();
+        $kategorije = $modelK->getFlatListNS();
+
+        $sql = "SELECT MAX(level) AS maks FROM {$modelK->getTable()};";
+        $nivo_query = $modelK->fetch($sql);
+        $nivo = $nivo_query[0]->maks;
+        
+        $this->render($response, 'autor/dokumenti/link.twig', compact('dokument',  'kategorije', 'nivo'));
+    }
+
+    public function postDokumentiLink($request, $response)
+    {
+        $data = $this->data();
+        $id = $data['idIzmena'];
+        unset($data['idIzmena']);
+
+        $modelDokument = new Dokument();
+        $stari = $modelDokument->find($id);
+
+        $data['naslov'] = $stari->naslov;
+        $data['link'] = $stari->link;
+        $data['vrsta_id'] = $stari->vrsta_id;
+        $data['opis'] = $stari->opis;
+        $data['tip'] = $stari->tip;
+        $data['velicina_tekst'] = $stari->velicina_tekst;
+        $data['velicina_mb'] = $stari->velicina_mb;
+        $data['korisnik_id'] = $this->auth->user()->id;
+
+        $validation_rules = [
+            'naslov' => [
+                'required' => true,
+            ],
+            'vrsta_id' => [
+                'required' => true,
+            ],
+            'kategorija_id' => [
+                'required' => true,
+            ],
+        ];
+
+        $this->validator->validate($data, $validation_rules);
+
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Дошло је до грешке приликом постављања линка на додатну категорију.');
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
+        } else {
+            $this->flash->addMessage('success', 'Линковање документа у додатну категорију је успешно.');
+            $modelDokument->insert($data);
+            $dok = $modelDokument->find($modelDokument->lastId());
+            $this->log($this::DODAVANJE, $dok, 'naziv');
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         }
     }
 }

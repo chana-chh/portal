@@ -32,7 +32,7 @@
                             <select name="kategorija_id" id="kategorija_id" class="custom-select izbor-sa-stilom">
                                 <option value=""> </option>
                                 {% for kat in kategorije %}
-                                <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.parent_id == kat.id ? ' selected' : ''}}>
+                                <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.kategorija_id == kat.id ? ' selected' : ''}}>
                                     {{ kat.naziv }}
                                 </option>
                                 {% endfor %}
@@ -45,7 +45,7 @@
                             <select name="vrsta_id" id="vrsta_id" class="custom-select {{ errors.vrsta_id[0] ? ' is-invalid' : '' }}" required>
                                 <option value=""> </option>
                                 {% for vrs in vrste %}
-                                <option value="{{ vrs.id }}" {{old.vrsta_id == vrs ? ' selected' : ''}}>{{ vrs.naziv }}</option>
+                                <option value="{{ vrs.id }}" {{old.vrsta_id == vrs.id ? ' selected' : ''}}>{{ vrs.naziv }}</option>
                                 {% endfor %}
                             </select>
                             <div class="valid-feedback">Исправно попуњено</div>
