@@ -10,7 +10,7 @@
     <div class="col-lg-10 offset-1">
         <div class="card border-dark mb-3">
             <div class="card-header text-primary">
-                <h3>Додавање докумената</h3>
+                <h3>Додавање описа докумената и његово објављивање на портал</h3>
             </div>
             <div class="card-body text-dark">
                 <form id="dokument-forma" action="{{ path_for('dokument.dodavanje.post') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
@@ -55,7 +55,7 @@
                     <div class="form-row">
                         <div class="col form-group">
                             <label for="opis">Опис / кратак садржај документа</label>
-                            <input type="text" value="{{ old.opis ? : '' }}" class="form-control{{ errors.opis[0] ? ' is-invalid' : '' }}" name="opis" id="opis" required>
+                            <textarea class="form-control{{ errors.opis[0] ? ' is-invalid' : '' }}" rows="4" name="opis" id="opis" required>{{ old.opis ? : '' }}</textarea>
                             <div class="valid-feedback">Одговарајући податак</div>
                             <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
                         </div>
