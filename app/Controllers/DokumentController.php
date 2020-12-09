@@ -332,6 +332,8 @@ class DokumentController extends Controller
         $modelDokument = new Dokument();
         $dokument = $modelDokument->find($id);
 
+        $gde_ga_ima = $modelDokument->kategorije_za_link($dokument->link);
+
         $modelK = new DokumentKategorija();
         $kategorije = $modelK->getFlatListNS();
 
@@ -339,7 +341,7 @@ class DokumentController extends Controller
         $nivo_query = $modelK->fetch($sql);
         $nivo = $nivo_query[0]->maks;
         
-        $this->render($response, 'autor/dokumenti/link.twig', compact('dokument',  'kategorije', 'nivo'));
+        $this->render($response, 'autor/dokumenti/link.twig', compact('dokument',  'kategorije', 'nivo', 'gde_ga_ima'));
     }
 
     public function postDokumentiLink($request, $response)

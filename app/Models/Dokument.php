@@ -53,4 +53,13 @@ class Dokument extends Model
         return (int) $this->fetch($sql)[0]->broj;
     }
 
+    public function kategorije_za_link(string $naziv_link)
+    {
+        $zaupit = '%'.$naziv_link.'%';
+        $sql = "SELECT d.id, k.naziv FROM {$this->table()} d
+        JOIN dokumenti_kategorije k ON d.kategorija_id=k.id
+        WHERE link LIKE '$zaupit';";
+        return $this->fetch($sql);
+    }
+
 }

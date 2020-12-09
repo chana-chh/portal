@@ -9,10 +9,17 @@
 <div class="row">
     <div class="col-lg-10 offset-1">
         <div class="card border-dark mb-3">
-            <div class="card-header text-primary">
+            <div class="card-header">
                 <h4>Врста документа: {{ dokument.vrsta.naziv }}</h4>
+                <small class="text-muted">Опис документа: {{ dokument.opis }}</small>
                 <hr>
-                <small>Опис: {{ dokument.opis }}</small>
+                <br>
+                <h4>Категорије у којима се тренутно налази документ:</h4>
+                <ul class="list-group list-group-flush">
+                {% for kateg in gde_ga_ima %}
+                     <li class="list-group-item">{{kateg.naziv}}</li>
+                {% endfor %}
+                </ul>
             </div>
             <div class="card-body text-dark">
                 <form id="dokument-forma" action="{{ path_for('dokument.link.post') }}" method="POST" data-parsley-validate>
@@ -20,7 +27,7 @@
                     <input type="hidden" id="idIzmena" name="idIzmena" value="{{ dokument.id }}" readonly>
                     <div class="form-row">
                         <div class="col form-group">
-                            <label for="kategorija_id">Категорија документа</label>
+                            <label for="kategorija_id">Одаберите категорију у коју желите још да додате постојећи документ</label>
                             <select name="kategorija_id" id="kategorija_id" class="custom-select izbor-sa-stilom">
                                 <option value=""> </option>
                                 {% for kat in kategorije %}

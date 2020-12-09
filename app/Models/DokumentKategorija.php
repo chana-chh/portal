@@ -18,4 +18,13 @@ class DokumentKategorija extends ModelNestedSet
         $sql = "SELECT COUNT(*) AS broj_kategorije FROM dokumenti WHERE kategorija_id = $id";
         return (int) $this->fetch($sql)[0]->broj_kategorije;
     }
+
+    public function brojdok_sadecom($id)
+    {
+        $roditelji = $this->getWithChildrenNS($id);
+        $roditelji_id = array_column($roditelji, 'id');
+        $in = implode(',', $roditelji_id);
+        $sql = "SELECT COUNT(*) AS broj_kategorije FROM dokumenti WHERE kategorija_id IN ($in);";
+        return (int) $this->fetch($sql)[0]->broj_kategorije;
+    }
 }
