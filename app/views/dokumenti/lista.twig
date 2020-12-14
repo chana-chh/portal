@@ -37,7 +37,11 @@
 {% for dok in dokumenti.data %}
 <div class="row">
     <div class="col col-lg-10 offset-lg-1">
+        {% if dok.arhiva %}
+        <h3 class="text-secondary"><i class="fas fa-archive"></i> <small>(архива)</small>  {{ dok.naslov }}</h3>
+        {% else %}
         <h3>{{ dok.naslov }}</h3>
+        {% endif %}
         <blockquote class="blockquote text-right" style="font-size: 0.875em">
             <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ dok.created_at|date('d.m.Y') }}&emsp;<i class="fas fa-user text-warning"></i> {{ dok.korisnik.imePrezime() }}</p>
             <footer class="blockquote-footer">Категорија: <cite title="Категорија">{{ dok.kategorija.naziv }}</cite>; Врста: <cite title="Vrsta">{{ dok.vrsta.naziv }}</cite></footer>
@@ -67,6 +71,7 @@
         <a href="{{ path_for('dokument.detalj', { id: dok.id }) }}" class="btn btn-outline-warning btn-sm" title="Измена података документа"><i class="fas fa-pencil-alt"></i></a>
         <a href="{{ path_for('dokument.link.get', { id: dok.id }) }}" class="btn btn-outline-success btn-sm" title="Постављање линка за другу категорију"><i class="fas fa-link"></i></a>
         <button class="btn btn-outline-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal" data-id="{{ dok.id }}" title="Брисање документа"><i class="fas fa-trash"></i></button>
+        <a href="{{ path_for('dokument.arhiviranje.get', { id: dok.id }) }}" class="btn btn-outline-secondary btn-sm" title="Архивирање/активирање документа"><i class="fas fa-archive"></i></a>
         {% endif %}
         {% endif %}
     </div>
@@ -168,45 +173,6 @@
     </div>
 </div>
 {% endif %}
-<div class="row mt-5 mb-5">
-    <div class="col col-lg-12 pl-5">
-        <h4 class="font-italic text-secondary">Архива</h4>
-        <br>
-        <div class="list-group list-group-flush">
-            {% for arh in arhiva %}
-            <li class="list-group-item d-flex justify-content-between list-group-item-light align-items-center py-2">
-                <a href="{{path_for('clanci.arhiva', { 'mm': arh.mm, 'yy': arh.godina})}}" class="text-reset">
-                    {% if arh.mesec == 'January' %}
-                    Јануар
-                    {% elseif arh.mesec == 'February' %}
-                    Фебруар
-                    {% elseif arh.mesec == 'March' %}
-                    Март
-                    {% elseif arh.mesec == 'April' %}
-                    Април
-                    {% elseif arh.mesec == 'May' %}
-                    Мај
-                    {% elseif arh.mesec == 'June' %}
-                    Јун
-                    {% elseif arh.mesec == 'July' %}
-                    Јул
-                    {% elseif arh.mesec == 'August' %}
-                    Август
-                    {% elseif arh.mesec == 'September' %}
-                    Септембар
-                    {% elseif arh.mesec == 'October' %}
-                    Октобар
-                    {% elseif arh.mesec == 'November' %}
-                    Новембар
-                    {% else %}
-                    Децембар
-                    {% endif %}, {{ arh.godina }}</a>
-                <span class="badge badge-pill badge-dark">{{ arh.broj }}</span>
-            </li>
-            {% endfor %}
-        </div>
-    </div>
-</div>
 {% endblock traka %}
 {% block skripta %}
 <script>

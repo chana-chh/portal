@@ -86,4 +86,6 @@ $app->group('', function () {
     $this->post('/autor/dokument/izmena', '\App\Controllers\DokumentController:postDokumentiIzmena')->setName('dokument.izmena');
     $this->get('/autor/dokument/linkovanje/{id}', '\App\Controllers\DokumentController:getDokumentiLink')->setName('dokument.link.get');
     $this->post('/autor/dokument/linkovanje', '\App\Controllers\DokumentController:postDokumentiLink')->setName('dokument.link.post');
+    $this->get('/autor/dokument/arhiviranje/{id}', '\App\Controllers\DokumentController:getDokumentiArhiviranje')->setName('dokument.arhiviranje.get');
+    $this->post('/autor/dokument/arhiviranje', '\App\Controllers\DokumentController:postDokumentiArhiviranje')->setName('dokument.arhiviranje.post');
 })->add(new UserLevelMiddleware($container, [0,100]));

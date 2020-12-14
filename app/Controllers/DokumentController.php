@@ -387,4 +387,37 @@ class DokumentController extends Controller
             return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         }
     }
+
+    public function getDokumentiArhiviranje($request, $response, $args)
+    {
+
+        $id = (int) $args['id'];
+        $modelDokument = new Dokument();
+        $dokument = $modelDokument->find($id);
+
+        
+        $this->render($response, 'autor/dokumenti/arhiviranje.twig', compact('dokument'));
+    }
+
+    public function postDokumentiArhiviranje($request, $response)
+    {
+        $data = $this->data();
+        $id = $data['idIzmena'];
+        unset($data['idIzmena']);
+
+        //Vreme 
+        $sada = time();
+        $mysqlvreme = date ('Y-m-d H:i:s', $sada);
+        dd($mysqlvreme);
+        if ($id) {
+            $model = new Dokument();
+            $stari = $model->find($id);
+            $model->update(['arviha' => 1], $id);
+            $dok = $model->find($id);
+            $this->log($this::IZMENA, $dok, 'opis', $stari);
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
+        } else {
+            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
+        }
+    }
 }
