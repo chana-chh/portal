@@ -14,6 +14,13 @@
                 {% if dokument.arhiva %}
                     <p class="text-warning">Документ је архивиран: {{ dokument.arhiva|date('d.m.Y') }}</p>
                 {% endif %}
+                <br>
+                <h5>Категорије у којима се тренутно налази документ и биће архивиран-активиран у свакој од њих:</h5>
+                <ul class="list-group list-group-flush">
+                {% for kateg in gde_ga_ima %}
+                     <li class="list-group-item">{{kateg.naziv}}</li>
+                {% endfor %}
+                </ul>
             </div>
             <div class="card-body text-dark">
                 <p class="text-muted">Опис документа: {{ dokument.opis }}</p>
@@ -23,11 +30,11 @@
                     <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
                         <div class="form-group">
                             {% if dokument.arhiva %}
-                            <button type="submit" class="btn btn-primary" title="Постави линк">
+                            <button type="submit" class="btn btn-primary" title="Активирање докумената">
                                 <i class="fas fa-box-open"></i>&emsp;Активирај
                             </button>
                             {% else %}
-                            <button type="submit" class="btn btn-primary" title="Постави линк">
+                            <button type="submit" class="btn btn-primary" title="Архивирање докумената">
                                 <i class="fas fa-archive"></i>&emsp;Архивирај
                             </button>
                             {% endif %}

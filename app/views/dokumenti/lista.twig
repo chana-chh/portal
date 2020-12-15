@@ -38,9 +38,9 @@
 <div class="row">
     <div class="col col-lg-10 offset-lg-1">
         {% if dok.arhiva %}
-        <h3 class="text-secondary"><i class="fas fa-archive"></i> <small>(архива)</small>  {{ dok.naslov }}</h3>
+        <h4 class="text-secondary"><i class="fas fa-archive"></i> <small>(архива)</small>  {{ dok.naslov }}</h4>
         {% else %}
-        <h3>{{ dok.naslov }}</h3>
+        <h4>{{ dok.naslov }}</h4>
         {% endif %}
         <blockquote class="blockquote text-right" style="font-size: 0.875em">
             <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ dok.created_at|date('d.m.Y') }}&emsp;<i class="fas fa-user text-warning"></i> {{ dok.korisnik.imePrezime() }}</p>

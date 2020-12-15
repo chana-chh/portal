@@ -14,6 +14,9 @@ class DokumentController extends Controller
         $where = " WHERE ";
         $params = [];
 
+        $kategorija = null;
+        $vrsta = null;
+
         $model_kategorije = new DokumentKategorija();
         $kategorije = $model_kategorije->getListNS();
         $radni = $model_kategorije->find(1);
@@ -31,9 +34,7 @@ class DokumentController extends Controller
 
                 $modelVrs = new DokumentVrsta();
                 $kategorije = $modelVrs->all();
-            } else {
-                $kategorija = null;
-            }
+            };
 
             if (isset($args['id_vrs'])) {
                 if ($where !== " WHERE ") {
@@ -44,10 +45,9 @@ class DokumentController extends Controller
 
                 $modelVrs = new DokumentVrsta();
                 $vrsta = $modelVrs->find((int) $args['id_vrs']);
-            } else {
-                $vrsta = null;
-            }
+            };
         }
+
         $where = $where === " WHERE " ? "" : $where;
 
         $query = [];
@@ -395,8 +395,9 @@ class DokumentController extends Controller
         $modelDokument = new Dokument();
         $dokument = $modelDokument->find($id);
 
+        $gde_ga_ima = $modelDokument->kategorije_za_link($dokument->link);
         
-        $this->render($response, 'autor/dokumenti/arhiviranje.twig', compact('dokument'));
+        $this->render($response, 'autor/dokumenti/arhiviranje.twig', compact('dokument', 'gde_ga_ima'));
     }
 
     public function postDokumentiArhiviranje($request, $response)
@@ -408,13 +409,18 @@ class DokumentController extends Controller
         //Vreme 
         $sada = time();
         $mysqlvreme = date ('Y-m-d H:i:s', $sada);
-        dd($mysqlvreme);
+
         if ($id) {
             $model = new Dokument();
             $stari = $model->find($id);
-            $model->update(['arviha' => 1], $id);
-            $dok = $model->find($id);
-            $this->log($this::IZMENA, $dok, 'opis', $stari);
+            $zaupit = '%'.$stari->link.'%';
+            if ($stari->arhiva) {
+                $sql = "UPDATE {$model->getTable()} SET arhiva = NULL WHERE link LIKE '$zaupit';";
+            }else{
+                $sql = "UPDATE {$model->getTable()} SET arhiva = '$mysqlvreme' WHERE link LIKE '$zaupit';";
+            }
+            
+            $model->fetch($sql);
             return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         } else {
             return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
