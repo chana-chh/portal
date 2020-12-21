@@ -1,13 +1,23 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.1.19-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             11.0.0.5919
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+
+-- Dumping database structure for portal
 DROP DATABASE IF EXISTS `portal`;
 CREATE DATABASE IF NOT EXISTS `portal` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 USE `portal`;
 
+-- Dumping structure for table portal.clanci
 DROP TABLE IF EXISTS `clanci`;
 CREATE TABLE IF NOT EXISTS `clanci` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -27,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `clanci` (
   CONSTRAINT `FK_clanci_kategorije` FOREIGN KEY (`kategorija_id`) REFERENCES `kategorije` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Dumping data for table portal.clanci: ~8 rows (approximately)
 DELETE FROM `clanci`;
 /*!40000 ALTER TABLE `clanci` DISABLE KEYS */;
 INSERT INTO `clanci` (`id`, `naslov`, `clanak`, `rezime`, `objavljen`, `pregledi`, `korisnik_id`, `kategorija_id`, `created_at`, `updated_at`, `published_at`, `deleted_at`) VALUES
@@ -40,6 +51,7 @@ INSERT INTO `clanci` (`id`, `naslov`, `clanak`, `rezime`, `objavljen`, `pregledi
 	(8, '„Фејсбук” прети одласком из Европе', 'Највећа онлајн друштвена мрежа неће моћи да послује на територији Европске уније уколико јој буде забрањено да шаље податке корисника у САД, а Европљани у том случају неће моћи да користе ни „Инстаграм”, који је у власништву „Фејсбука”. То наводе правни заступници америчке компаније у поднеску суду у Даблину, где је европско седиште „Фејсбука”, тражећи да се замрзне процес који води ирски повереник за заштиту података, што је суд одобрио.\r\n\r\n„Фејсбук” негира оцене да тај документ представља претњу повлачењем и каже да је само приказ реалног стања: многе компаније зависе од преноса података између ЕУ и САД, а без међународног правног оквира трпеће економије, преноси „Гардијан”. „Фејсбук” упозорава да ће забрана преноса података изазвати последице за пословање компаније, али и за 400 милиона корисника и 25 милиона фирми у ЕУ које користе њене апликације.\r\n\r\nИрски повереник за заштиту података о личности наредио је почетком септембра америчком технолошком џину да обустави пренос података у САД, реагујући по јулској пресуди Европског суда правде у Луксембургу (ЦЈЕУ) да нема довољно гаранција да амерички обавештајци неће „њушкати” по подацима Европљана. Суд је довео у питање легалност употребе стандардних уговорних клаузула на које се „Фејсбук” ослањао (омогућавају извоз података уз претходни пристанак корисника) у случају кад подаци иду компанији ван ЕУ која потпада под америчке законе о обавештајном надзору.\r\n\r\nТо је била последња у низу пресуда у дугом правном процесу који аустријски правник Макс Шремс води против „Фејсбука” скоро 10 година. Прославио се још када је као студент 2011. почео борбу против компаније Марка Закерберга због њеног превеликог задирања у приватност корисника, подносећи тужбу ирском поверенику. Оптужбе су добиле на тежини кад је две године касније Едвард Сноуден обелоданио да кроз програм „Призма” америчка обавештајна агенција НСА има неометан приступ онлајн активностима корисника „Гугла”, „Фејсбука”, „Епла” и других америчких интернет компанија.\r\n\r\nШремс је тада предао нову тужбу у Даблину, тврдећи да су Сноуденова открића јасно показала да споразум САД и ЕУ из 2000, познат као „Сигурна лука”, не гарантује приватност европским држављанима. Ирски повереник је предао случај суду у Луксембургу, највишој судској инстанци у ЕУ, који је 2015. закључио да споразум није валидан. ЕУ је после тога покушала да направи нови правни оквир за пренос података, тзв. штит приватности, али је суд и њега срушио у јулу, закључивши да не нуди довољну заштиту грађана уније од обавештајног надзора САД. Регулаторним телима у земљама чланицама наложено је да контролишу сваки пренос података како би осигурала да је у складу с одредбама европске регулативе ГДПР.\r\n\r\nШремс, оснивач иницијативе „Европа против ’Фејсбука’”, поздравио је одлуку, рекавши да ће САД озбиљно морати да ревидирају законе о надзору уколико америчке компаније желе да задрже улогу на тржишту ЕУ. Поједини коментатори помињу и могућност цепања „Фејсбука” на два дела, што би за ту компанију био скуп и компликован процес.\r\n\r\nШеф „Фејсбука” за комуникације Ник Клег, некада британски вицепремијер из редова Либерално-демократске партије, написао је на блогу да је међународни трансфер података темељ светске економије и основа многих услуга које свакодневно користимо. На пример, немачки стартап неће моћи да користи клауд услуге америчке компаније или француски трговац неће моћи да има кол-центар у Мароку. „Фејсбук” се жали да се према њему поступа неправично, јер ниједној другој компанији нису изречене овакве мере, иако многе извозе податке из ЕУ у друге земље.\r\n\r\nОд Европске комисије се очекује да с владом САД нађе решење за проблем, који у основи има неусклађеност два правна система кад је реч о заштити личних података. Амерички даје широка овлашћења обавештајном надзору, што се судара с фундаменталним европским правом на приватност. Европски комесар за правосуђе Дидије Рејндер рекао је недавно у Европском парламенту да ће САД морати да мењају закон о надзору да би се смањио јаз који постоји између њега и европских закона о заштити приватности.', '„Фејсбук” прети одласком из Европе', 0, 0, 1, 4, '2020-09-25 12:11:15', '2020-09-25 12:11:16', '2020-09-25 12:11:17', NULL);
 /*!40000 ALTER TABLE `clanci` ENABLE KEYS */;
 
+-- Dumping structure for table portal.dokumenti
 DROP TABLE IF EXISTS `dokumenti`;
 CREATE TABLE IF NOT EXISTS `dokumenti` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -49,8 +61,12 @@ CREATE TABLE IF NOT EXISTS `dokumenti` (
   `naslov` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
   `link` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
   `opis` text COLLATE utf8mb4_unicode_ci,
+  `tip` char(3) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `velicina_tekst` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `velicina_mb` decimal(10,2) DEFAULT NULL,
   `korisnik_id` int(10) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `arhiva` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_dokumenti_korisnici` (`korisnik_id`),
   KEY `FK_dokumenti_clanci` (`clanak_id`),
@@ -60,16 +76,21 @@ CREATE TABLE IF NOT EXISTS `dokumenti` (
   CONSTRAINT `FK_dokumenti_kat_dokumenta` FOREIGN KEY (`kategorija_id`) REFERENCES `dokumenti_kategorije` (`id`),
   CONSTRAINT `FK_dokumenti_korisnici` FOREIGN KEY (`korisnik_id`) REFERENCES `korisnici` (`id`),
   CONSTRAINT `FK_dokumenti_vrsta_dokumenta` FOREIGN KEY (`vrsta_id`) REFERENCES `dokumenti_vrste` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Dumping data for table portal.dokumenti: ~6 rows (approximately)
 DELETE FROM `dokumenti`;
 /*!40000 ALTER TABLE `dokumenti` DISABLE KEYS */;
-INSERT INTO `dokumenti` (`id`, `clanak_id`, `vrsta_id`, `kategorija_id`, `naslov`, `link`, `opis`, `korisnik_id`, `created_at`) VALUES
-	(2, NULL, 1, 1, 'Закон о раду', 'http://localhost/portal/pub/doc/закони_ЗАКОН_О_РАДУ_35f689fb5d790f14.pdf', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mattis, sapien in consequat ultrices, mauris orci egestas leo, eu vestibulum odio nunc non turpis. Donec vitae elementum arcu, id auctor elit. In feugiat gravida purus pulvinar bibendum. Don', 1, '2020-09-28 08:26:29'),
-	(3, NULL, 3, 1, 'Општи Акт о безбедности на раду', 'http://localhost/portal/pub/doc/_Општи_Акт_о_безбедности_на_раду_7ad227d5524a3502.pdf', 'Опис 123', 1, '2020-10-16 12:29:02'),
-	(4, NULL, 1, 1, 'Zakon o planiranju i izgradnji', 'http://localhost/portal/pub/doc/Закон_Zakon_o_planiranju_i_izgradnji_062f90d0f7f2a68e.pdf', 'Zakon o planiranju i izgradnji', 1, '2020-10-16 14:37:29');
+INSERT INTO `dokumenti` (`id`, `clanak_id`, `vrsta_id`, `kategorija_id`, `naslov`, `link`, `opis`, `tip`, `velicina_tekst`, `velicina_mb`, `korisnik_id`, `created_at`, `arhiva`) VALUES
+	(2, NULL, 1, 2, 'Закон о раду a', 'http://localhost/portal/pub/doc/закони_ЗАКОН_О_РАДУ_35f689fb5d790f14.pdf', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mattis, sapien in consequat ultrices, mauris orci egestas leo, eu vestibulum odio nunc non turpis. Donec vitae elementum arcu, id auctor elit. In feugiat gravida purus pulvinar bibendum. Donito bato!', 'pdf', '15.3 MB', NULL, 1, '2020-09-28 08:26:29', NULL),
+	(3, NULL, 3, 1, 'Општи Акт о безбедности на раду', 'http://localhost/portal/pub/doc/Уредба_AAAA_902e54b1184c2809.txt', 'Опис 123', 'txt', '165 KB', NULL, 1, '2020-10-16 12:29:02', NULL),
+	(4, NULL, 1, 1, 'Zakon o planiranju i izgradnji', 'http://localhost/portal/pub/doc/закони_ЗАКОН_О_РАДУ_35f689fb5d790f14.pdf', 'Zakon o planiranju i izgradnji', 'doc', '257 MB', NULL, 1, '2020-10-16 14:37:29', '2020-12-14 21:31:13'),
+	(5, NULL, 3, 172, 'Општи Акт о безбедности на раду', 'http://localhost/portal/pub/doc/закони_ЗАКОН_О_РАДУ_35f689fb5d790f14.pdf', 'Опис 123', 'txt', '165 KB', NULL, 1, '2020-12-08 19:39:45', NULL),
+	(6, NULL, 2, 1, 'AAAA', 'http://localhost/portal/pub/doc/Уредба_AAAA_902e54b1184c2809.txt', 'Налазио се у обрисаним категоријама: ОРГАНИ ГРАДА КРАГУЈЕВЦА,Скупштина Града,Градоначелник,Градско веће,Градска управа TEKST', 'txt', '188.00 B', 0.00, 1, '2020-12-09 20:41:52', NULL),
+	(7, NULL, 2, 1, 'BBBBBB za brisnanje kategorije', 'http://localhost/portal/pub/doc/Уредба_BBBBBB_za_brisnanje_kategorije_5c42b10070dd39f4.txt', 'Налазио се у обрисаним категоријама: ОРГАНИ ГРАДА КРАГУЈЕВЦА,Скупштина Града,Градоначелник,Градско веће,Градска управа Uredba za brisanje kategorije', 'txt', '6.00 B', 0.00, 1, '2020-12-18 20:15:21', NULL);
 /*!40000 ALTER TABLE `dokumenti` ENABLE KEYS */;
 
+-- Dumping structure for table portal.dokumenti_kategorije
 DROP TABLE IF EXISTS `dokumenti_kategorije`;
 CREATE TABLE IF NOT EXISTS `dokumenti_kategorije` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -80,58 +101,207 @@ CREATE TABLE IF NOT EXISTS `dokumenti_kategorije` (
   `left` int(10) NOT NULL DEFAULT '0' COMMENT 'for nested set model calculation. this will be able to select filtered parent id and all of its children.',
   `right` int(10) NOT NULL DEFAULT '0' COMMENT 'for nested set model calculation. this will be able to select filtered parent id and all of its children.',
   `korisnik_id` int(10) unsigned NOT NULL,
+  `arhiva` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_kat_dokumenta_korisnici` (`korisnik_id`),
+  KEY `Index 3` (`naziv`(191),`parent_id`),
   CONSTRAINT `FK_kat_dokumenta_korisnici` FOREIGN KEY (`korisnik_id`) REFERENCES `korisnici` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=194 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Dumping data for table portal.dokumenti_kategorije: ~187 rows (approximately)
 DELETE FROM `dokumenti_kategorije`;
 /*!40000 ALTER TABLE `dokumenti_kategorije` DISABLE KEYS */;
-INSERT INTO `dokumenti_kategorije` (`id`, `naziv`, `parent_id`, `position`, `level`, `left`, `right`, `korisnik_id`) VALUES
-	(1, 'Нераспоређени', 0, 1, 1, 1, 2, 1),
-	(2, 'ВИЗИЈА, МИСИЈА, ПЛАН РАЗВОЈА, СТРАТЕГИЈА', 0, 2, 1, 3, 4, 1),
-	(3, 'ОРГАНИ ГРАДА КРАГУЈЕВЦА', 0, 3, 1, 5, 14, 1),
-	(4, 'Скупштина Града', 3, 1, 2, 6, 7, 1),
-	(5, 'Градоначелник', 3, 2, 2, 8, 9, 1),
-	(6, 'Градско веће', 3, 3, 2, 10, 11, 1),
-	(7, 'Градска управа', 3, 4, 2, 12, 13, 1),
-	(8, 'ПОЛИТИЧКИ СИСТЕМ ', 0, 4, 1, 15, 16, 1),
-	(9, 'МЕСНЕ ЗАЈЕДНИЦЕ', 0, 5, 1, 17, 18, 1),
-	(10, 'ОРГАНИЗАЦИЈА ЦИВИЛНОГ ДРУШТВА', 0, 6, 1, 19, 20, 1),
-	(11, 'ГРАДСКИ ОМБУДСМАН', 0, 7, 1, 21, 22, 1),
-	(12, 'ЈАВНО ПРАВОБРАНИЛАШТВО', 0, 8, 1, 23, 24, 1),
-	(13, 'ИНТЕРНА РЕВИЗИЈА', 0, 9, 1, 25, 26, 1),
-	(14, 'БУЏЕТСКА ИНСПЕКЦИЈА', 0, 10, 1, 27, 28, 1),
-	(15, 'КОНТРОЛА И НАДЗОР ПРАВНИХ СУБЈЕКАТА ЧИЈИ ЈЕ ОСНИВАЧ ГРАД', 0, 11, 1, 29, 30, 1),
-	(16, 'ПРОТОКОЛ, МЕЂУНАРОДНА И УНУТРАШЊА САРАДЊА', 0, 12, 1, 31, 32, 1),
-	(17, 'ЈАВНОСТ РАДА', 0, 13, 1, 33, 34, 1),
-	(18, 'ОРГАНИЗАЦИОНА СТРУКТУРА', 0, 14, 1, 35, 38, 1),
-	(19, 'ЈАВНИ ПРИХОДИ И ИНСПЕКЦИЈСКИ ПОСЛОВИ', 18, 1, 2, 36, 37, 1),
-	(20, 'ЉУДСКИ РЕСУРСИ', 0, 15, 1, 39, 42, 1),
-	(21, 'ЈАВНИ ПРИХОДИ И ИНСПЕКЦИЈСКИ ПОСЛОВИ1', 20, 1, 2, 40, 41, 1),
-	(22, 'УЗБУЊИВАЊЕ', 0, 16, 1, 43, 44, 1),
-	(23, 'ФИНАНСИЈСКО УПРАВЉАЊЕ И КОНТРОЛА', 0, 17, 1, 45, 46, 1),
-	(24, 'ФИНАНСИЈЕ', 0, 18, 1, 47, 48, 1),
-	(25, 'ЈАВНИ ПРИХОДИ', 0, 19, 1, 49, 60, 1),
-	(26, 'ПОРЕЗ НА ИМОВИНУ', 25, 1, 2, 50, 51, 1),
-	(27, 'ЛОКАЛНА КОМУНАЛН ТАКСА', 25, 2, 2, 52, 53, 1),
-	(28, 'НАКНАДА ЗА ЗАШТИТУ ЖИВОТНЕ СРЕДИНЕ', 25, 3, 2, 54, 55, 1),
-	(29, 'НАКНАДА ЗА КОРИШЋЕЊЕ ЈАВНИХ ДОБАРА', 25, 4, 2, 56, 57, 1),
-	(30, 'БОРАВИШНА ТАКСА', 25, 5, 2, 58, 59, 1),
-	(31, 'ЈАВНЕ НАБАВКЕ', 0, 20, 1, 61, 62, 1),
-	(32, 'ЛОКАЛНИ ЕКОНОМСКИ РАЗВОЈ', 0, 21, 1, 63, 64, 1),
-	(33, 'ИНВЕСТИЦИЈЕ И ПРОЈЕКТИ', 0, 22, 1, 65, 76, 1),
-	(34, 'Изградња објеката', 33, 1, 2, 66, 67, 1),
-	(35, 'Изградња комуналне инфраструктуре', 33, 2, 2, 68, 69, 1),
-	(36, 'Становање и одржавање зграда', 33, 3, 2, 70, 71, 1),
-	(37, 'Изградња станова за социјално угрожене категорије', 33, 4, 2, 72, 73, 1),
-	(38, 'Изградња за рањиве категорије', 33, 5, 2, 74, 75, 1),
-	(39, 'УПРАВЉАЊЕ ИМОВИНОМ ', 0, 23, 1, 77, 84, 1),
-	(40, 'Пољопривредно земљиште', 39, 1, 2, 78, 79, 1),
-	(41, 'Грађевинско земљиште', 39, 2, 2, 80, 81, 1),
-	(42, 'Путеви', 39, 3, 2, 82, 83, 1);
+INSERT INTO `dokumenti_kategorije` (`id`, `naziv`, `parent_id`, `position`, `level`, `left`, `right`, `korisnik_id`, `arhiva`) VALUES
+	(1, 'НЕРАСПОРЕЂЕНИ', 0, 1, 1, 1, 2, 1, 0),
+	(2, 'ВИЗИЈА, МИСИЈА, ПЛАН РАЗВОЈА, СТРАТЕГИЈА', 0, 2, 1, 3, 4, 1, 0),
+	(8, 'ПОЛИТИЧКИ СИСТЕМ ', 0, 4, 1, 5, 6, 1, 0),
+	(9, 'МЕСНЕ ЗАЈЕДНИЦЕ', 0, 5, 1, 7, 12, 1, 0),
+	(10, 'ОРГАНИЗАЦИЈА ЦИВИЛНОГ ДРУШТВА', 0, 6, 1, 13, 14, 1, 0),
+	(11, 'ГРАДСКИ ОМБУДСМАН', 0, 7, 1, 15, 16, 1, 0),
+	(12, 'ЈАВНО ПРАВОБРАНИЛАШТВО', 0, 8, 1, 17, 18, 1, 0),
+	(13, 'ИНТЕРНА РЕВИЗИЈА', 0, 9, 1, 19, 20, 1, 0),
+	(14, 'БУЏЕТСКА ИНСПЕКЦИЈА', 0, 10, 1, 21, 22, 1, 0),
+	(15, 'КОНТРОЛА И НАДЗОР ПРАВНИХ СУБЈЕКАТА ЧИЈИ ЈЕ ОСНИВАЧ ГРАД', 0, 11, 1, 23, 24, 1, 0),
+	(16, 'ПРОТОКОЛ, МЕЂУНАРОДНА И УНУТРАШЊА САРАДЊА', 0, 12, 1, 25, 26, 1, 0),
+	(17, 'ЈАВНОСТ РАДА', 0, 13, 1, 27, 28, 1, 0),
+	(18, 'ОРГАНИЗАЦИОНА СТРУКТУРА', 0, 14, 1, 29, 32, 1, 0),
+	(19, 'Јавни приходи и инспекцијски послови', 18, 1, 2, 30, 31, 1, 0),
+	(20, 'ЉУДСКИ РЕСУРСИ', 0, 15, 1, 33, 36, 1, 0),
+	(21, 'Јавни приходи и инспекцијски послови', 20, 1, 2, 34, 35, 1, 0),
+	(22, 'УЗБУЊИВАЊЕ', 0, 16, 1, 37, 40, 1, 0),
+	(23, 'ФИНАНСИЈСКО УПРАВЉАЊЕ И КОНТРОЛА', 0, 17, 1, 41, 42, 1, 0),
+	(24, 'ФИНАНСИЈЕ', 0, 18, 1, 43, 44, 1, 0),
+	(25, 'ЈАВНИ ПРИХОДИ', 0, 19, 1, 45, 56, 1, 0),
+	(26, 'Порез на имовину', 25, 1, 2, 46, 47, 1, 0),
+	(27, 'Локална комуналн такса', 25, 2, 2, 48, 49, 1, 0),
+	(28, 'Накнада за заштиту животне средине', 25, 3, 2, 50, 51, 1, 0),
+	(29, 'Накнада за коришћење јавних добара', 25, 4, 2, 52, 53, 1, 0),
+	(30, 'Боравишна такса', 25, 5, 2, 54, 55, 1, 0),
+	(31, 'ЈАВНЕ НАБАВКЕ', 0, 20, 1, 57, 58, 1, 0),
+	(32, 'ЛОКАЛНИ ЕКОНОМСКИ РАЗВОЈ', 0, 21, 1, 59, 60, 1, 0),
+	(33, 'ИНВЕСТИЦИЈЕ И ПРОЈЕКТИ', 0, 22, 1, 61, 72, 1, 0),
+	(34, 'Изградња објеката', 33, 1, 2, 62, 63, 1, 0),
+	(35, 'Изградња комуналне инфраструктуре', 33, 2, 2, 64, 65, 1, 0),
+	(36, 'Становање и одржавање зграда', 33, 3, 2, 66, 67, 1, 0),
+	(37, 'Изградња станова за социјално угрожене категорије', 33, 4, 2, 68, 69, 1, 0),
+	(38, 'Изградња за рањиве категорије', 33, 5, 2, 70, 71, 1, 0),
+	(39, 'УПРАВЉАЊЕ ИМОВИНОМ ', 0, 23, 1, 73, 92, 1, 0),
+	(40, 'Пољопривредно земљиште', 39, 1, 2, 74, 75, 1, 0),
+	(41, 'Грађевинско земљиште', 39, 2, 2, 76, 77, 1, 0),
+	(42, 'Путеви', 39, 3, 2, 78, 79, 1, 0),
+	(43, 'Јавни приходи и инспекцијски послови b', 22, 1, 2, 38, 39, 1, 0),
+	(44, 'Становање и одржавање зграда a', 39, 4, 2, 80, 81, 1, 0),
+	(45, 'Промет непокретности и издавање у закуп', 39, 5, 2, 82, 83, 1, 0),
+	(46, 'Премер и катастар', 39, 6, 2, 84, 85, 1, 0),
+	(47, 'Јавни интерес и Експропријација', 39, 7, 2, 86, 87, 1, 0),
+	(48, 'Враћање одузете имовине и обештећење', 39, 8, 2, 88, 89, 1, 0),
+	(49, 'Станови за припаднике снага безбедности', 39, 9, 2, 90, 91, 1, 0),
+	(50, 'Е-УПРАВА', 0, 24, 1, 93, 94, 1, 0),
+	(51, 'ПРОСТОРНО ПЛАНИРАЊЕ, ИЗГРАДЊА И УРБАНИЗАМ', 0, 25, 1, 95, 100, 1, 0),
+	(52, 'Просторно планирање', 51, 1, 2, 96, 97, 1, 0),
+	(53, 'Озакоњење објеката', 51, 2, 2, 98, 99, 1, 0),
+	(54, 'ПРИВРЕДА (без пољопривреде)', 0, 26, 1, 101, 102, 1, 0),
+	(55, 'ПОЉОПРИВРЕДА И РУРАЛНИ РАЗВОЈ', 0, 27, 1, 103, 104, 1, 0),
+	(56, 'КОМУНАЛНА ДЕЛАТНОСТ', 0, 28, 1, 105, 130, 1, 0),
+	(57, 'Снабдевање водом за пиће, пречишћавње и одвођење атмосферских и отпадних вода', 56, 1, 2, 106, 107, 1, 0),
+	(58, 'Производња, дистрибуција и снабдевање топлотном енергијом Становање и одржавање зграда', 56, 2, 2, 108, 109, 1, 0),
+	(59, 'Гробља и сахрањивања', 56, 3, 2, 110, 111, 1, 0),
+	(60, 'Радно време угоститељских, трговинских и занатских објеката', 56, 4, 2, 112, 113, 1, 0),
+	(61, 'Јавна паркиралишта', 56, 5, 2, 114, 115, 1, 0),
+	(62, 'Пијаце', 56, 6, 2, 116, 117, 1, 0),
+	(63, 'Подизање и одржавање споменика', 56, 7, 2, 118, 119, 1, 0),
+	(64, 'Одржавање чистоће', 56, 8, 2, 120, 121, 1, 0),
+	(65, 'Димничарске услуге', 56, 9, 2, 122, 123, 1, 0),
+	(66, 'Заштита и држање домаћих животиња', 56, 10, 2, 124, 125, 1, 0),
+	(67, 'Изградње и уређења и одржавања јавних WC-а', 56, 11, 2, 126, 127, 1, 0),
+	(68, 'Оглашавање', 56, 12, 2, 128, 129, 1, 0),
+	(69, 'РЕГУЛАЦИЈА САОБРАЋАЈА И ПУТНА ИНФРАСТРУКТУРА', 0, 29, 1, 131, 136, 1, 0),
+	(70, 'Безбедност  и регулација саобраћаја', 69, 1, 2, 132, 133, 1, 0),
+	(71, 'Јавни превоз', 69, 2, 2, 134, 135, 1, 0),
+	(72, 'ЕНЕРГЕТСКА ЕФИКАСНОСТ И ОБНОВЉИВИ ИЗВОРИ ЕНЕРГИЈЕ', 0, 30, 1, 137, 142, 1, 0),
+	(73, 'Енергетска ефикасност', 72, 1, 2, 138, 139, 1, 0),
+	(74, 'Oбновљиви извори енергије', 72, 2, 2, 140, 141, 1, 0),
+	(75, 'ЗАШТИТА ЖИВОТНЕ СРЕДИНЕ', 0, 31, 1, 143, 158, 1, 0),
+	(76, 'Ваздух', 75, 1, 2, 144, 145, 1, 0),
+	(77, 'Вода', 75, 2, 2, 146, 147, 1, 0),
+	(78, 'Бука', 75, 3, 2, 148, 149, 1, 0),
+	(79, 'Отпад', 75, 4, 2, 150, 151, 1, 0),
+	(80, 'Нејонизујуће зрачење', 75, 5, 2, 152, 153, 1, 0),
+	(81, 'Заштита природе', 75, 6, 2, 154, 155, 1, 0),
+	(82, 'Хемикалије', 75, 7, 2, 156, 157, 1, 0),
+	(83, 'ОБРАЗОВАЊЕ', 0, 32, 1, 159, 168, 1, 0),
+	(84, 'Предшколско васпитање и образовање', 83, 1, 2, 160, 161, 1, 0),
+	(85, 'Основно образовање и васпитање', 83, 2, 2, 162, 163, 1, 0),
+	(86, 'Средње образовање и васпитање', 83, 3, 2, 164, 165, 1, 0),
+	(87, 'Образовање одраслих', 83, 4, 2, 166, 167, 1, 0),
+	(88, 'СОЦИЈАЛНА ЗАШТИТА', 0, 33, 1, 169, 182, 1, 0),
+	(89, 'Породични смештај и усвојење', 88, 1, 2, 170, 171, 1, 0),
+	(90, 'Инвалидитет', 88, 2, 2, 172, 173, 1, 0),
+	(91, 'Црвени крст', 88, 3, 2, 174, 175, 1, 0),
+	(92, 'Права  бораца, деце бораца, породица  палих бораца, војних  инвалида  и цивилних инвалида рата', 88, 4, 2, 176, 177, 1, 0),
+	(93, 'Избеглице, Азил, Миграције', 88, 5, 2, 178, 179, 1, 0),
+	(94, 'Енергетски угрожен купац', 88, 6, 2, 180, 181, 1, 0),
+	(95, 'ДЕЧЈА ЗАШТИТА', 0, 34, 1, 183, 184, 1, 0),
+	(96, 'ЗДРАВСТВЕНА ЗАШТИТА', 0, 35, 1, 185, 220, 1, 0),
+	(97, 'Јавно здравље', 96, 1, 2, 186, 187, 1, 0),
+	(98, 'Здравствена заштита', 96, 2, 2, 188, 189, 1, 0),
+	(99, 'Здравствено осигурање', 96, 3, 2, 190, 191, 1, 0),
+	(100, 'Права пацијената', 96, 4, 2, 192, 193, 1, 0),
+	(101, 'Трансфузијска медицина', 96, 5, 2, 194, 195, 1, 0),
+	(102, 'Биомедицински потпомогнута оплодња', 96, 6, 2, 196, 197, 1, 0),
+	(103, 'Здрвствена документација и евиденција у области здрвства', 96, 7, 2, 198, 199, 1, 0),
+	(104, 'План мреже здрвствених уставова', 96, 8, 2, 200, 201, 1, 0),
+	(105, 'Амброзија', 96, 9, 2, 202, 203, 1, 0),
+	(106, 'Хроничне незаразне болести', 96, 10, 2, 204, 205, 1, 0),
+	(107, 'Рак (Cancer)', 96, 11, 2, 206, 207, 1, 0),
+	(108, 'Превентивна здравствена заштита деце са психофизиолошким  поремећајима и говорном патологијом', 96, 12, 2, 208, 209, 1, 0),
+	(109, 'Дијабетес', 96, 13, 2, 210, 211, 1, 0),
+	(110, 'Смрт', 96, 14, 2, 212, 213, 1, 0),
+	(111, 'Дезинфекцја, дезиснсекција, дератизација', 96, 15, 2, 214, 215, 1, 0),
+	(112, 'Рехабилитација', 96, 16, 2, 216, 217, 1, 0),
+	(113, 'Добровољно давање крви', 96, 17, 2, 218, 219, 1, 0),
+	(114, 'ДЕМОГРАФСКА ПОЛИТИКА', 0, 36, 1, 221, 222, 1, 0),
+	(115, 'МАТИЧНЕ ЕВИДЕНЦИЈЕ (изводи – грађанска стања)', 0, 37, 1, 223, 224, 1, 0),
+	(116, 'ПРАВНА ПОМОЋ', 0, 38, 1, 225, 226, 1, 0),
+	(117, 'ИНСПЕКЦИЈСКИ НАДЗОР', 0, 39, 1, 227, 328, 1, 0),
+	(118, 'КОМУНАЛНА ИНСПЕКЦИЈА', 117, 1, 2, 228, 257, 1, 0),
+	(119, 'Снабдевање водом за пиће', 118, 1, 3, 229, 230, 1, 0),
+	(120, 'Пречишћавње и одвођење атмосферских и отпадних вода', 118, 2, 3, 231, 232, 1, 0),
+	(121, 'Производња, дистрибуција и снабдевање топлотном енергијом', 118, 3, 3, 233, 234, 1, 0),
+	(122, 'Становање и одржавање зграда', 118, 4, 3, 235, 236, 1, 0),
+	(123, 'Радно време угоститељских, трговинских и занатских објеката', 118, 5, 3, 237, 238, 1, 0),
+	(124, 'Оглашавање', 118, 6, 3, 239, 240, 1, 0),
+	(125, 'Јавна паркиралишта', 118, 7, 3, 241, 242, 1, 0),
+	(126, 'Пијаце', 118, 8, 3, 243, 244, 1, 0),
+	(127, 'Подизање и одржавање споменика', 118, 9, 3, 245, 246, 1, 0),
+	(128, 'Гробља и сахрањивања', 118, 10, 3, 247, 248, 1, 0),
+	(129, 'Одржавање чистоће', 118, 11, 3, 249, 250, 1, 0),
+	(130, 'Димничарске услуге', 118, 12, 3, 251, 252, 1, 0),
+	(131, 'Заштита и држање домаћих животиња', 118, 13, 3, 253, 254, 1, 0),
+	(132, 'Изградње и уређења и одржавања јавних WC-а', 118, 14, 3, 255, 256, 1, 0),
+	(133, 'КОМУНАЛНА МИЛИЦИЈА', 117, 2, 2, 258, 287, 1, 0),
+	(134, 'Снабдевање водом за пиће', 133, 1, 3, 259, 260, 1, 0),
+	(135, 'Јавни ред и мир', 133, 2, 3, 261, 262, 1, 0),
+	(136, 'Становање и одржавање зграда', 133, 3, 3, 263, 264, 1, 0),
+	(137, 'Радно време угоститељских, трговинских и занатских објеката', 133, 4, 3, 265, 266, 1, 0),
+	(138, 'Оглашавање', 133, 5, 3, 267, 268, 1, 0),
+	(139, 'Јавна паркиралишта', 133, 6, 3, 269, 270, 1, 0),
+	(140, 'Пијаце', 133, 7, 3, 271, 272, 1, 0),
+	(141, 'Подизање и одржавање споменика', 133, 8, 3, 273, 274, 1, 0),
+	(142, 'Гробља и сахрањивања', 133, 9, 3, 275, 276, 1, 0),
+	(143, 'Заштита и држање домаћих животиња', 133, 10, 3, 277, 278, 1, 0),
+	(144, 'Дувански дим', 133, 11, 3, 279, 280, 1, 0),
+	(145, 'Одржавање чистоће', 133, 12, 3, 281, 282, 1, 0),
+	(146, 'Димничарске услуге', 133, 13, 3, 283, 284, 1, 0),
+	(147, 'Изградње и уређења и одржавања јавних WC-а', 133, 14, 3, 285, 286, 1, 0),
+	(148, 'ГРАЂЕВИНСКА ИНСПЕКЦИЈА', 117, 3, 2, 288, 289, 1, 0),
+	(149, 'ИНСПЕКЦИЈА ЗА ЗАШТИТУ ЖИВОТНЕ СРЕДИНЕ', 117, 4, 2, 290, 305, 1, 0),
+	(150, 'Ваздух', 149, 1, 3, 291, 292, 1, 0),
+	(151, 'Вода', 149, 2, 3, 293, 294, 1, 0),
+	(152, 'Бука', 149, 3, 3, 295, 296, 1, 0),
+	(153, 'Отпад', 149, 4, 3, 297, 298, 1, 0),
+	(154, 'Нејонизујуће зрачење', 149, 5, 3, 299, 300, 1, 0),
+	(155, 'Заштита природе', 149, 6, 3, 301, 302, 1, 0),
+	(156, 'Хемикалије', 149, 7, 3, 303, 304, 1, 0),
+	(157, 'ИНСПЕКЦИЈА ЗА САОБРАЋАЈ И ПУТЕВЕ', 117, 5, 2, 306, 311, 1, 0),
+	(158, 'Безбедност  и регулација саобраћаја', 157, 1, 3, 307, 308, 1, 0),
+	(159, 'Јавни превоз', 157, 2, 3, 309, 310, 1, 0),
+	(160, 'ПРОСВЕТНА ИНСПЕКЦИЈА', 117, 6, 2, 312, 321, 1, 0),
+	(161, 'Предшколско васпитање и образовање', 160, 1, 3, 313, 314, 1, 0),
+	(162, 'Основно васпитање и образовање', 160, 2, 3, 315, 316, 1, 0),
+	(163, 'Средње васпитање и образовање', 160, 3, 3, 317, 318, 1, 0),
+	(164, 'Образовање одраслих', 160, 4, 3, 319, 320, 1, 0),
+	(165, 'ТУРИСТИЧКА ИНСПЕКЦИЈА', 117, 7, 2, 322, 323, 1, 0),
+	(166, 'СПОРТСКА ИНСПЕКЦИЈА', 117, 8, 2, 324, 325, 1, 0),
+	(167, 'COVID 19', 117, 9, 2, 326, 327, 1, 0),
+	(168, 'КУЛТУРА', 0, 40, 1, 329, 330, 1, 0),
+	(169, 'СПОРТ', 0, 41, 1, 331, 332, 1, 0),
+	(170, 'ОМЛАДИНА', 0, 42, 1, 333, 334, 1, 0),
+	(171, 'ТУРИЗАМ', 0, 43, 1, 335, 336, 1, 0),
+	(172, 'БЕЗБЕДНОСТ И ЗДРАВЉЕ НА РАДУ', 0, 44, 1, 337, 338, 1, 0),
+	(173, 'ПРОТИВПОЖАРНА ЗАШТИТА', 0, 45, 1, 339, 340, 1, 0),
+	(174, 'ИНФОРМАЦИОНО КОМУНИКАЦИОНЕ ТЕХНОЛОГИЈЕ', 0, 46, 1, 341, 348, 1, 0),
+	(175, 'Хардвер', 174, 1, 2, 342, 343, 1, 0),
+	(176, 'Софтвер', 174, 2, 2, 344, 345, 1, 0),
+	(177, 'Услуге', 174, 3, 2, 346, 347, 1, 0),
+	(178, 'ПИСАРНИЦА', 0, 47, 1, 349, 350, 1, 0),
+	(179, 'ОДРЖАВАЊЕ ОБЈЕКАТА И ОПРЕМЕ', 0, 48, 1, 351, 352, 1, 0),
+	(180, 'МАГАЦИН', 0, 49, 1, 353, 354, 1, 0),
+	(181, 'ВОЗНИ ПАРК', 0, 50, 1, 355, 356, 1, 0),
+	(182, 'МОБИЛНА ТЕЛЕФОНИЈА', 0, 51, 1, 357, 358, 1, 0),
+	(183, 'ИНТЕРНИ БИФЕ', 0, 52, 1, 359, 360, 1, 0),
+	(184, 'МЕДИЈИ', 0, 53, 1, 361, 362, 1, 0),
+	(185, 'ВАНРЕДНЕ СИТУАЦИЈЕ И ОДБРАНА', 0, 54, 1, 363, 368, 1, 0),
+	(186, 'Поплаве', 185, 1, 2, 364, 365, 1, 0),
+	(187, 'Пожари', 185, 2, 2, 366, 367, 1, 0),
+	(188, 'COVID 19', 0, 55, 1, 369, 372, 1, 0),
+	(189, 'СИНДИКАТ', 0, 56, 1, 373, 374, 1, 0),
+	(190, 'Јавни приходи и инспекцијски послови', 188, 1, 2, 370, 371, 1, 0),
+	(192, 'A/A 2021', 9, 1, 2, 8, 9, 1, 1),
+	(193, 'A/A 2022', 9, 2, 2, 10, 11, 1, 1);
 /*!40000 ALTER TABLE `dokumenti_kategorije` ENABLE KEYS */;
 
+-- Dumping structure for table portal.dokumenti_vrste
 DROP TABLE IF EXISTS `dokumenti_vrste`;
 CREATE TABLE IF NOT EXISTS `dokumenti_vrste` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -140,16 +310,24 @@ CREATE TABLE IF NOT EXISTS `dokumenti_vrste` (
   PRIMARY KEY (`id`),
   KEY `FK__korisnici` (`korisnik_id`),
   CONSTRAINT `FK__korisnici` FOREIGN KEY (`korisnik_id`) REFERENCES `korisnici` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Dumping data for table portal.dokumenti_vrste: ~9 rows (approximately)
 DELETE FROM `dokumenti_vrste`;
 /*!40000 ALTER TABLE `dokumenti_vrste` DISABLE KEYS */;
 INSERT INTO `dokumenti_vrste` (`id`, `naziv`, `korisnik_id`) VALUES
 	(1, 'Закон', 1),
 	(2, 'Уредба', 1),
-	(3, 'Правилник', 1);
+	(3, 'Правилник', 1),
+	(4, 'Одлука', 1),
+	(5, 'Стратегија', 1),
+	(6, 'Директива', 1),
+	(7, 'Извештај', 1),
+	(8, 'Акциони план', 1),
+	(9, 'Инструкција', 1);
 /*!40000 ALTER TABLE `dokumenti_vrste` ENABLE KEYS */;
 
+-- Dumping structure for table portal.kategorije
 DROP TABLE IF EXISTS `kategorije`;
 CREATE TABLE IF NOT EXISTS `kategorije` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -161,6 +339,7 @@ CREATE TABLE IF NOT EXISTS `kategorije` (
   CONSTRAINT `FK_kategorije_korisnici` FOREIGN KEY (`korisnik_id`) REFERENCES `korisnici` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Dumping data for table portal.kategorije: ~15 rows (approximately)
 DELETE FROM `kategorije`;
 /*!40000 ALTER TABLE `kategorije` DISABLE KEYS */;
 INSERT INTO `kategorije` (`id`, `naziv`, `vrsta`, `korisnik_id`) VALUES
@@ -181,6 +360,7 @@ INSERT INTO `kategorije` (`id`, `naziv`, `vrsta`, `korisnik_id`) VALUES
 	(15, 'Синдикат "Пера"', 'синдикати', 1);
 /*!40000 ALTER TABLE `kategorije` ENABLE KEYS */;
 
+-- Dumping structure for table portal.komentari
 DROP TABLE IF EXISTS `komentari`;
 CREATE TABLE IF NOT EXISTS `komentari` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -196,6 +376,7 @@ CREATE TABLE IF NOT EXISTS `komentari` (
   CONSTRAINT `FK_komentari_clanci` FOREIGN KEY (`id_clanka`) REFERENCES `clanci` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Dumping data for table portal.komentari: ~4 rows (approximately)
 DELETE FROM `komentari`;
 /*!40000 ALTER TABLE `komentari` DISABLE KEYS */;
 INSERT INTO `komentari` (`id`, `id_clanka`, `naslov`, `korisnik`, `korisnik_ip`, `komentar`, `created_at`, `published_at`) VALUES
@@ -205,6 +386,7 @@ INSERT INTO `komentari` (`id`, `id_clanka`, `naslov`, `korisnik`, `korisnik_ip`,
 	(5, 2, 'Neki komentar', 'Сташа тхе Краљ', '::1,KURE_I5', 'Молимо вас да се у коментарима држите теме текста. Администратор портала задржава право да – уколико их процени као неумесне - скрати или не објави коментаре који садрже осврте на нечију личност и приватан живот, увреде на рачун аутора текста и/или чланова административног тима портала као и било какву претњу, непристојан речник, говор мржње, расне и националне увреде или било какав незаконит садржај. Коментаре писане верзалом и линкове на друге сајтове не објављујемо. Администратор портала нема никакву обавезу образлагања одлука везаних за скраћивање коментара и њихово објављивање.', '2020-09-28 08:44:21', '2020-09-28 08:45:19');
 /*!40000 ALTER TABLE `komentari` ENABLE KEYS */;
 
+-- Dumping structure for table portal.korisnici
 DROP TABLE IF EXISTS `korisnici`;
 CREATE TABLE IF NOT EXISTS `korisnici` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -213,7 +395,8 @@ CREATE TABLE IF NOT EXISTS `korisnici` (
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `korisnicko_ime` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lozinka` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `dozvoljene_kategorije` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dozvoljene_kategorije` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `dozvoljene_kategorije_dok` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nivo` int(10) unsigned NOT NULL,
   `korisnik_id` int(10) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -221,15 +404,18 @@ CREATE TABLE IF NOT EXISTS `korisnici` (
   UNIQUE KEY `username` (`korisnicko_ime`),
   KEY `FK_korisnici_korisnici` (`korisnik_id`),
   CONSTRAINT `FK_korisnici_korisnici` FOREIGN KEY (`korisnik_id`) REFERENCES `korisnici` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Dumping data for table portal.korisnici: ~2 rows (approximately)
 DELETE FROM `korisnici`;
 /*!40000 ALTER TABLE `korisnici` DISABLE KEYS */;
-INSERT INTO `korisnici` (`id`, `ime`, `prezime`, `email`, `korisnicko_ime`, `lozinka`, `dozvoljene_kategorije`, `nivo`, `korisnik_id`, `created_at`) VALUES
-	(1, 'Admin', '', '', 'admin', '$2y$10$RWD9bVOhe1GlWER7DVKMAukc2/OAwpoAvC/8A.wYOpGtqMFTezQHm', '1,2,3', 0, 1, '2020-01-08 19:47:03'),
-	(2, 'pera', 'pekic', 'peki@pera.net', 'pekile', '$2y$10$U2FnmDxHkgxlqyG.tkYs/OdPHXxuE1ybWYYSR.tD.WsiRk6Y8Eequ', '1, 2, 4', 100, 1, '2020-09-28 13:22:24');
+INSERT INTO `korisnici` (`id`, `ime`, `prezime`, `email`, `korisnicko_ime`, `lozinka`, `dozvoljene_kategorije`, `dozvoljene_kategorije_dok`, `nivo`, `korisnik_id`, `created_at`) VALUES
+	(1, 'Admin', '', '', 'admin', '$2y$10$RWD9bVOhe1GlWER7DVKMAukc2/OAwpoAvC/8A.wYOpGtqMFTezQHm', '1,2,3', '', 0, 1, '2020-01-08 19:47:03'),
+	(2, 'pera', 'pekic', 'peki@pera.net', 'pekile', '$2y$10$QCcvbVlJ5s1YIHo5iFPYbetOVtU3V/dnPjM8fvEAHyXu.Dd3N86KW', '1,2,4', '2,13,35', 100, 1, '2020-09-28 13:22:24'),
+	(3, 'Ahmed', 'Ninjic', 'ah@yahoo.com', 'ahmed', '$2y$10$iRz336TJfddb4bSTt8RiqejHeJyl3hcA2mRkAsOkqbY8GnMgxp.7q', '1', '149, 150, 151, 152, 153, 154, 155, 156', 100, 1, '2020-12-20 18:44:01');
 /*!40000 ALTER TABLE `korisnici` ENABLE KEYS */;
 
+-- Dumping structure for table portal.logovi
 DROP TABLE IF EXISTS `logovi`;
 CREATE TABLE IF NOT EXISTS `logovi` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -241,8 +427,9 @@ CREATE TABLE IF NOT EXISTS `logovi` (
   PRIMARY KEY (`id`),
   KEY `FK_logovi_korisnici` (`korisnik_id`),
   CONSTRAINT `FK_logovi_korisnici` FOREIGN KEY (`korisnik_id`) REFERENCES `korisnici` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=254 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Dumping data for table portal.logovi: ~239 rows (approximately)
 DELETE FROM `logovi`;
 /*!40000 ALTER TABLE `logovi` DISABLE KEYS */;
 INSERT INTO `logovi` (`id`, `opis`, `datum`, `izmene`, `tip`, `korisnik_id`) VALUES
@@ -314,7 +501,191 @@ INSERT INTO `logovi` (`id`, `opis`, `datum`, `izmene`, `tip`, `korisnik_id`) VAL
 	(66, '39, dokumenti_kategorije - naziv: УПРАВЉАЊЕ ИМОВИНОМ ', '2020-12-04 13:59:34', '', 'dodavanje', 1),
 	(67, '40, dokumenti_kategorije - naziv: Пољопривредно земљиште', '2020-12-04 14:06:23', '', 'dodavanje', 1),
 	(68, '41, dokumenti_kategorije - naziv: Грађевинско земљиште', '2020-12-04 14:06:37', '', 'dodavanje', 1),
-	(69, '42, dokumenti_kategorije - naziv: Путеви', '2020-12-04 14:06:54', '', 'dodavanje', 1);
+	(69, '42, dokumenti_kategorije - naziv: Путеви', '2020-12-04 14:06:54', '', 'dodavanje', 1),
+	(70, '19, dokumenti_kategorije - naziv: 13.1.	Јавни приходи и инспекцијски послови', '2020-12-06 15:58:59', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:68:"ЈАВНИ ПРИХОДИ И ИНСПЕКЦИЈСКИ ПОСЛОВИ";s:13:"nova_vrednost";s:74:"13.1.	Јавни приходи и инспекцијски послови";}}', 'izmena', 1),
+	(71, '19, dokumenti_kategorije - naziv: Јавни приходи и инспекцијски послови', '2020-12-06 15:59:19', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:74:"13.1.	Јавни приходи и инспекцијски послови";s:13:"nova_vrednost";s:68:"Јавни приходи и инспекцијски послови";}}', 'izmena', 1),
+	(72, '21, dokumenti_kategorije - naziv: Јавни приходи и инспекцијски послови a', '2020-12-06 16:03:35', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:69:"ЈАВНИ ПРИХОДИ И ИНСПЕКЦИЈСКИ ПОСЛОВИ1";s:13:"nova_vrednost";s:70:"Јавни приходи и инспекцијски послови a";}}', 'izmena', 1),
+	(73, '43, dokumenti_kategorije - naziv: Јавни приходи и инспекцијски послови b', '2020-12-06 16:04:05', '', 'dodavanje', 1),
+	(74, '26, dokumenti_kategorije - naziv: Порез на имовину', '2020-12-06 16:05:19', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:30:"ПОРЕЗ НА ИМОВИНУ";s:13:"nova_vrednost";s:30:"Порез на имовину";}}', 'izmena', 1),
+	(75, '27, dokumenti_kategorije - naziv: Локална комуналн такса', '2020-12-06 16:05:34', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:42:"ЛОКАЛНА КОМУНАЛН ТАКСА";s:13:"nova_vrednost";s:42:"Локална комуналн такса";}}', 'izmena', 1),
+	(76, '28, dokumenti_kategorije - naziv: Накнада за заштиту животне средине', '2020-12-06 16:05:48', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:64:"НАКНАДА ЗА ЗАШТИТУ ЖИВОТНЕ СРЕДИНЕ";s:13:"nova_vrednost";s:64:"Накнада за заштиту животне средине";}}', 'izmena', 1),
+	(77, '29, dokumenti_kategorije - naziv: Накнада за коришћење јавних добара', '2020-12-06 16:06:49', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:64:"НАКНАДА ЗА КОРИШЋЕЊЕ ЈАВНИХ ДОБАРА";s:13:"nova_vrednost";s:64:"Накнада за коришћење јавних добара";}}', 'izmena', 1),
+	(78, '30, dokumenti_kategorije - naziv: Боравишна такса', '2020-12-06 16:07:18', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:29:"БОРАВИШНА ТАКСА";s:13:"nova_vrednost";s:29:"Боравишна такса";}}', 'izmena', 1),
+	(79, '44, dokumenti_kategorije - naziv: Становање и одржавање зграда a', '2020-12-06 16:08:20', '', 'dodavanje', 1),
+	(80, '45, dokumenti_kategorije - naziv: Промет непокретности и издавање у закуп', '2020-12-06 16:08:33', '', 'dodavanje', 1),
+	(81, '46, dokumenti_kategorije - naziv: Премер и катастар', '2020-12-06 16:08:46', '', 'dodavanje', 1),
+	(82, '47, dokumenti_kategorije - naziv: Јавни интерес и Експропријација', '2020-12-06 16:08:57', '', 'dodavanje', 1),
+	(83, '48, dokumenti_kategorije - naziv: Враћање одузете имовине и обештећење', '2020-12-06 16:09:10', '', 'dodavanje', 1),
+	(84, '49, dokumenti_kategorije - naziv: Станови за припаднике снага безбедности', '2020-12-06 16:09:22', '', 'dodavanje', 1),
+	(85, '50, dokumenti_kategorije - naziv: Е-УПРАВА', '2020-12-06 16:09:33', '', 'dodavanje', 1),
+	(86, '51, dokumenti_kategorije - naziv: ПРОСТОРНО ПЛАНИРАЊЕ, ИЗГРАДЊА И УРБАНИЗАМ', '2020-12-06 16:09:56', '', 'dodavanje', 1),
+	(87, '52, dokumenti_kategorije - naziv: Просторно планирање', '2020-12-06 16:10:11', '', 'dodavanje', 1),
+	(88, '53, dokumenti_kategorije - naziv: Озакоњење објеката', '2020-12-06 16:10:24', '', 'dodavanje', 1),
+	(89, '54, dokumenti_kategorije - naziv: ПРИВРЕДА (без пољопривреде)', '2020-12-06 16:10:45', '', 'dodavanje', 1),
+	(90, '55, dokumenti_kategorije - naziv: ПОЉОПРИВРЕДА И РУРАЛНИ РАЗВОЈ', '2020-12-06 16:11:03', '', 'dodavanje', 1),
+	(91, '56, dokumenti_kategorije - naziv: КОМУНАЛНА ДЕЛАТНОСТ', '2020-12-06 16:11:24', '', 'dodavanje', 1),
+	(92, '57, dokumenti_kategorije - naziv: Снабдевање водом за пиће, пречишћавње и одвођење атмосферских и отпадних вода', '2020-12-06 16:11:54', '', 'dodavanje', 1),
+	(93, '58, dokumenti_kategorije - naziv: Производња, дистрибуција и снабдевање топлотном енергијом Становање и одржавање зграда', '2020-12-06 16:12:16', '', 'dodavanje', 1),
+	(94, '59, dokumenti_kategorije - naziv: Гробља и сахрањивања', '2020-12-06 16:13:10', '', 'dodavanje', 1),
+	(95, '60, dokumenti_kategorije - naziv: Радно време угоститељских, трговинских и занатских објеката', '2020-12-06 16:13:26', '', 'dodavanje', 1),
+	(96, '61, dokumenti_kategorije - naziv: Јавна паркиралишта', '2020-12-06 16:13:38', '', 'dodavanje', 1),
+	(97, '62, dokumenti_kategorije - naziv: Пијаце', '2020-12-06 16:13:49', '', 'dodavanje', 1),
+	(98, '63, dokumenti_kategorije - naziv: Подизање и одржавање споменика', '2020-12-06 16:14:00', '', 'dodavanje', 1),
+	(99, '64, dokumenti_kategorije - naziv: Одржавање чистоће', '2020-12-06 16:14:11', '', 'dodavanje', 1),
+	(100, '65, dokumenti_kategorije - naziv: Димничарске услуге', '2020-12-06 16:14:21', '', 'dodavanje', 1),
+	(101, '66, dokumenti_kategorije - naziv: Заштита и држање домаћих животиња', '2020-12-06 16:14:32', '', 'dodavanje', 1),
+	(102, '67, dokumenti_kategorije - naziv: Изградње и уређења и одржавања јавних WC-а', '2020-12-06 16:14:45', '', 'dodavanje', 1),
+	(103, '68, dokumenti_kategorije - naziv: Оглашавање', '2020-12-06 16:14:54', '', 'dodavanje', 1),
+	(104, '69, dokumenti_kategorije - naziv: РЕГУЛАЦИЈА САОБРАЋАЈА И ПУТНА ИНФРАСТРУКТУРА', '2020-12-06 16:15:16', '', 'dodavanje', 1),
+	(105, '70, dokumenti_kategorije - naziv: Безбедност  и регулација саобраћаја', '2020-12-06 16:15:39', '', 'dodavanje', 1),
+	(106, '71, dokumenti_kategorije - naziv: Јавни превоз', '2020-12-06 16:15:53', '', 'dodavanje', 1),
+	(107, '72, dokumenti_kategorije - naziv: ЕНЕРГЕТСКА ЕФИКАСНОСТ И ОБНОВЉИВИ ИЗВОРИ ЕНЕРГИЈЕ', '2020-12-06 16:16:08', '', 'dodavanje', 1),
+	(108, '1, dokumenti_kategorije - naziv: НЕРАСПОРЕЂЕНi', '2020-12-06 16:56:22', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:26:"НЕРАСПОРЕЂЕНИ";s:13:"nova_vrednost";s:25:"НЕРАСПОРЕЂЕНi";}}', 'izmena', 1),
+	(109, '1, dokumenti_kategorije - naziv: НЕРАСПОРЕЂЕНИ', '2020-12-06 16:56:31', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:25:"НЕРАСПОРЕЂЕНi";s:13:"nova_vrednost";s:26:"НЕРАСПОРЕЂЕНИ";}}', 'izmena', 1),
+	(110, '21, dokumenti_kategorije - naziv: Јавни приходи и инспекцијски послови', '2020-12-06 17:00:40', 'a:1:{s:5:"naziv";a:2:{s:14:"stara_vrednost";s:70:"Јавни приходи и инспекцијски послови a";s:13:"nova_vrednost";s:68:"Јавни приходи и инспекцијски послови";}}', 'izmena', 1),
+	(111, '73, dokumenti_kategorije - naziv: Енергетска ефикасност', '2020-12-06 17:07:55', '', 'dodavanje', 1),
+	(112, '74, dokumenti_kategorije - naziv: Oбновљиви извори енергије', '2020-12-06 17:08:24', '', 'dodavanje', 1),
+	(113, '75, dokumenti_kategorije - naziv: ЗАШТИТА ЖИВОТНЕ СРЕДИНЕ', '2020-12-06 17:10:02', '', 'dodavanje', 1),
+	(114, '76, dokumenti_kategorije - naziv: Ваздух', '2020-12-06 17:11:20', '', 'dodavanje', 1),
+	(115, '77, dokumenti_kategorije - naziv: Вода', '2020-12-06 17:12:56', '', 'dodavanje', 1),
+	(116, '78, dokumenti_kategorije - naziv: Бука', '2020-12-06 17:13:08', '', 'dodavanje', 1),
+	(117, '79, dokumenti_kategorije - naziv: Отпад', '2020-12-06 17:13:15', '', 'dodavanje', 1),
+	(118, '80, dokumenti_kategorije - naziv: Нејонизујуће зрачење', '2020-12-06 17:13:24', '', 'dodavanje', 1),
+	(119, '81, dokumenti_kategorije - naziv: Заштита природе', '2020-12-06 17:13:32', '', 'dodavanje', 1),
+	(120, '82, dokumenti_kategorije - naziv: Хемикалије', '2020-12-06 17:13:39', '', 'dodavanje', 1),
+	(121, '83, dokumenti_kategorije - naziv: ОБРАЗОВАЊЕ', '2020-12-06 17:14:32', '', 'dodavanje', 1),
+	(122, '84, dokumenti_kategorije - naziv: Предшколско васпитање и образовање', '2020-12-06 17:15:56', '', 'dodavanje', 1),
+	(123, '85, dokumenti_kategorije - naziv: Основно образовање и васпитање', '2020-12-06 17:16:06', '', 'dodavanje', 1),
+	(124, '86, dokumenti_kategorije - naziv: Средње образовање и васпитање', '2020-12-06 17:16:16', '', 'dodavanje', 1),
+	(125, '87, dokumenti_kategorije - naziv: Образовање одраслих', '2020-12-06 17:16:24', '', 'dodavanje', 1),
+	(126, '4, dokumenti_vrste - naziv: Одлука', '2020-12-06 17:52:30', '', 'dodavanje', 1),
+	(127, '5, dokumenti_vrste - naziv: Стратегија', '2020-12-06 17:52:37', '', 'dodavanje', 1),
+	(128, '6, dokumenti_vrste - naziv: Директива', '2020-12-06 17:53:21', '', 'dodavanje', 1),
+	(129, '7, dokumenti_vrste - naziv: Извештај', '2020-12-06 17:53:41', '', 'dodavanje', 1),
+	(130, '8, dokumenti_vrste - naziv: Акциони план', '2020-12-06 17:54:00', '', 'dodavanje', 1),
+	(131, '9, dokumenti_vrste - naziv: Инструкција', '2020-12-06 17:55:54', '', 'dodavanje', 1),
+	(132, '88, dokumenti_kategorije - naziv: СОЦИЈАЛНА ЗАШТИТА', '2020-12-06 17:56:45', '', 'dodavanje', 1),
+	(133, '89, dokumenti_kategorije - naziv: Породични смештај и усвојење', '2020-12-06 17:56:58', '', 'dodavanje', 1),
+	(134, '90, dokumenti_kategorije - naziv: Инвалидитет', '2020-12-06 17:57:10', '', 'dodavanje', 1),
+	(135, '91, dokumenti_kategorije - naziv: Црвени крст', '2020-12-06 17:57:19', '', 'dodavanje', 1),
+	(136, '92, dokumenti_kategorije - naziv: Права  бораца, деце бораца, породица  палих бораца, војних  инвалида  и цивилних инвалида рата', '2020-12-06 17:57:29', '', 'dodavanje', 1),
+	(137, '93, dokumenti_kategorije - naziv: Избеглице, Азил, Миграције', '2020-12-06 17:57:46', '', 'dodavanje', 1),
+	(138, '94, dokumenti_kategorije - naziv: Енергетски угрожен купац', '2020-12-06 17:57:57', '', 'dodavanje', 1),
+	(139, '95, dokumenti_kategorije - naziv: ДЕЧЈА ЗАШТИТА', '2020-12-06 17:58:16', '', 'dodavanje', 1),
+	(140, '96, dokumenti_kategorije - naziv: ЗДРАВСТВЕНА ЗАШТИТА', '2020-12-06 17:58:26', '', 'dodavanje', 1),
+	(141, '97, dokumenti_kategorije - naziv: Јавно здравље', '2020-12-06 17:58:46', '', 'dodavanje', 1),
+	(142, '98, dokumenti_kategorije - naziv: Здравствена заштита', '2020-12-06 17:59:08', '', 'dodavanje', 1),
+	(143, '99, dokumenti_kategorije - naziv: Здравствено осигурање', '2020-12-06 17:59:43', '', 'dodavanje', 1),
+	(144, '100, dokumenti_kategorije - naziv: Права пацијената', '2020-12-06 17:59:54', '', 'dodavanje', 1),
+	(145, '101, dokumenti_kategorije - naziv: Трансфузијска медицина', '2020-12-06 18:00:10', '', 'dodavanje', 1),
+	(146, '102, dokumenti_kategorije - naziv: Биомедицински потпомогнута оплодња', '2020-12-06 18:00:25', '', 'dodavanje', 1),
+	(147, '103, dokumenti_kategorije - naziv: Здрвствена документација и евиденција у области здрвства', '2020-12-06 18:00:49', '', 'dodavanje', 1),
+	(148, '104, dokumenti_kategorije - naziv: План мреже здрвствених уставова', '2020-12-06 18:01:06', '', 'dodavanje', 1),
+	(149, '105, dokumenti_kategorije - naziv: Амброзија', '2020-12-06 18:01:30', '', 'dodavanje', 1),
+	(150, '106, dokumenti_kategorije - naziv: Хроничне незаразне болести', '2020-12-06 18:01:45', '', 'dodavanje', 1),
+	(151, '107, dokumenti_kategorije - naziv: Рак (Cancer)', '2020-12-06 18:02:32', '', 'dodavanje', 1),
+	(152, '108, dokumenti_kategorije - naziv: Превентивна здравствена заштита деце са психофизиолошким  поремећајима и говорном патологијом', '2020-12-06 18:02:45', '', 'dodavanje', 1),
+	(153, '109, dokumenti_kategorije - naziv: Дијабетес', '2020-12-06 18:03:02', '', 'dodavanje', 1),
+	(154, '110, dokumenti_kategorije - naziv: Смрт', '2020-12-06 18:03:50', '', 'dodavanje', 1),
+	(155, '111, dokumenti_kategorije - naziv: Дезинфекцја, дезиснсекција, дератизација', '2020-12-06 18:04:03', '', 'dodavanje', 1),
+	(156, '112, dokumenti_kategorije - naziv: Рехабилитација', '2020-12-06 18:04:15', '', 'dodavanje', 1),
+	(157, '113, dokumenti_kategorije - naziv: Добровољно давање крви', '2020-12-06 18:04:29', '', 'dodavanje', 1),
+	(158, '114, dokumenti_kategorije - naziv: ДЕМОГРАФСКА ПОЛИТИКА', '2020-12-06 18:24:10', '', 'dodavanje', 1),
+	(159, '115, dokumenti_kategorije - naziv: МАТИЧНЕ ЕВИДЕНЦИЈЕ (изводи – грађанска стања)', '2020-12-06 18:25:22', '', 'dodavanje', 1),
+	(160, '116, dokumenti_kategorije - naziv: ПРАВНА ПОМОЋ', '2020-12-06 18:25:36', '', 'dodavanje', 1),
+	(161, '117, dokumenti_kategorije - naziv: ИНСПЕКЦИЈСКИ НАДЗОР', '2020-12-06 18:25:45', '', 'dodavanje', 1),
+	(162, '118, dokumenti_kategorije - naziv: КОМУНАЛНА ИНСПЕКЦИЈА', '2020-12-06 18:28:32', '', 'dodavanje', 1),
+	(163, '119, dokumenti_kategorije - naziv: Снабдевање водом за пиће', '2020-12-06 18:29:21', '', 'dodavanje', 1),
+	(164, '120, dokumenti_kategorije - naziv: Пречишћавње и одвођење атмосферских и отпадних вода', '2020-12-06 18:29:44', '', 'dodavanje', 1),
+	(165, '121, dokumenti_kategorije - naziv: Производња, дистрибуција и снабдевање топлотном енергијом', '2020-12-06 18:30:14', '', 'dodavanje', 1),
+	(166, '122, dokumenti_kategorije - naziv: Становање и одржавање зграда', '2020-12-06 18:30:43', '', 'dodavanje', 1),
+	(167, '123, dokumenti_kategorije - naziv: Радно време угоститељских, трговинских и занатских објеката', '2020-12-06 18:31:34', '', 'dodavanje', 1),
+	(168, '124, dokumenti_kategorije - naziv: Оглашавање', '2020-12-06 18:32:00', '', 'dodavanje', 1),
+	(169, '125, dokumenti_kategorije - naziv: Јавна паркиралишта', '2020-12-06 18:32:19', '', 'dodavanje', 1),
+	(170, '126, dokumenti_kategorije - naziv: Пијаце', '2020-12-06 18:32:53', '', 'dodavanje', 1),
+	(171, '127, dokumenti_kategorije - naziv: Подизање и одржавање споменика', '2020-12-06 18:33:12', '', 'dodavanje', 1),
+	(172, '128, dokumenti_kategorije - naziv: Гробља и сахрањивања', '2020-12-06 18:33:37', '', 'dodavanje', 1),
+	(173, '129, dokumenti_kategorije - naziv: Одржавање чистоће', '2020-12-06 18:34:00', '', 'dodavanje', 1),
+	(174, '130, dokumenti_kategorije - naziv: Димничарске услуге', '2020-12-06 18:42:45', '', 'dodavanje', 1),
+	(175, '131, dokumenti_kategorije - naziv: Заштита и држање домаћих животиња', '2020-12-06 18:43:08', '', 'dodavanje', 1),
+	(176, '132, dokumenti_kategorije - naziv: Изградње и уређења и одржавања јавних WC-а', '2020-12-06 18:43:41', '', 'dodavanje', 1),
+	(177, '133, dokumenti_kategorije - naziv: КОМУНАЛНА МИЛИЦИЈА', '2020-12-06 18:44:17', '', 'dodavanje', 1),
+	(178, '134, dokumenti_kategorije - naziv: Снабдевање водом за пиће', '2020-12-06 18:44:37', '', 'dodavanje', 1),
+	(179, '135, dokumenti_kategorije - naziv: Јавни ред и мир', '2020-12-06 18:44:56', '', 'dodavanje', 1),
+	(180, '136, dokumenti_kategorije - naziv: Становање и одржавање зграда', '2020-12-06 18:45:18', '', 'dodavanje', 1),
+	(181, '137, dokumenti_kategorije - naziv: Радно време угоститељских, трговинских и занатских објеката', '2020-12-06 18:45:47', '', 'dodavanje', 1),
+	(182, '138, dokumenti_kategorije - naziv: Оглашавање', '2020-12-06 18:46:07', '', 'dodavanje', 1),
+	(183, '139, dokumenti_kategorije - naziv: Јавна паркиралишта', '2020-12-06 18:46:26', '', 'dodavanje', 1),
+	(184, '140, dokumenti_kategorije - naziv: Пијаце', '2020-12-06 18:46:40', '', 'dodavanje', 1),
+	(185, '141, dokumenti_kategorije - naziv: Подизање и одржавање споменика', '2020-12-06 18:47:02', '', 'dodavanje', 1),
+	(186, '142, dokumenti_kategorije - naziv: Гробља и сахрањивања', '2020-12-06 18:47:24', '', 'dodavanje', 1),
+	(187, '143, dokumenti_kategorije - naziv: Заштита и држање домаћих животиња', '2020-12-06 18:47:39', '', 'dodavanje', 1),
+	(188, '144, dokumenti_kategorije - naziv: Дувански дим', '2020-12-06 18:47:51', '', 'dodavanje', 1),
+	(189, '145, dokumenti_kategorije - naziv: Одржавање чистоће', '2020-12-06 18:48:05', '', 'dodavanje', 1),
+	(190, '146, dokumenti_kategorije - naziv: Димничарске услуге', '2020-12-06 18:48:25', '', 'dodavanje', 1),
+	(191, '147, dokumenti_kategorije - naziv: Изградње и уређења и одржавања јавних WC-а', '2020-12-06 18:48:42', '', 'dodavanje', 1),
+	(192, '148, dokumenti_kategorije - naziv: ГРАЂЕВИНСКА ИНСПЕКЦИЈА', '2020-12-06 18:49:03', '', 'dodavanje', 1),
+	(193, '149, dokumenti_kategorije - naziv: ИНСПЕКЦИЈА ЗА ЗАШТИТУ ЖИВОТНЕ СРЕДИНЕ', '2020-12-06 18:49:18', '', 'dodavanje', 1),
+	(194, '150, dokumenti_kategorije - naziv: Ваздух', '2020-12-06 18:49:46', '', 'dodavanje', 1),
+	(195, '151, dokumenti_kategorije - naziv: Вода', '2020-12-06 18:49:55', '', 'dodavanje', 1),
+	(196, '152, dokumenti_kategorije - naziv: Бука', '2020-12-06 18:50:05', '', 'dodavanje', 1),
+	(197, '153, dokumenti_kategorije - naziv: Отпад', '2020-12-06 18:50:14', '', 'dodavanje', 1),
+	(198, '154, dokumenti_kategorije - naziv: Нејонизујуће зрачење', '2020-12-06 18:50:23', '', 'dodavanje', 1),
+	(199, '155, dokumenti_kategorije - naziv: Заштита природе', '2020-12-06 18:50:32', '', 'dodavanje', 1),
+	(200, '156, dokumenti_kategorije - naziv: Хемикалије', '2020-12-06 18:50:42', '', 'dodavanje', 1),
+	(201, '157, dokumenti_kategorije - naziv: ИНСПЕКЦИЈА ЗА САОБРАЋАЈ И ПУТЕВЕ', '2020-12-06 18:51:04', '', 'dodavanje', 1),
+	(202, '158, dokumenti_kategorije - naziv: Безбедност  и регулација саобраћаја', '2020-12-06 18:51:22', '', 'dodavanje', 1),
+	(203, '159, dokumenti_kategorije - naziv: Јавни превоз', '2020-12-06 18:51:38', '', 'dodavanje', 1),
+	(204, '160, dokumenti_kategorije - naziv: ПРОСВЕТНА ИНСПЕКЦИЈА', '2020-12-06 18:51:58', '', 'dodavanje', 1),
+	(205, '161, dokumenti_kategorije - naziv: Предшколско васпитање и образовање', '2020-12-06 18:52:16', '', 'dodavanje', 1),
+	(206, '162, dokumenti_kategorije - naziv: Основно васпитање и образовање', '2020-12-06 18:52:27', '', 'dodavanje', 1),
+	(207, '163, dokumenti_kategorije - naziv: Средње васпитање и образовање', '2020-12-06 18:52:38', '', 'dodavanje', 1),
+	(208, '164, dokumenti_kategorije - naziv: Образовање одраслих', '2020-12-06 18:52:49', '', 'dodavanje', 1),
+	(209, '165, dokumenti_kategorije - naziv: ТУРИСТИЧКА ИНСПЕКЦИЈА', '2020-12-06 18:53:07', '', 'dodavanje', 1),
+	(210, '166, dokumenti_kategorije - naziv: СПОРТСКА ИНСПЕКЦИЈА', '2020-12-06 18:53:25', '', 'dodavanje', 1),
+	(211, '167, dokumenti_kategorije - naziv: COVID 19', '2020-12-06 18:53:40', '', 'dodavanje', 1),
+	(212, '168, dokumenti_kategorije - naziv: КУЛТУРА', '2020-12-06 18:54:03', '', 'dodavanje', 1),
+	(213, '169, dokumenti_kategorije - naziv: СПОРТ', '2020-12-06 18:54:16', '', 'dodavanje', 1),
+	(214, '170, dokumenti_kategorije - naziv: ОМЛАДИНА', '2020-12-06 18:54:36', '', 'dodavanje', 1),
+	(215, '171, dokumenti_kategorije - naziv: ТУРИЗАМ', '2020-12-06 18:54:52', '', 'dodavanje', 1),
+	(216, '172, dokumenti_kategorije - naziv: БЕЗБЕДНОСТ И ЗДРАВЉЕ НА РАДУ', '2020-12-06 18:55:08', '', 'dodavanje', 1),
+	(217, '173, dokumenti_kategorije - naziv: ПРОТИВПОЖАРНА ЗАШТИТА', '2020-12-06 18:55:23', '', 'dodavanje', 1),
+	(218, '174, dokumenti_kategorije - naziv: ИНФОРМАЦИОНО КОМУНИКАЦИОНЕ ТЕХНОЛОГИЈЕ', '2020-12-06 18:56:30', '', 'dodavanje', 1),
+	(219, '175, dokumenti_kategorije - naziv: Хардвер', '2020-12-06 18:56:44', '', 'dodavanje', 1),
+	(220, '176, dokumenti_kategorije - naziv: Софтвер', '2020-12-06 18:56:56', '', 'dodavanje', 1),
+	(221, '177, dokumenti_kategorije - naziv: Услуге', '2020-12-06 18:57:18', '', 'dodavanje', 1),
+	(222, '178, dokumenti_kategorije - naziv: ПИСАРНИЦА', '2020-12-06 18:58:13', '', 'dodavanje', 1),
+	(223, '179, dokumenti_kategorije - naziv: ОДРЖАВАЊЕ ОБЈЕКАТА И ОПРЕМЕ', '2020-12-06 18:58:36', '', 'dodavanje', 1),
+	(224, '180, dokumenti_kategorije - naziv: МАГАЦИН', '2020-12-06 18:58:47', '', 'dodavanje', 1),
+	(225, '181, dokumenti_kategorije - naziv: ВОЗНИ ПАРК', '2020-12-06 18:58:54', '', 'dodavanje', 1),
+	(226, '182, dokumenti_kategorije - naziv: МОБИЛНА ТЕЛЕФОНИЈА', '2020-12-06 18:59:03', '', 'dodavanje', 1),
+	(227, '183, dokumenti_kategorije - naziv: ИНТЕРНИ БИФЕ', '2020-12-06 18:59:14', '', 'dodavanje', 1),
+	(228, '184, dokumenti_kategorije - naziv: МЕДИЈИ', '2020-12-06 18:59:23', '', 'dodavanje', 1),
+	(229, '185, dokumenti_kategorije - naziv: ВАНРЕДНЕ СИТУАЦИЈЕ И ОДБРАНА', '2020-12-06 18:59:34', '', 'dodavanje', 1),
+	(230, '186, dokumenti_kategorije - naziv: Поплаве', '2020-12-06 18:59:52', '', 'dodavanje', 1),
+	(231, '187, dokumenti_kategorije - naziv: Пожари', '2020-12-06 19:00:10', '', 'dodavanje', 1),
+	(232, '188, dokumenti_kategorije - naziv: COVID 19', '2020-12-06 19:00:44', '', 'dodavanje', 1),
+	(233, '189, dokumenti_kategorije - naziv: СИНДИКАТ', '2020-12-06 19:00:52', '', 'dodavanje', 1),
+	(234, '190, dokumenti_kategorije - naziv: Јавни приходи и инспекцијски послови', '2020-12-06 19:01:11', '', 'dodavanje', 1),
+	(235, '2, dokumenti - naslov: Закон о раду', '2020-12-08 19:05:15', 'a:1:{s:4:"opis";a:2:{s:14:"stara_vrednost";s:255:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mattis, sapien in consequat ultrices, mauris orci egestas leo, eu vestibulum odio nunc non turpis. Donec vitae elementum arcu, id auctor elit. In feugiat gravida purus pulvinar bibendum. Don";s:13:"nova_vrednost";s:264:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mattis, sapien in consequat ultrices, mauris orci egestas leo, eu vestibulum odio nunc non turpis. Donec vitae elementum arcu, id auctor elit. In feugiat gravida purus pulvinar bibendum. Donito bato!";}}', 'izmena', 1),
+	(236, '2, dokumenti - naslov: Закон о раду', '2020-12-08 19:06:20', 'a:0:{}', 'izmena', 1),
+	(237, '2, dokumenti - naslov: Закон о раду', '2020-12-08 19:06:30', 'a:0:{}', 'izmena', 1),
+	(238, '2, dokumenti - naslov: Закон о раду a', '2020-12-08 19:06:38', 'a:1:{s:6:"naslov";a:2:{s:14:"stara_vrednost";s:22:"Закон о раду";s:13:"nova_vrednost";s:24:"Закон о раду a";}}', 'izmena', 1),
+	(239, '5, dokumenti - naziv: ', '2020-12-08 19:39:45', '', 'dodavanje', 1),
+	(240, '3, dokumenti_kategorije - naziv: ОРГАНИ ГРАДА КРАГУЈЕВЦА', '2020-12-18 20:16:50', 'a:8:{s:2:"id";i:3;s:5:"naziv";s:44:"ОРГАНИ ГРАДА КРАГУЈЕВЦА";s:9:"parent_id";i:0;s:8:"position";i:3;s:5:"level";i:1;s:4:"left";i:5;s:5:"right";i:14;s:11:"korisnik_id";i:1;}', 'brisanje', 1),
+	(241, '4, dokumenti_kategorije - naziv: Скупштина Града', '2020-12-18 20:16:50', 'a:8:{s:2:"id";i:4;s:5:"naziv";s:29:"Скупштина Града";s:9:"parent_id";i:3;s:8:"position";i:1;s:5:"level";i:2;s:4:"left";i:6;s:5:"right";i:7;s:11:"korisnik_id";i:1;}', 'brisanje', 1),
+	(242, '5, dokumenti_kategorije - naziv: Градоначелник', '2020-12-18 20:16:50', 'a:8:{s:2:"id";i:5;s:5:"naziv";s:26:"Градоначелник";s:9:"parent_id";i:3;s:8:"position";i:2;s:5:"level";i:2;s:4:"left";i:8;s:5:"right";i:9;s:11:"korisnik_id";i:1;}', 'brisanje', 1),
+	(243, '6, dokumenti_kategorije - naziv: Градско веће', '2020-12-18 20:16:50', 'a:8:{s:2:"id";i:6;s:5:"naziv";s:23:"Градско веће";s:9:"parent_id";i:3;s:8:"position";i:3;s:5:"level";i:2;s:4:"left";i:10;s:5:"right";i:11;s:11:"korisnik_id";i:1;}', 'brisanje', 1),
+	(244, '7, dokumenti_kategorije - naziv: Градска управа', '2020-12-18 20:16:50', 'a:8:{s:2:"id";i:7;s:5:"naziv";s:27:"Градска управа";s:9:"parent_id";i:3;s:8:"position";i:4;s:5:"level";i:2;s:4:"left";i:12;s:5:"right";i:13;s:11:"korisnik_id";i:1;}', 'brisanje', 1),
+	(245, '2, korisnici - ime: pera, prezime: pekic, ', '2020-12-18 20:43:43', 'a:1:{s:7:"lozinka";a:2:{s:14:"stara_vrednost";s:60:"$2y$10$U2FnmDxHkgxlqyG.tkYs/OdPHXxuE1ybWYYSR.tD.WsiRk6Y8Eequ";s:13:"nova_vrednost";s:60:"$2y$10$HcI522qNmzRQRaPNBlAROevkojYhXIrEqJMNfX6iVlWXMGGy9ataO";}}', 'izmena', 1),
+	(246, '2, korisnici - ime: pera, prezime: pekic, ', '2020-12-18 20:44:56', 'a:1:{s:7:"lozinka";a:2:{s:14:"stara_vrednost";s:60:"$2y$10$HcI522qNmzRQRaPNBlAROevkojYhXIrEqJMNfX6iVlWXMGGy9ataO";s:13:"nova_vrednost";s:60:"$2y$10$QCcvbVlJ5s1YIHo5iFPYbetOVtU3V/dnPjM8fvEAHyXu.Dd3N86KW";}}', 'izmena', 1),
+	(247, '3, korisnici - ime: Ahmed, prezime: Ninjic, ', '2020-12-20 18:44:01', '', 'dodavanje', 1),
+	(248, '191, dokumenti_kategorije - naziv: A/A 2020', '2020-12-20 22:26:37', '', 'dodavanje', 1),
+	(249, '191, dokumenti_kategorije - naziv: A/A 2020', '2020-12-20 22:27:41', 'a:9:{s:2:"id";i:191;s:5:"naziv";s:8:"A/A 2020";s:9:"parent_id";i:9;s:8:"position";i:1;s:5:"level";i:2;s:4:"left";i:8;s:5:"right";i:9;s:11:"korisnik_id";i:1;s:6:"arhiva";i:0;}', 'brisanje', 1),
+	(250, '192, dokumenti_kategorije - naziv: A/A 2021', '2020-12-20 22:30:36', '', 'dodavanje', 1),
+	(251, '193, dokumenti_kategorije - naziv: A/A 2022', '2020-12-20 22:35:41', '', 'dodavanje', 1),
+	(252, '193, dokumenti_kategorije - naziv: A/A 2022', '2020-12-21 10:44:46', 'a:1:{s:6:"arhiva";a:2:{s:14:"stara_vrednost";i:1;s:13:"nova_vrednost";i:0;}}', 'izmena', 1),
+	(253, '193, dokumenti_kategorije - naziv: A/A 2022', '2020-12-21 10:45:02', 'a:0:{}', 'izmena', 1);
 /*!40000 ALTER TABLE `logovi` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
