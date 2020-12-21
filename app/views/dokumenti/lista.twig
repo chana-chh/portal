@@ -67,12 +67,12 @@
             Преглед <i class="fas fa-eye"></i>
         </a>
         {% if auth.logged %}
-        {% if auth.user.nivo == 0 %}
+        {% if auth.user.nivo == 0 or dok.kategorija_id in [auth.user.dozvoljene_kategorije_dok] %}
         <a href="{{ path_for('dokument.detalj', { id: dok.id }) }}" class="btn btn-outline-warning btn-sm" title="Измена података документа"><i class="fas fa-pencil-alt"></i></a>
-        <a href="{{ path_for('dokument.link.get', { id: dok.id }) }}" class="btn btn-outline-success btn-sm" title="Постављање линка за другу категорију"><i class="fas fa-link"></i></a>
         <button class="btn btn-outline-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal" data-id="{{ dok.id }}" title="Брисање документа"><i class="fas fa-trash"></i></button>
         <a href="{{ path_for('dokument.arhiviranje.get', { id: dok.id }) }}" class="btn btn-outline-secondary btn-sm" title="Архивирање/активирање документа"><i class="fas fa-archive"></i></a>
         {% endif %}
+        <a href="{{ path_for('dokument.link.get', { id: dok.id }) }}" class="btn btn-outline-success btn-sm" title="Постављање линка за другу категорију"><i class="fas fa-link"></i></a>
         {% endif %}
     </div>
 </div>
@@ -135,6 +135,8 @@
 {% block traka %}
 <div class="row mt-5 mb-4">
     <div class="col col-lg-12 pl-5">
+        <h4 class="font-italic text-secondary">Претрага докумената</h4>
+        <br>
         <form class="form" action="{{ path_for('dokumenti.pretraga')}}" method="POST">
             {{ csrf|raw }}
             <input type="hidden" id="id_kat" name="id_kat" value="{{ kategorija.id }}" />
@@ -157,6 +159,7 @@
     <div class="col col-lg-12 pl-5">
         <h4 class="font-italic text-secondary">{{ kategorija ? "Врсте докумената" : "Категорије"}}</h4>
         <br>
+        <small class="font-italic text-secondary"><i class="fas fa-question-circle"></i> Клик на икону приказује поткатегорије, клик на назив приказује документа у категорији</small>
         <ul class="list-unstyled">
             {% include "templates/inc/recursion_lista.twig" with {'kategorije': kategorije, 'kategorija':kategorija, 'vrsta':vrsta, 'radni':radni} %}
         </ul>

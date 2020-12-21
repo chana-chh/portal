@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\DokumentKategorija;
+use App\Models\Dokument;
 use App\Classes\Logger;
 
 class DokumentKatController extends Controller
@@ -35,6 +36,7 @@ class DokumentKatController extends Controller
             $data = [
             "naziv" => $data['dnModal'],
             "parent_id" => $data['parentModal'],
+            "arhiva" => isset($data['arhiva']) ? 1 : 0,
             ];
         }
 
@@ -62,7 +64,7 @@ class DokumentKatController extends Controller
         } else {
             $this->flash->addMessage('success', 'Нова категорија ДОКУМЕНТА је успешно додата.');
             $model = new DokumentKategorija();
-            $poslednji  = $model->insertNS($data['parent_id'], $data['naziv'], $data['korisnik_id']);
+            $poslednji  = $model->insertNS($data['parent_id'], $data['naziv'], $data['korisnik_id'], $data['arhiva']);
             $kategorija = $model->find($poslednji);
             $this->log($this::DODAVANJE, $kategorija, 'naziv');
             return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $kategorija->id]));
@@ -73,12 +75,26 @@ class DokumentKatController extends Controller
     {
         $id = (int)$request->getParam('idBrisanje');
         $model = new DokumentKategorija();
-        $kategorija = $model->find($id);
-        $success = $model->deleteOne($id);
+        $za_brisanje = $model->getWithChildrenNS($id);
 
+        foreach ($za_brisanje as $b) {
+                $kategorija = $model->find($b->id);
+                $this->log($this::BRISANJE, $kategorija, 'naziv', $kategorija);
+            }
+
+        $za_brisanje_id = array_column($za_brisanje, 'id');
+        $za_brisanje_naziv = array_column($za_brisanje, 'naziv');
+        $naziv = implode(',', $za_brisanje_naziv);
+        $in = implode(',', $za_brisanje_id);
+
+        $modeld = new Dokument();
+        $sql = "UPDATE {$modeld->getTable()} SET kategorija_id = 1, opis = CONCAT('Налазио се у обрисаним категоријама:',' ','$naziv',' ',opis) 
+        WHERE kategorija_id IN ($in);";
+        $modeld->fetch($sql);
+
+        $success = $model->deleteWithChildren($id);
         if ($success) {
             $this->flash->addMessage('success', "Категорија ДОКУМЕНТА је успешно обрисана.");
-            $this->log($this::BRISANJE, $kategorija, 'naziv', $kategorija);
             return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
         } else {
             $this->flash->addMessage('danger', "Дошло је до грешке приликом брисања категорије ДОКУМЕНТА.");
@@ -115,6 +131,7 @@ class DokumentKatController extends Controller
 
         $data = $this->data();
         $id = $data['idIzmena'];
+        $data['arhiva'] = isset($data['arhiva']) ? 1 : 0;
         $roditelj = $data['parent_id'];
         $pozicija = $data['position'];
 

@@ -18,7 +18,11 @@
     </ul>
     {% else %}
     <a href="" data-toggle="collapse" data-target="#id-{{ d.id }}-collapse" style="text-decoration: none;">
+        {% if d.arhiva == 1 %}
+        <img src="{{ base_url() }}/img/022-folder-18.png" alt="folder" height="24px">
+        {% else %}
         <img src="{{ base_url() }}/img/025-folder-15.png" alt="folder" height="24px">
+        {% endif %}
     </a>&emsp;
     {% if kategorija %}
     <a href="{{ path_for('dokumenti.lista', { 'id_kat': kategorija.id, 'id_vrs' : d.id }) }}" class="text-reset">

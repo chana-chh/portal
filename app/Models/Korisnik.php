@@ -54,4 +54,12 @@ class Korisnik extends Model
         $kat = $model->fetch($sql);
         return $kat;
     }
+
+    public function dozvoljeneKatDok()
+    {
+        $model = new DokumentKategorija();
+        $sql = "SELECT * FROM dokumenti_kategorije WHERE id IN({$this->dozvoljene_kategorije_dok});";
+        $kat = $model->fetch($sql);
+        return $kat;
+    }
 }

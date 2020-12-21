@@ -59,12 +59,6 @@ class DokumentController extends Controller
 
         $dokumenti = $model->paginate($page, 'page', $sql, $params);
 
-        $sql = "SELECT
-                COUNT(id) as broj, MONTHNAME(t.created_at) as mesec, YEAR(t.created_at) as godina, MONTH (t.created_at) as mm
-                FROM dokumenti t
-                GROUP BY EXTRACT(YEAR_MONTH FROM t.created_at) DESC;";
-        $arhiva =$model->fetch($sql);
-
         $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva', 'kategorija', 'vrsta', 'radni'));
     }
 
@@ -145,14 +139,7 @@ class DokumentController extends Controller
         $sql = "SELECT * FROM {$model->getTable()}{$where} ORDER BY created_at DESC;";
         $dokumenti = $model->paginate($page, 'page', $sql, $params);
 
-
-        $sql = "SELECT
-                COUNT(id) as broj, MONTHNAME(t.created_at) as mesec, YEAR(t.created_at) as godina, MONTH (t.created_at) as mm
-                FROM dokumenti t
-                GROUP BY EXTRACT(YEAR_MONTH FROM t.created_at) DESC;";
-        $arhiva =$model->fetch($sql);
-
-        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva', 'data', 'kategorija', 'vrsta', 'radni'));
+        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'data', 'kategorija', 'vrsta', 'radni'));
     }
 
     public function getDokumentiKategorija($request, $response, $args)
@@ -166,21 +153,20 @@ class DokumentController extends Controller
             WHERE kategorija_id = {$id_kategorije}
             ORDER BY created_at DESC;"
         );
-        $sql = "SELECT
-                COUNT(id) as broj, MONTHNAME(t.created_at) as mesec, YEAR(t.created_at) as godina, MONTH (t.created_at) as mm
-                FROM dokumenti t
-                GROUP BY EXTRACT(YEAR_MONTH FROM t.created_at) DESC;";
-        $arhiva =$modelDokument->fetch($sql);
 
         $model_kategorije = new DokumentKategorija();
         $kategorije = $model_kategorije->all();
-        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva'));
+        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti'));
     }
 
     public function getDokumentDodavanje($request, $response)
     {
         $modelK = new DokumentKategorija();
-        $kategorije = $modelK->getFlatListNS();
+        if ($this->auth->user()->nivo == 0) {
+            $kategorije = $modelK->getFlatListNS();
+        }else{
+            $kategorije = $this->auth->user()->dozvoljeneKatDok();
+        }
 
         $sql = "SELECT MAX(level) AS maks FROM {$modelK->getTable()};";
         $nivo_query = $modelK->fetch($sql);
@@ -279,7 +265,11 @@ class DokumentController extends Controller
         $dokument = $modelDokument->find($id);
 
         $modelK = new DokumentKategorija();
-        $kategorije = $modelK->getFlatListNS();
+        if ($this->auth->user()->nivo == 0) {
+            $kategorije = $modelK->getFlatListNS();
+        }else{
+            $kategorije = $this->auth->user()->dozvoljeneKatDok();
+        }
 
         $sql = "SELECT MAX(level) AS maks FROM {$modelK->getTable()};";
         $nivo_query = $modelK->fetch($sql);
@@ -335,7 +325,11 @@ class DokumentController extends Controller
         $gde_ga_ima = $modelDokument->kategorije_za_link($dokument->link);
 
         $modelK = new DokumentKategorija();
-        $kategorije = $modelK->getFlatListNS();
+        if ($this->auth->user()->nivo == 0) {
+            $kategorije = $modelK->getFlatListNS();
+        }else{
+            $kategorije = $this->auth->user()->dozvoljeneKatDok();
+        }
 
         $sql = "SELECT MAX(level) AS maks FROM {$modelK->getTable()};";
         $nivo_query = $modelK->fetch($sql);

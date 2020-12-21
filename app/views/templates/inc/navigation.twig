@@ -23,14 +23,27 @@
       </li>
       {% if auth.logged %}
       {# Korisnik #}
-      <li class="nav-item">
-        <a class="nav-link" href="{{ path_for('autor.objave.lista') }}"><i class="fas fa-clipboard"></i> Објаве</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-edit"></i> Аутори докумената
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{{ path_for('dokument.dodavanje.get') }}"><i class="fas fa-upload"></i> Отпремање документа</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-bullhorn"></i> Аутори новости
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{{ path_for('autor.objave.lista') }}"><i class="fas fa-clipboard"></i> Објаве</a>
+          <a class="dropdown-item" href="{{ path_for('komentari') }}"><i class="fas fa-comments"></i> Коментари</a>
+        </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ path_for('dokument.dodavanje.get') }}"><i class="fas fa-upload"></i> Отпремање документа</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ path_for('komentari') }}"><i class="fas fa-comments"></i> Коментари</a>
+        <a class="nav-link" href="{{ path_for('uputstvo') }}"><i class="fas fa-question-circle text-warning"></i></a>
       </li>
       {% if auth.user.nivo == 0 %}
 

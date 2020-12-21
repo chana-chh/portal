@@ -25,4 +25,9 @@ class HomeController extends Controller
 
         $this->render($response, 'home.twig', compact('brojClanaka', 'poslednjaObjavaClanak', 'brojDoc', 'poslednjiUp', 'imenik'));
     }
+
+    public function getHelp($request, $response)
+    {
+        $this->render($response, 'help.twig');
+    }
 }

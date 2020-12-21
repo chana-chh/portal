@@ -17,7 +17,7 @@
                     {{ csrf|raw }}
                     <div class="row mb-2">
                         <div class="col text-danger">
-                            <strong>Важно:</strong> Порука о дозвољеним типовима и величини фајла
+                            <strong>Важно:</strong> Дозвољеним су документи типа Portable Document Format PDF, Microsoft WORD DOC и DOCX као и текстуални фајлови TXT максималне величине 32MB
                         </div>
                     </div>
                     <div class="form-row">
@@ -64,7 +64,7 @@
                         <div class="form-group col-lg-8">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input{{ errors.dokument[0] ? ' is-invalid' : '' }}" id="dokument" name="dokument" required>
-                                <label id="file-label" class="custom-file-label" for="dokument" data-browse="Pronađi">Изабери документ</label>
+                                <label id="file-label" class="custom-file-label" for="dokument" data-browse="Пронађи">Изабери документ</label>
                                 <div class="valid-feedback">Одговарајући податак</div>
                                 <div class="invalid-feedback">{{ errors.dokument[0] ? : 'Морате одабрати документ' }}</div>
                             </div>

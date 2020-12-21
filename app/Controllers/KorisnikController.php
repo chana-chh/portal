@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \App\Models\Korisnik;
 use \App\Models\Kategorija;
+use \App\Models\DokumentKategorija;
 use App\Classes\Logger;
 
 class KorisnikController extends Controller
@@ -20,7 +21,10 @@ class KorisnikController extends Controller
         $model_kategorije = new Kategorija();
         $kategorije = $model_kategorije->all();
 
-        $this->render($response, 'korisnik/lista.twig', compact('data', 'kategorije'));
+        $model_kate_dok = new DokumentKategorija();
+        $kategorije_dokumenta = $model_kate_dok->getFlatListNS();
+
+        $this->render($response, 'korisnik/lista.twig', compact('data', 'kategorije', 'kategorije_dokumenta'));
     }
 
     public function postKorisnikDodavanje($request, $response)
@@ -62,6 +66,7 @@ class KorisnikController extends Controller
             ]
         ];
         $data['dozvoljene_kategorije'] = implode(', ', $data['dozvoljene_kategorije']);
+        $data['dozvoljene_kategorije_dok'] = implode(', ', $data['dozvoljene_kategorije_dok']);
         $data['korisnik_id'] = $this->auth->user()->id;
 
         $this->validator->validate($data, $validation_rules);
@@ -105,7 +110,10 @@ class KorisnikController extends Controller
         $model_kategorije = new Kategorija();
         $kategorije = $model_kategorije->all();
 
-        $this->render($response, 'korisnik/izmena.twig', compact('korisnik', 'kategorije'));
+        $model_kate_dok = new DokumentKategorija();
+        $kategorije_dokumenta = $model_kate_dok->getFlatListNS();
+
+        $this->render($response, 'korisnik/izmena.twig', compact('korisnik', 'kategorije', 'kategorije_dokumenta'));
     }
 
     public function postKorisnikIzmena($request, $response)
@@ -149,6 +157,7 @@ class KorisnikController extends Controller
         ];
         
         $data['dozvoljene_kategorije'] = implode(', ', $data['dozvoljene_kategorije']);
+        $data['dozvoljene_kategorije_dok'] = implode(', ', $data['dozvoljene_kategorije_dok']);
 
         if (!empty($data['lozinka'])) {
             array_push($validation_rules, $validation_pass);

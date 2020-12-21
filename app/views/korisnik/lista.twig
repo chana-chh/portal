@@ -51,10 +51,8 @@
       <td>
         {% if korisnik.nivo == 0 %}
         Администратор
-        {% elseif korisnik.nivo == 100 %}
-        Аутор
         {% else %}
-        X
+        Аутор
         {% endif %}
       </td>
       <td class="text-right">
@@ -74,7 +72,7 @@
         {% else %}
         <div class="btn-group btn-group-sm">
           <a class="btn btn-warning btn-sm" href="{{ path_for('admin.korisnik.izmena.get', { id: korisnik.id }) }}"
-            title="Izmena podataka o korisniku">
+            title="Измена података о кориснику">
             <i class="fas fa-edit"></i>
           </a>
           <button class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
@@ -218,7 +216,6 @@
           <option value="0">Администратор</option>
           {% endif %}
           <option value="100">Аутор</option>
-          <option value="200">X</option>
         </select>
         <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
@@ -226,15 +223,26 @@
         </div>
       </div>
       <div class="form-group">
-      <label for="dozvoljene_kategorije" class="mr-3">Категорија</label>
+      <label for="dozvoljene_kategorije" class="mr-3">Дозвољене категорије НОВОСТИ<br><small>(За избор више категорија истовремено држати притиснут CTRL тастер приликом бирања)</small></label>
       <select name="dozvoljene_kategorije[]" id="dozvoljene_kategorije"
-        class="custom-select {{ errors.dozvoljene_kategorije[0] ? ' is-invalid' : '' }}" required multiple="multiple">
+        class="custom-select {{ errors.dozvoljene_kategorije[0] ? ' is-invalid' : '' }}" multiple="multiple">
         {% for kat in kategorije %}
         <option value="{{ kat.id }}" {{old.dozvoljene_kategorije == kat.id ? ' selected' : ''}}>{{ kat.naziv }}</option>
         {% endfor %}
       </select>
       <div class="valid-feedback">Исправно попуњено</div>
       <div class="invalid-feedback">{{ errors.dozvoljene_kategorije[0] ? : 'Аутор мора да има дефинисане категорије којима приступа.' }}</div>
+    </div>
+    <div class="form-group">
+      <label for="dozvoljene_kategorije_dok" class="mr-3">Дозвољене категорије ДОКУМЕНАТА<br><small>(За избор више категорија истовремено држати притиснут CTRL тастер приликом бирања)</small></label>
+      <select name="dozvoljene_kategorije_dok[]" id="dozvoljene_kategorije_dok"
+        class="custom-select {{ errors.dozvoljene_kategorije_dok[0] ? ' is-invalid' : '' }}" multiple="multiple">
+        {% for kat_doc in kategorije_dokumenta %}
+        <option value="{{ kat_doc.id }}" {{old.dozvoljene_kategorije_dok == kat_doc.id ? ' selected' : ''}}>{{ kat_doc.naziv }}</option>
+        {% endfor %}
+      </select>
+      <div class="valid-feedback">Исправно попуњено</div>
+      <div class="invalid-feedback">{{ errors.dozvoljene_kategorije_dok[0] ? : 'Аутор мора да има дефинисане категорије којима приступа.' }}</div>
     </div>
       <div class="row justify-content-end text-right">
         <div class="col">
