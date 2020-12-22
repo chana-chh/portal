@@ -62,7 +62,7 @@ class DokumentController extends Controller
 
         $dokumenti = $model->paginate($page, 'page', $sql, $params);
 
-        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'arhiva', 'kategorija', 'vrsta', 'radni'));
+        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'kategorija', 'vrsta', 'radni'));
     }
 
     public function postDokumentiPretraga($request, $response)
