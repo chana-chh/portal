@@ -2,9 +2,9 @@
 {% block naslov %}
 <div class="row m-2">
     <div class="col-lg-10">
-        <h1>
+        <h1 id="top">
             <img src="{{ base_url() }}/img/dok.png" alt="Документа" style="max-width: 64px;
-  width:100%;"> &emsp;Преглед докумената
+  width:100%;"> &emsp;Преглед докумената <small class="text-danger font-italic font-weight-light" style="font-size: 1.2rem;">(по редоследу објављивања БЕЗ АРХИВЕ)</small>
         </h1>
         {% if kategorija %}
         <h4 class="text-secondary"><i class="fas fa-folder-open text-warning"></i> Категорија документа: {{kategorija.naziv}}</h4>
@@ -17,6 +17,9 @@
         <div class="btn-group mt-4">
             <a class="btn btn-outline-secondary text-warning" onclick="window.history.back();" title="Повратак на претходну страну">
                 <i class="fa fa-arrow-left"></i>
+            </a>
+            <a class="btn btn-outline-secondary text-warning" href="{{ path_for('izrada') }}" title="Архивирани документи - У ИЗРАДИ">
+                <i class="fas fa-archive"></i> А/А
             </a>
             <a class="btn btn-outline-secondary text-warning" href="{{ path_for('pocetna') }}" title="Повратак на почетну страну">
                 <i class="fa fa-home"></i>
@@ -159,7 +162,8 @@
     <div class="col col-lg-12 pl-5">
         <h4 class="font-italic text-secondary">{{ kategorija ? "Врсте докумената" : "Категорије"}}</h4>
         <br>
-        <small class="font-italic text-secondary"><i class="fas fa-question-circle"></i> Клик на икону приказује поткатегорије, клик на назив приказује документа у категорији</small>
+        <small class="font-italic text-secondary" style="background-color: white;"><i class="fas fa-question-circle"></i> Клик на икону приказује поткатегорије, клик на назив приказује документа у категорији</small>
+        <hr>
         <ul class="list-unstyled">
             {% include "templates/inc/recursion_lista.twig" with {'kategorije': kategorije, 'kategorija':kategorija, 'vrsta':vrsta, 'radni':radni} %}
         </ul>
@@ -176,6 +180,11 @@
     </div>
 </div>
 {% endif %}
+<div class="row">
+    <div class="col col-lg-12 pl-5 text-center mt-2 mb-2">
+        <a href="#top" style="font-size: 1.2rem;"><i class="fas fa-arrow-circle-up"></i> Врх стране</a>
+    </div>
+</div>
 {% endblock traka %}
 {% block skripta %}
 <script>

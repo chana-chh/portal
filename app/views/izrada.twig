@@ -1,0 +1,25 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row m-2">
+    <div class="col-lg-10">
+        <h1 id="top">
+        <i class="fas fa-archive text-danger"></i>&emsp;АРХИВА ДОКУМЕНАТА ЈЕ ТРЕНУТНО У ИЗРАДИ
+        </h1>
+    </div>
+    <div class="col-lg-2 text-right">
+        <div class="btn-group mt-4">
+            <a class="btn btn-outline-secondary text-warning" onclick="window.history.back();" title="Повратак на претходну страну">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <a class="btn btn-outline-secondary text-warning" href="{{ path_for('pocetna') }}" title="Повратак на почетну страну">
+                <i class="fa fa-home"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row m-5">
+    <div class="col-lg-12">
+        <img src="{{ base_url() }}/img/izrada.png" alt="Izrada" class="img-fluid rounded mx-auto d-block">
+    </div>
+</div>
+{% endblock naslov %}

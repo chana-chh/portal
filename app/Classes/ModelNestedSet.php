@@ -77,14 +77,13 @@ class ModelNestedSet extends Model
     }
 
     // dodaje novi objekat u rodielja (ako je objekat koren onda je $parend_id = 0)
-    public function insertNS(int $parent_id, string $naziv, int $korisnik_id, int $arhiva)
+    public function insertNS(int $parent_id, string $naziv, int $korisnik_id)
     {
         $new_position = $this->getNewPosition($parent_id);
         $data = [
             'parent_id' => $parent_id,
             'naziv' => $naziv,
             'korisnik_id' => $korisnik_id,
-            'arhiva' => $arhiva,
             'position' => $new_position,
         ];
         $this->insert($data);

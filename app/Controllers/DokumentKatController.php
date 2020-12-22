@@ -36,7 +36,6 @@ class DokumentKatController extends Controller
             $data = [
             "naziv" => $data['dnModal'],
             "parent_id" => $data['parentModal'],
-            "arhiva" => isset($data['arhiva']) ? 1 : 0,
             ];
         }
 
@@ -131,7 +130,6 @@ class DokumentKatController extends Controller
 
         $data = $this->data();
         $id = $data['idIzmena'];
-        $data['arhiva'] = isset($data['arhiva']) ? 1 : 0;
         $roditelj = $data['parent_id'];
         $pozicija = $data['position'];
 

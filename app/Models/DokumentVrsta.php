@@ -15,7 +15,7 @@ class DokumentVrsta extends Model
 
     public function broj($kat_id)
     {
-        $sql = "SELECT COUNT(*) AS broj_vrste FROM dokumenti WHERE vrsta_id = {$this->id}";
+        $sql = "SELECT COUNT(*) AS broj_vrste FROM dokumenti WHERE arhiva IS NULL AND vrsta_id = {$this->id}";
         if (isset($kat_id)) {
             $sql = $sql. " AND kategorija_id = $kat_id;";
         }

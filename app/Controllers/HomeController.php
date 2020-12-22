@@ -30,4 +30,9 @@ class HomeController extends Controller
     {
         $this->render($response, 'help.twig');
     }
+
+    public function getIzrada($request, $response)
+    {
+        $this->render($response, 'izrada.twig');
+    }
 }

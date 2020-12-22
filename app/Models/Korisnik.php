@@ -50,16 +50,52 @@ class Korisnik extends Model
     public function dozvoljeneKategorije()
     {
         $model = new Kategorija();
-        $sql = "SELECT * FROM kategorije WHERE id IN({$this->dozvoljene_kategorije});";
+        $in = $this->dozvoljene_kategorije;
+        if ($in) {
+        $sql = "SELECT * FROM kategorije WHERE id IN({$in});";
         $kat = $model->fetch($sql);
-        return $kat;
+         return $kat;
+        }else{
+            return NULL;
+        }
     }
 
     public function dozvoljeneKatDok()
     {
         $model = new DokumentKategorija();
-        $sql = "SELECT * FROM dokumenti_kategorije WHERE id IN({$this->dozvoljene_kategorije_dok});";
-        $kat = $model->fetch($sql);
-        return $kat;
+        $in = $this->dozvoljene_kategorije_dok;
+        if ($in) {
+            $sql = "SELECT * FROM dokumenti_kategorije WHERE id IN({$in});";
+            $kat = $model->fetch($sql);
+            return $kat;
+        }else{
+            return NULL;
+        } 
     }
+
+    public function dkdnaziv()
+    {
+        $dozvoljene = $this->dozvoljeneKatDok();
+        if ($dozvoljene) {
+            $za_naziv = array_column($dozvoljene, 'naziv');
+            $nazivi = implode(',', $za_naziv);
+            return $nazivi;
+        }else{
+            return "Није дефинисано!";
+        }
+        
+    }
+
+    public function dknaziv()
+    {
+        $dozvoljene = $this->dozvoljeneKategorije();
+        if ($dozvoljene) {
+            $za_naziv = array_column($dozvoljene, 'naziv');
+            $nazivi = implode(',', $za_naziv);
+            return $nazivi;
+        }else{
+            return "Није дефинисано!";
+        }
+        
+    }    
 }

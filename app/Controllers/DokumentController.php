@@ -19,6 +19,10 @@ class DokumentController extends Controller
 
         $model_kategorije = new DokumentKategorija();
         $kategorije = $model_kategorije->getListNS();
+        $nerasporedjeni = $kategorije[0];
+        unset($kategorije[0]);
+        array_push($kategorije, $nerasporedjeni);
+
         $radni = $model_kategorije->find(1);
 
         if (!empty($args)) {
@@ -48,8 +52,7 @@ class DokumentController extends Controller
             };
         }
 
-        $where = $where === " WHERE " ? "" : $where;
-
+        $where = $where === " WHERE " ? " WHERE arhiva IS NULL" : $where." AND arhiva IS NULL";
         $query = [];
         parse_str($request->getUri()->getQuery(), $query);
         $page = isset($query['page']) ? (int)$query['page'] : 1;
@@ -91,6 +94,10 @@ class DokumentController extends Controller
 
         $model_kategorije = new DokumentKategorija();
         $kategorije = $model_kategorije->getListNS();
+        $nerasporedjeni = $kategorije[0];
+        unset($kategorije[0]);
+        array_push($kategorije, $nerasporedjeni);
+        
         $radni = $model_kategorije->find(1);
 
         if (!empty($data['upit'])) {
@@ -134,7 +141,7 @@ class DokumentController extends Controller
             $vrsta = null;
         }
 
-        $where = $where === " WHERE " ? "" : $where;
+        $where = $where === " WHERE " ? " WHERE arhiva IS NULL" : $where." AND arhiva IS NULL";
         $model = new Dokument();
         $sql = "SELECT * FROM {$model->getTable()}{$where} ORDER BY created_at DESC;";
         $dokumenti = $model->paginate($page, 'page', $sql, $params);
@@ -142,22 +149,22 @@ class DokumentController extends Controller
         $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'data', 'kategorija', 'vrsta', 'radni'));
     }
 
-    public function getDokumentiKategorija($request, $response, $args)
-    {
-        $id_kategorije = (int) $args['id'];
-        $modelDokument = new Dokument();
-        $dokumenti = $modelDokument->paginate(
-            $this->page(),
-            'page',
-            "SELECT * FROM dokumenti
-            WHERE kategorija_id = {$id_kategorije}
-            ORDER BY created_at DESC;"
-        );
+    // public function getDokumentiKategorija($request, $response, $args)
+    // {
+    //     $id_kategorije = (int) $args['id'];
+    //     $modelDokument = new Dokument();
+    //     $dokumenti = $modelDokument->paginate(
+    //         $this->page(),
+    //         'page',
+    //         "SELECT * FROM dokumenti
+    //         WHERE kategorija_id = {$id_kategorije}
+    //         ORDER BY created_at DESC;"
+    //     );
 
-        $model_kategorije = new DokumentKategorija();
-        $kategorije = $model_kategorije->all();
-        $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti'));
-    }
+    //     $model_kategorije = new DokumentKategorija();
+    //     $kategorije = $model_kategorije->all();
+    //     $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti'));
+    // }
 
     public function getDokumentDodavanje($request, $response)
     {

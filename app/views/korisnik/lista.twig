@@ -1,41 +1,21 @@
 {% extends "templates/app.twig" %}
-{% block stil %}
-<style>
-  @media (max-width: 575.98px) {
-    .mobilni {
-      font-size: 0.875rem !important;
-    }
-
-    .btn,
-    .btn-sm {
-      padding: 0.25rem 0.4rem;
-      font-size: 0.875rem;
-      line-height: 0.5;
-      border-radius: 0.2rem;
-    }
-  }
-</style>
-{% endblock stil %}
 {% block naslov %}
-<div class="row mt-md-2 d-none d-sm-flex">
+<div class="row mt-md-2">
   <div class="col">
     <h1><i class="fas fa-users text-secondary"></i> Корисници апликације</h1>
-  </div>
-</div>
-<div class="row mt-2 d-sm-none">
-  <div class="col">
-    <h4><i class="fas fa-users text-secondary"></i> Корисници апликације</h4>
   </div>
 </div>
 <hr />
 {% endblock naslov %}
 {% block sadrzaj %}
-<table class="table mobilni">
+<table class="table" style="font-size: 0.875em;">
   <thead class="thead-dark">
     <tr>
       <th class="w-5">ID</th>
-      <th class="w-30">Име и презиме</th>
-      <th class="w-30">Електронска адреса</th>
+      <th class="w-15">Име и презиме</th>
+      <th class="w-15">Електронска адреса</th>
+      <th class="w-15">Категорије новости</th>
+      <th class="w-15">Категорије документа</th>
       <th class="w-15">Корисничко име</th>
       <th class="w-10">Ниво права</th>
       <th class="w-10 text-right"><i class="fas fa-cogs text-warning"></i></th>
@@ -47,6 +27,8 @@
       <td class="text-danger">{{ korisnik.id }}</td>
       <td>{{ korisnik.imePrezime }}</td>
       <td>{{ korisnik.email }}</td>
+      <td>{{ korisnik.dknaziv() }}</td>
+      <td>{{ korisnik.dkdnaziv() }}</td>
       <td>{{ korisnik.korisnicko_ime }}</td>
       <td>
         {% if korisnik.nivo == 0 %}
