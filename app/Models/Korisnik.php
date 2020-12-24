@@ -59,6 +59,16 @@ class Korisnik extends Model
             return NULL;
         }
     }
+    public function dozvoljeneKategorijeNiz()
+    {
+        $in = $this->dozvoljene_kategorije;
+        if ($in) {
+            $kat = explode( ',', $in );
+            return $kat;
+        }else{
+            return NULL;
+        } 
+    }
 
     public function dozvoljeneKatDok()
     {
@@ -67,6 +77,17 @@ class Korisnik extends Model
         if ($in) {
             $sql = "SELECT * FROM dokumenti_kategorije WHERE id IN({$in});";
             $kat = $model->fetch($sql);
+            return $kat;
+        }else{
+            return NULL;
+        } 
+    }
+
+    public function dozvoljeneKatDokNiz()
+    {
+        $in = $this->dozvoljene_kategorije_dok;
+        if ($in) {
+            $kat = explode( ',', $in );
             return $kat;
         }else{
             return NULL;

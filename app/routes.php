@@ -21,6 +21,9 @@ $app->get('/dokumenti/lista[/{id_kat}[/{id_vrs}]]', '\App\Controllers\DokumentCo
 //$app->get('/dokumenti/kategorija/{id}', '\App\Controllers\DokumentController:getDokumentiKategorija')->setName('dokumenti.kategorija');
 $app->get('/dokumenti/pretraga', '\App\Controllers\DokumentController:getDokumentiPretraga')->setName('dokumenti.pretraga');
 $app->post('/dokumenti/pretraga', '\App\Controllers\DokumentController:postDokumentiPretraga');
+$app->get('/dokumenti/arhiva[/{id_kat}[/{id_vrs}]]', '\App\Controllers\DokumentController:getArhiva')->setName('dokumenti.arhiva');
+$app->get('/dokumenti/arhiva-pretraga', '\App\Controllers\DokumentController:getDokumentiArhivaPretraga')->setName('dokumenti.arhiva.pretraga');
+$app->post('/dokumenti/arhiva-pretraga', '\App\Controllers\DokumentController:postDokumentiArhivaPretraga');
 
 $app->group('', function () {
     //Prijava

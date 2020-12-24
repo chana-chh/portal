@@ -21,4 +21,13 @@ class DokumentVrsta extends Model
         }
         return (int) $this->fetch($sql)[0]->broj_vrste;
     }
+
+    public function brojarhiva($kat_id)
+    {
+        $sql = "SELECT COUNT(*) AS broj_vrste FROM dokumenti WHERE arhiva IS NOT NULL AND vrsta_id = {$this->id}";
+        if (isset($kat_id)) {
+            $sql = $sql. " AND kategorija_id = $kat_id;";
+        }
+        return (int) $this->fetch($sql)[0]->broj_vrste;
+    }
 }

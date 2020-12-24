@@ -33,12 +33,13 @@
                             <button type="submit" class="btn btn-primary" title="Активирање докумената">
                                 <i class="fas fa-box-open"></i>&emsp;Активирај
                             </button>
+                            <a href="{{ path_for('dokumenti.arhiva') }}" class="btn btn-secondary"><i class="fas fa-ban"></i> &emsp;Откажи</a>
                             {% else %}
                             <button type="submit" class="btn btn-primary" title="Архивирање докумената">
                                 <i class="fas fa-archive"></i>&emsp;Архивирај
                             </button>
-                            {% endif %}
                             <a href="{{ path_for('dokumenti.lista') }}" class="btn btn-secondary"><i class="fas fa-ban"></i> &emsp;Откажи</a>
+                            {% endif %}
                         </div>
                     </div>
                 </form>

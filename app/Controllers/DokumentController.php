@@ -149,6 +149,146 @@ class DokumentController extends Controller
         $this->render($response, 'dokumenti/lista.twig', compact('kategorije', 'dokumenti', 'data', 'kategorija', 'vrsta', 'radni'));
     }
 
+    public function getArhiva($request, $response, $args)
+    {
+        $where = " WHERE ";
+        $params = [];
+
+        $kategorija = null;
+        $vrsta = null;
+
+        $model_kategorije = new DokumentKategorija();
+        $kategorije = $model_kategorije->getListNS();
+        $nerasporedjeni = $kategorije[0];
+        unset($kategorije[0]);
+        array_push($kategorije, $nerasporedjeni);
+
+        $radni = $model_kategorije->find(1);
+
+        if (!empty($args)) {
+            if (isset($args['id_kat'])) {
+                if ($where !== " WHERE ") {
+                    $where .= " AND ";
+                }
+                $where .= "kategorija_id = :kategorija_id";
+                $params[':kategorija_id'] = (int) $args['id_kat'];
+
+                $modelKat = new DokumentKategorija();
+                $kategorija = $modelKat->find((int) $args['id_kat']);
+
+                $modelVrs = new DokumentVrsta();
+                $kategorije = $modelVrs->all();
+            };
+
+            if (isset($args['id_vrs'])) {
+                if ($where !== " WHERE ") {
+                    $where .= " AND ";
+                }
+                $where .= "vrsta_id = :vrsta_id";
+                $params[':vrsta_id'] = (int) $args['id_vrs'];
+
+                $modelVrs = new DokumentVrsta();
+                $vrsta = $modelVrs->find((int) $args['id_vrs']);
+            };
+        }
+
+        $where = $where === " WHERE " ? " WHERE arhiva IS NOT NULL" : $where." AND arhiva IS NOT NULL";
+        $query = [];
+        parse_str($request->getUri()->getQuery(), $query);
+        $page = isset($query['page']) ? (int)$query['page'] : 1;
+
+        $model = new Dokument();
+        $sql = "SELECT * FROM {$model->getTable()}{$where} ORDER BY arhiva DESC;";
+
+        $dokumenti = $model->paginate($page, 'page', $sql, $params);
+
+        $this->render($response, 'dokumenti/arhiva.twig', compact('kategorije', 'dokumenti', 'kategorija', 'vrsta', 'radni'));
+    }
+
+    public function postDokumentiArhivaPretraga($request, $response)
+    {
+        $_SESSION['DATA_DOKUMENTI_PRETRAGA'] = $request->getParams();
+        return $response->withRedirect($this->router->pathFor('dokumenti.arhiva.pretraga'));
+    }
+
+    public function getDokumentiArhivaPretraga($request, $response)
+    {
+        $data = $_SESSION['DATA_DOKUMENTI_PRETRAGA'];
+        array_shift($data);
+        array_shift($data);
+
+        if (empty($data['upit'])) {
+            return $response->withRedirect($this->router->pathFor('dokumenti.arhiva'));
+        }
+
+        $data['upit'] = str_replace('%', '', $data['upit']);
+
+        $upit = '%' . filter_var($data['upit'], FILTER_SANITIZE_STRING) . '%';
+
+        $query = [];
+        parse_str($request->getUri()->getQuery(), $query);
+        $page = isset($query['page']) ? (int)$query['page'] : 1;
+
+        $where = " WHERE ";
+        $params = [];
+
+        $model_kategorije = new DokumentKategorija();
+        $kategorije = $model_kategorije->getListNS();
+        $nerasporedjeni = $kategorije[0];
+        unset($kategorije[0]);
+        array_push($kategorije, $nerasporedjeni);
+        
+        $radni = $model_kategorije->find(1);
+
+        if (!empty($data['upit'])) {
+            $where .= "naslov LIKE :naslov";
+            $params[':naslov'] = $upit;
+        }
+
+        if (!empty($data['upit'])) {
+            if ($where !== " WHERE ") {
+                $where .= " OR ";
+            }
+            $where .= "opis LIKE :opis";
+            $params[':opis'] = $upit;
+        }
+
+        if (!empty($data['id_kat'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "kategorija_id = :id_kat";
+            $params[':id_kat'] = $data['id_kat'];
+
+            $modelKat = new DokumentKategorija();
+            $kategorija = $modelKat->find((int) $data['id_kat']);
+
+            $modelVrs = new DokumentVrsta();
+            $kategorije = $modelVrs->all();
+        } else {
+            $kategorija = null;
+        }
+
+        if (!empty($data['id_vrs'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "vrsta_id = :id_vrs";
+            $params[':id_vrs'] = $data['id_vrs'];
+            $modelVrs = new DokumentVrsta();
+            $vrsta = $modelVrs->find((int) $data['id_vrs']);
+        } else {
+            $vrsta = null;
+        }
+
+        $where = $where === " WHERE " ? " WHERE arhiva IS NOT NULL" : $where." AND arhiva IS NOT NULL";
+        $model = new Dokument();
+        $sql = "SELECT * FROM {$model->getTable()}{$where} ORDER BY arhiva DESC;";
+        $dokumenti = $model->paginate($page, 'page', $sql, $params);
+
+        $this->render($response, 'dokumenti/arhiva.twig', compact('kategorije', 'dokumenti', 'data', 'kategorija', 'vrsta', 'radni'));
+    }
+
     // public function getDokumentiKategorija($request, $response, $args)
     // {
     //     $id_kategorije = (int) $args['id'];
@@ -417,12 +557,13 @@ class DokumentController extends Controller
             $zaupit = '%'.$stari->link.'%';
             if ($stari->arhiva) {
                 $sql = "UPDATE {$model->getTable()} SET arhiva = NULL WHERE link LIKE '$zaupit';";
+                $model->fetch($sql);
+                return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
             }else{
                 $sql = "UPDATE {$model->getTable()} SET arhiva = '$mysqlvreme' WHERE link LIKE '$zaupit';";
+                $model->fetch($sql);
+                return $response->withRedirect($this->router->pathFor('dokumenti.arhiva'));
             }
-            
-            $model->fetch($sql);
-            return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         } else {
             return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         }

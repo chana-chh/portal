@@ -3,8 +3,8 @@
 <div class="row m-2">
     <div class="col-lg-10">
         <h1 id="top">
-            <img src="{{ base_url() }}/img/dok.png" alt="Документа" style="max-width: 64px;
-  width:100%;"> &emsp;Преглед докумената <small class="text-danger font-italic font-weight-light" style="font-size: 1.2rem;">(по редоследу објављивања БЕЗ АРХИВЕ)</small>
+            <img src="{{ base_url() }}/img/arhiva.png" alt="Документа" style="max-width: 64px;
+  width:100%;"> &emsp;Преглед АРХИВИРАНИХ докумената <small class="text-danger font-italic font-weight-light" style="font-size: 1.2rem;">(по редоследу архивирања)</small>
         </h1>
         {% if kategorija %}
         <h4 class="text-secondary"><i class="fas fa-folder-open text-warning"></i> Категорија документа: {{kategorija.naziv}}</h4>
@@ -18,8 +18,8 @@
             <a class="btn btn-outline-secondary text-warning" onclick="window.history.back();" title="Повратак на претходну страну">
                 <i class="fa fa-arrow-left"></i>
             </a>
-            <a class="btn btn-outline-secondary text-warning" href="{{ path_for('dokumenti.arhiva') }}" title="Архивирани документи">
-                <i class="fas fa-archive"></i> А/А
+            <a class="btn btn-outline-secondary text-warning" href="{{ path_for('dokumenti.lista') }}" title="Активни-важећи документи">
+                <i class="fas fa-box-open"></i> ВАЖЕЋИ
             </a>
             <a class="btn btn-outline-secondary text-warning" href="{{ path_for('pocetna') }}" title="Повратак на почетну страну">
                 <i class="fa fa-home"></i>
@@ -46,7 +46,7 @@
         <h4>{{ dok.naslov }}</h4>
         {% endif %}
         <blockquote class="blockquote text-right" style="font-size: 0.875em">
-            <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ dok.created_at|date('d.m.Y') }}&emsp;<i class="fas fa-user text-warning"></i> {{ dok.korisnik.imePrezime() }}</p>
+            <p class="mb-0 text-secondary"><i class="fas fa-archive text-warning"></i> <abbr title="Архивиран дана">А/А</abbr> {{ dok.arhiva|date('d.m.Y') }}&emsp;<i class="fas fa-calendar-alt text-warning"></i> {{ dok.created_at|date('d.m.Y') }}&emsp;<i class="fas fa-user text-warning"></i> {{ dok.korisnik.imePrezime() }}</p>
             <footer class="blockquote-footer">Категорија: <cite title="Категорија">{{ dok.kategorija.naziv }}</cite>; Врста: <cite title="Vrsta">{{ dok.vrsta.naziv }}</cite></footer>
         </blockquote>
         <hr>
@@ -140,7 +140,7 @@
     <div class="col col-lg-12 pl-5">
         <h4 class="font-italic text-secondary">Претрага докумената</h4>
         <br>
-        <form class="form" action="{{ path_for('dokumenti.pretraga')}}" method="POST">
+        <form class="form" action="{{ path_for('dokumenti.arhiva.pretraga')}}" method="POST">
             {{ csrf|raw }}
             <input type="hidden" id="id_kat" name="id_kat" value="{{ kategorija.id }}" />
             <input type="hidden" id="id_vrs" name="id_vrs" value="{{ vrsta.id }}" />
@@ -165,7 +165,7 @@
         <small class="font-italic text-secondary" style="background-color: white;"><i class="fas fa-question-circle"></i> Клик на икону приказује поткатегорије, клик на назив приказује документа у категорији</small>
         <hr>
         <ul class="list-unstyled">
-            {% include "templates/inc/recursion_lista.twig" with {'kategorije': kategorije, 'kategorija':kategorija, 'vrsta':vrsta, 'radni':radni} %}
+            {% include "templates/inc/recursion_arhiva.twig" with {'kategorije': kategorije, 'kategorija':kategorija, 'vrsta':vrsta, 'radni':radni} %}
         </ul>
     </div>
 </div>
@@ -174,7 +174,7 @@
 <div class="row mt-5 mb-5">
     <div class="col col-lg-12 text-center">
     <h4>Повратак на категорије </h4>
-        <a class="btn btn-outline-secondary" href="{{ path_for('dokumenti.lista') }}" title="Повратак на категорије">
+        <a class="btn btn-outline-secondary" href="{{ path_for('dokumenti.arhiva') }}" title="Повратак на категорије">
             <i class="fa fa-list text-warning"></i>
         </a>
     </div>
