@@ -390,10 +390,11 @@ class DokumentController extends Controller
         $modelDokument = new Dokument();
         $dok = $modelDokument->find($id);
         $tmp = explode('/', $dok->link);
+        $kolikoihima = $modelDokument->isti(end($tmp));
         $file = DIR . 'pub' . DS . 'doc' . DS . end($tmp);
         $success = $modelDokument->deleteOne($id);
         if ($success) {
-            if ($modelDokument->isti(end($tmp)) == 1) {
+            if ($kolikoihima == 1) {
                 unlink($file);
             }
             $this->flash->addMessage('success', "Докуменат је успешно обрисан.");
