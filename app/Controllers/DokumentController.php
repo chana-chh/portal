@@ -368,7 +368,8 @@ class DokumentController extends Controller
             $velicina_tekst = human_filesize($dokument->getSize());
             $velicina_mb = $dokument->getSize() / 1024 / 1024;
             $naslov = str_replace(" ", "_", $data['naslov']);
-            $name = "{$vrsta}_{$naslov}_{$unique}";
+            $vrstazaime = str_replace(" ", "_", $vrsta);
+            $name = "{$vrstazaime}_{$naslov}_{$unique}";
             $filename = "{$name}.{$extension}";
             $veza = URL . "doc/{$filename}";
             $data['velicina_tekst'] = $velicina_tekst;
