@@ -88,7 +88,7 @@
                     <label for="dozvoljene_kategorije" class="mr-3">Дозвољене категорије НОВОСТИ</label>
                     <select name="dozvoljene_kategorije[]" id="dozvoljene_kategorije" class="custom-select {{ errors.dozvoljene_kategorije[0] ? ' is-invalid' : '' }}" required multiple="multiple">
                         {% for kat in kategorije %}
-                        <option value="{{ kat.id }}" {{kat.id in [korisnik.dozvoljene_kategorije] ? ' selected' : ''}}>{{ kat.naziv }}</option>
+                        <option value="{{ kat.id }}" {{kat.id in korisnik.dozvoljeneKategorijeNiz() ? ' selected' : ''}}>{{ kat.naziv }}</option>
                         {% endfor %}
                     </select>
                     <div class="valid-feedback">Исправно попуњено</div>
@@ -100,7 +100,7 @@
                     <label for="dozvoljene_kategorije_dok" class="mr-3">Дозвољене категорије ДОКУМЕНАТА</label>
                     <select name="dozvoljene_kategorije_dok[]" id="dozvoljene_kategorije_dok" class="custom-select {{ errors.dozvoljene_kategorije_dok[0] ? ' is-invalid' : '' }}" required multiple="multiple">
                         {% for kat_doc in kategorije_dokumenta %}
-                        <option value="{{ kat_doc.id }}" {{kat_doc.id in [korisnik.dozvoljene_kategorije_dok] ? ' selected' : ''}}>{{ kat_doc.naziv }}</option>
+                        <option value="{{ kat_doc.id }}" {{kat_doc.id in korisnik.dozvoljeneKatDokNiz() ? ' selected' : ''}}>{{ kat_doc.naziv }}</option>
                         {% endfor %}
                     </select>
                     <div class="valid-feedback">Исправно попуњено</div>

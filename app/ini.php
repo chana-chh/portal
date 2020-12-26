@@ -38,7 +38,7 @@ ini_set('memory_limit', '1G');
 ini_set('max_execution_time', 60);
 
 ini_set('file_uploads', 1);
-ini_set('upload_max_filesize', '20M');
+ini_set('upload_max_filesize', '33M');
 ini_set('upload_tmp_dir', DIR . DS . 'app' . DS . 'tmp');
 
 if (in_array('sha512', hash_algos())) {
