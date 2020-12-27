@@ -23,7 +23,7 @@
                         </div>
                         <div class="col form-group">
                             <label for="kategorija_id" class="mr-3">Категорија документа</label>
-                            <select name="kategorija_id" id="kategorija_id" class="custom-select izbor-sa-stilom">
+                            <select name="kategorija_id" id="kategorija_id" class="custom-select" required>
                                 <option value=""> </option>
                                 {% for kat in kategorije %}
                                 <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.kategorija_id == kat.id ? ' selected' : ''}}

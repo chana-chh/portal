@@ -16,7 +16,7 @@
             {{ csrf | raw }}
             <input type="hidden" id="id" name="id" value="{{ korisnik.id }}" />
             <div class="form-row">
-                <div class="form-group col-6">
+                <div class="form-group col">
                     <label for="ime">Име</label>
                     <input class="form-control{{ errors.ime[0] ? ' is-invalid' : '' }}" type="text" name="ime" id="ime" value="{{ old.ime ? : korisnik.ime  }}" autocomplete="off" required />
                     <div class="valid-feedback">Одговарајући податак</div>
@@ -24,7 +24,7 @@
                         {{ errors.ime[0] ? : 'Obavezno polje.' }}
                     </div>
                 </div>
-                <div class="form-group col-6">
+                <div class="form-group col">
                     <label for="prezime">Презиме</label>
                     <input class="form-control{{ errors.prezime[0] ? ' is-invalid' : '' }}" type="text" name="prezime" id="prezime" value="{{ old.prezime ? : korisnik.prezime  }}" autocomplete="off" required />
                     <div class="valid-feedback">Одговарајући податак</div>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group col">
                     <label for="korisnicko_ime">Кoрисничко име</label>
                     <input class="form-control{{ errors.korisnicko_ime[0] ? ' is-invalid' : '' }}" type="text" name="korisnicko_ime" id="korisnicko_ime" value="{{ old.korisnicko_ime ? : korisnik.korisnicko_ime }}" autocomplete="off" required minlength="5" />
                     <div class="valid-feedback">Одговарајући податак</div>
@@ -50,7 +50,7 @@
                         {{ errors.korisnicko_ime[0] ? : 'Обавезно поље са најмање 5, а највише 50 карактера' }}
                     </div>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col">
                     <label for="nivo">Ниво корисничких права</label>
                     <select class="custom-select{{ errors.nivo[0] ? ' is-invalid' : '' }}" id="nivo" name="nivo" required>
                         <option value=""></option>
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group col">
                     <label for="lozinka" class="uk-form-label">Лозинка</label>
                     <input class="form-control" type="password" name="lozinka" id="lozinka" class="form-control" autocomplete="new-password" />
                     <div class="valid-feedback">Одговарајући податак</div>
@@ -74,7 +74,7 @@
                         {{ errors.lozinka[0] ? : 'Обавезно поље са најмање 6 карактера!' }}
                     </div>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col">
                     <label for="lozinka_potvrda" class="uk-form-label">Потврда лозинке</label>
                     <input class="form-control" type="password" name="lozinka_potvrda" id="lozinka_potvrda" class="form-control" autocomplete="off" />
                     <div class="valid-feedback">Одговарајући податак</div>
@@ -84,8 +84,8 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group">
-                    <label for="dozvoljene_kategorije" class="mr-3">Дозвољене категорије НОВОСТИ</label>
+                <div class="form-group col">
+                    <label for="dozvoljene_kategorije">Дозвољене категорије НОВОСТИ</label>
                     <select name="dozvoljene_kategorije[]" id="dozvoljene_kategorije" class="custom-select {{ errors.dozvoljene_kategorije[0] ? ' is-invalid' : '' }}" required multiple="multiple">
                         {% for kat in kategorije %}
                         <option value="{{ kat.id }}" {{kat.id in korisnik.dozvoljeneKategorijeNiz() ? ' selected' : ''}}>{{ kat.naziv }}</option>
@@ -96,8 +96,8 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group">
-                    <label for="dozvoljene_kategorije_dok" class="mr-3">Дозвољене категорије ДОКУМЕНАТА</label>
+                <div class="form-group col">
+                    <label for="dozvoljene_kategorije_dok">Дозвољене категорије ДОКУМЕНАТА</label>
                     <select name="dozvoljene_kategorije_dok[]" id="dozvoljene_kategorije_dok" class="custom-select {{ errors.dozvoljene_kategorije_dok[0] ? ' is-invalid' : '' }}" required multiple="multiple">
                         {% for kat_doc in kategorije_dokumenta %}
                         <option value="{{ kat_doc.id }}" {{kat_doc.id in korisnik.dozvoljeneKatDokNiz() ? ' selected' : ''}}>{{ kat_doc.naziv }}</option>

@@ -18,13 +18,18 @@ class KorisnikController extends Controller
             $data = $model->paginate($this->page(), 'page', "SELECT * FROM korisnici WHERE nivo != 1000;");
         }
 
+        $this->render($response, 'korisnik/lista.twig', compact('data'));
+    }
+
+    public function getKorisnikDodavanje($request, $response)
+    {
         $model_kategorije = new Kategorija();
         $kategorije = $model_kategorije->all();
 
         $model_kate_dok = new DokumentKategorija();
         $kategorije_dokumenta = $model_kate_dok->getFlatListNS();
 
-        $this->render($response, 'korisnik/lista.twig', compact('data', 'kategorije', 'kategorije_dokumenta'));
+        $this->render($response, 'korisnik/dodavanje.twig', compact( 'kategorije', 'kategorije_dokumenta'));
     }
 
     public function postKorisnikDodavanje($request, $response)

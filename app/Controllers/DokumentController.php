@@ -380,6 +380,9 @@ class DokumentController extends Controller
             $dokument->moveTo('doc/' . $filename);
             $modelDokument = new Dokument();
             $modelDokument->insert($data);
+
+            $dok = $modelDokument->find($modelDokument->lastId());
+            $this->log($this::DODAVANJE, $dok, ['naslov', 'vrsta_id', 'kategorija_id']);
             $this->flash->addMessage('success', 'Докуменат је успешно сачуван.');
             return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         }
@@ -398,6 +401,7 @@ class DokumentController extends Controller
             if ($kolikoihima == 1) {
                 unlink($file);
             }
+            $this->log($this::BRISANJE, $dok, 'naslov', $dok);
             $this->flash->addMessage('success', "Докуменат је успешно обрисан.");
             return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         } else {
@@ -526,7 +530,7 @@ class DokumentController extends Controller
             $this->flash->addMessage('success', 'Линковање документа у додатну категорију је успешно.');
             $modelDokument->insert($data);
             $dok = $modelDokument->find($modelDokument->lastId());
-            $this->log($this::DODAVANJE, $dok, 'naziv');
+            $this->log($this::DODAVANJE, $dok, ['Линковање документа у додатну категорију','naslov']);
             return $response->withRedirect($this->router->pathFor('dokumenti.lista'));
         }
     }

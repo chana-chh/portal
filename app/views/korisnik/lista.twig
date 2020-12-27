@@ -1,21 +1,32 @@
 {% extends "templates/app.twig" %}
 {% block naslov %}
-<div class="row mt-md-2">
-  <div class="col">
-    <h1><i class="fas fa-users text-secondary"></i> Корисници апликације</h1>
-  </div>
+<div class="row m-2">
+    <div class="col-lg-10">
+        <h1><i class="fas fa-users text-secondary"></i> Корисници апликације</h1>
+    </div>
+    <div class="col-lg-2 text-right">
+        <div class="btn-group mt-4">
+            <a class="btn btn-outline-secondary text-warning" onclick="window.history.back();" title="Повратак на претходну страну">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <a class="btn btn-outline-secondary text-warning" href="{{ path_for('admin.korisnik.get') }}" title="Додавање корисника">
+                <i class="fas fa-plus"></i> Додај
+            </a>
+            <a class="btn btn-outline-secondary text-warning" href="{{ path_for('pocetna') }}" title="Повратак на почетну страну">
+                <i class="fa fa-home"></i>
+            </a>
+        </div>
+    </div>
 </div>
 <hr />
-{% endblock naslov %}
-{% block sadrzaj %}
 <table class="table" style="font-size: 0.875em;">
   <thead class="thead-dark">
     <tr>
       <th class="w-5">ID</th>
-      <th class="w-15">Име и презиме</th>
-      <th class="w-15">Електронска адреса</th>
-      <th class="w-15">Категорије новости</th>
-      <th class="w-15">Категорије документа</th>
+      <th class="w-10">Име и презиме</th>
+      <th class="w-10">Електронска адреса</th>
+      <th class="w-20">Категорије новости</th>
+      <th class="w-20">Категорије документа</th>
       <th class="w-15">Корисничко име</th>
       <th class="w-10">Ниво права</th>
       <th class="w-10 text-right"><i class="fas fa-cogs text-warning"></i></th>
@@ -26,9 +37,21 @@
     <tr>
       <td class="text-danger">{{ korisnik.id }}</td>
       <td>{{ korisnik.imePrezime }}</td>
-      <td>{{ korisnik.email }}</td>
-      <td>{{ korisnik.dknaziv() }}</td>
-      <td>{{ korisnik.dkdnaziv() }}</td>
+      <td><a href="mailto:{{ korisnik.email }}">{{ korisnik.email }}</a></td>
+      <td>
+        <ul style="padding: 0; list-style-type: none;">
+        {% for kat in korisnik.dozvoljeneKategorije() %}
+          <li>{{kat.naziv}}</li>
+        {% endfor %}
+        </ul>
+      </td>
+      <td>
+        <ul style="padding: 0; list-style-type: none;">
+        {% for katdok in korisnik.dozvoljeneKatDok() %}
+          <li>{{katdok.naziv}}</li>
+        {% endfor %}
+        </ul>
+      </td>
       <td>{{ korisnik.korisnicko_ime }}</td>
       <td>
         {% if korisnik.nivo == 0 %}
@@ -120,156 +143,15 @@
   </div>
 </div>
 {# Kraj modala za brisanje #}
+{% endblock naslov %}
 
-{% endblock sadrzaj %}
-{% block traka %}
-<div class="card border-dark mb-3">
-  <div class="card-header">Додавање новог корисника</div>
-  <div class="card-body text-dark mobilni">
-    <form action="{{ path_for('admin.korisnik.dodavanje') }}" method="POST" class="needs-validation" novalidate
-      oninput='lozinka_potvrda.setCustomValidity(lozinka_potvrda.value != lozinka.value ? "Лозинка се не поклапа!" : "")'>
-      {{ csrf | raw }}
-      <div class="form-row">
-        <div class="form-group col-6">
-          <label for="ime">Име</label>
-          <input class="form-control{{ errors.ime[0] ? ' is-invalid' : '' }}" type="text" name="ime" id="ime"
-            value="{{ old.ime ? : ''  }}" autocomplete="off" required />
-          <div class="valid-feedback">Одговарајући податак</div>
-          <div class="invalid-feedback">
-            {{ errors.ime[0] ? : 'Обавезно поље.' }}
-          </div>
-        </div>
-        <div class="form-group col-6">
-          <label for="prezime">Презиме</label>
-          <input class="form-control{{ errors.prezime[0] ? ' is-invalid' : '' }}" type="text" name="prezime"
-            id="prezime" value="{{ old.prezime ? : ''  }}" autocomplete="off" required />
-          <div class="valid-feedback">Одговарајући податак</div>
-          <div class="invalid-feedback">
-            {{ errors.prezime[0] ? : 'Обавезно поље.' }}
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="email">Електронска адреса корисника</label>
-        <input class="form-control{{
-            errors.email[0] ? ' is-invalid' : ''
-          }}" type="email" name="email" id="email" value="{{ old.email ? : '' }}" autocomplete="off" required />
-        <div class="valid-feedback">Одговарајући податак</div>
-        <div class="invalid-feedback">
-          {{ errors.email[0] ? : 'Обавезно поље у форми електронске адресе.' }}
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="korisnicko_ime">Кoрисничко име</label>
-        <input class="form-control{{
-            errors.korisnicko_ime[0] ? ' is-invalid' : ''
-          }}" type="text" name="korisnicko_ime" id="korisnicko_ime" value="{{ old.korisnicko_ime ? : '' }}"
-          autocomplete="off" required minlength="5" />
-        <div class="valid-feedback">Одговарајући податак</div>
-        <div class="invalid-feedback">
-          {{ errors.korisnicko_ime[0] ? : 'Обавезно поље са најмање 5, а највише 50 карактера' }}
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="lozinka" class="uk-form-label">Лозинка</label>
-        <input class="form-control{{ errors.lozinka[0] ? ' is-invalid' : '' }}" type="password" name="lozinka"
-          id="lozinka" autocomplete="new-password" required minlength="6" />
-        <div class="valid-feedback">Одговарајући податак</div>
-        <div class="invalid-feedback">
-          {{ errors.lozinka[0] ? : 'Обавезно поље са најмање 6 карактера' }}
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="lozinka_potvrda" class="uk-form-label">Потврда лозинке</label>
-        <input class="form-control{{
-            errors.lozinka_potvrda[0] ? ' is-invalid' : ''
-          }}" type="password" name="lozinka_potvrda" id="lozinka_potvrda" autocomplete="off"
-          required />
-        <div class="valid-feedback">Одговарајући податак</div>
-        <div class="invalid-feedback">
-          {{ errors.lozinka_potvrda[0] ? : 'Обавезно поље које мора бити исто као и поље "Лозинка"' }}
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="nivo">Ниво корисничких права</label>
-        <select class="custom-select{{ errors.nivo[0] ? ' is-invalid' : '' }}" id="nivo" name="nivo" required>
-          <option value=""></option>
-          {% if auth.user.nivo == 0 %}
-          <option value="0">Администратор</option>
-          {% endif %}
-          <option value="100">Аутор</option>
-        </select>
-        <div class="valid-feedback">Одговарајући податак</div>
-        <div class="invalid-feedback">
-          {{ errors.nivo[0] ? : 'Obavezno polje' }}
-        </div>
-      </div>
-      <div class="form-group">
-      <label for="dozvoljene_kategorije" class="mr-3">Дозвољене категорије НОВОСТИ<br><small>(За избор више категорија истовремено држати притиснут CTRL тастер приликом бирања)</small></label>
-      <select name="dozvoljene_kategorije[]" id="dozvoljene_kategorije"
-        class="custom-select {{ errors.dozvoljene_kategorije[0] ? ' is-invalid' : '' }}" multiple="multiple">
-        {% for kat in kategorije %}
-        <option value="{{ kat.id }}" {{old.dozvoljene_kategorije == kat.id ? ' selected' : ''}}>{{ kat.naziv }}</option>
-        {% endfor %}
-      </select>
-      <div class="valid-feedback">Исправно попуњено</div>
-      <div class="invalid-feedback">{{ errors.dozvoljene_kategorije[0] ? : 'Аутор мора да има дефинисане категорије којима приступа.' }}</div>
-    </div>
-    <div class="form-group">
-      <label for="dozvoljene_kategorije_dok" class="mr-3">Дозвољене категорије ДОКУМЕНАТА<br><small>(За избор више категорија истовремено држати притиснут CTRL тастер приликом бирања)</small></label>
-      <select name="dozvoljene_kategorije_dok[]" id="dozvoljene_kategorije_dok"
-        class="custom-select {{ errors.dozvoljene_kategorije_dok[0] ? ' is-invalid' : '' }}" multiple="multiple">
-        {% for kat_doc in kategorije_dokumenta %}
-        <option value="{{ kat_doc.id }}" {{old.dozvoljene_kategorije_dok == kat_doc.id ? ' selected' : ''}}>{{ kat_doc.naziv }}</option>
-        {% endfor %}
-      </select>
-      <div class="valid-feedback">Исправно попуњено</div>
-      <div class="invalid-feedback">{{ errors.dozvoljene_kategorije_dok[0] ? : 'Аутор мора да има дефинисане категорије којима приступа.' }}</div>
-    </div>
-      <div class="row justify-content-end text-right">
-        <div class="col">
-          <button type="submit" class="btn btn-primary text-right">
-            <i class="fas fa-plus-square" title="Додавање новог корисника"></i>
-            &emsp;Додај
-          </button>
-          <a href="{{ path_for('admin.korisnik.lista') }}" class="btn btn-secondary"><i class="fas fa-ban"></i>
-            &emsp;Откажи</a>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-{% endblock traka %} {% block skripta %}
+{% block skripta %}
 <script>
   $(document).ready(function () {
     $(document).on("click", ".otvori-brisanje", function () {
       var id = $(this).val();
       $("#idBrisanje").val(id);
     });
-
-    (function () {
-      "use strict";
-      window.addEventListener(
-        "load",
-        function () {
-          var forms = document.getElementsByClassName("needs-validation");
-          var validation = Array.prototype.filter.call(forms, function (form) {
-            form.addEventListener(
-              "submit",
-              function (event) {
-                if (form.checkValidity() === false) {
-                  event.preventDefault();
-                  event.stopPropagation();
-                }
-                form.classList.add("was-validated");
-              },
-              false
-            );
-          });
-        },
-        false
-      );
-    })();
   });
 </script>
 {% endblock skripta %}
