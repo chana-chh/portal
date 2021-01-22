@@ -345,6 +345,8 @@ class DokumentController extends Controller
         $validation_rules = [
             'naslov' => [
                 'required' => true,
+                'minlen' => 5,
+                'maxlen' => 254
             ],
             'vrsta_id' => [
                 'required' => true,
@@ -367,7 +369,8 @@ class DokumentController extends Controller
             $extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
             $velicina_tekst = human_filesize($dokument->getSize());
             $velicina_mb = $dokument->getSize() / 1024 / 1024;
-            $naslov = str_replace(" ", "_", $data['naslov']);
+            $naslov_ceo = str_replace(" ", "_", $data['naslov']);
+            $naslov = substr($naslov_ceo, 0, 25);
             $vrstazaime = str_replace(" ", "_", $vrsta);
             $name = "{$vrstazaime}_{$naslov}_{$unique}";
             $filename = "{$name}.{$extension}";
@@ -443,6 +446,8 @@ class DokumentController extends Controller
         $validation_rules = [
             'naslov' => [
                 'required' => true,
+                'minlen' => 5,
+                'maxlen' => 254
             ],
             'vrsta_id' => [
                 'required' => true,

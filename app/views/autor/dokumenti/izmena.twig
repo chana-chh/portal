@@ -19,7 +19,7 @@
                     <div class="form-row">
                         <div class="col form-group">
                             <label for="naslov">Наслов документа</label>
-                            <input type="text" value="{{ old.naslov ? : dokument.naslov }}" class="form-control" name="naslov" id="naslov" required>
+                            <input type="text" value="{{ old.naslov ? : dokument.naslov }}" class="form-control" name="naslov" id="naslov" maxlength="250" required>
                         </div>
                         <div class="col form-group">
                             <label for="kategorija_id" class="mr-3">Категорија документа</label>

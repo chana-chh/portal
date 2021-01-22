@@ -23,7 +23,7 @@
                     <div class="form-row">
                         <div class="col form-group">
                             <label for="naslov">Наслов документа</label>
-                            <input type="text" value="{{ old.naslov ? : '' }}" class="form-control{{ errors.naslov[0] ? ' is-invalid' : '' }}" name="naslov" id="naslov" required>
+                            <input type="text" value="{{ old.naslov ? : '' }}" class="form-control{{ errors.naslov[0] ? ' is-invalid' : '' }}" name="naslov" id="naslov" required maxlength="250">
                             <div class="valid-feedback">Одговарајући податак</div>
                             <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
                         </div>
