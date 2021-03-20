@@ -1,0 +1,91 @@
+{% extends "templates/app.twig" %}
+{% block stil %}
+<style type="text/css">
+input.parsley-error
+    {
+      color: #B94A48 !important;
+      background-color: #F2DEDE !important;
+      border: 1px solid #EED3D7 !important;
+    }
+</style>
+{% endblock stil %}
+{% block naslov %}
+<div class="row mt-2">
+    <div class="col-lg-10 offset-1">
+        <h1><i class="fas fa-file-signature text-secondary"></i> Измена материјала-докумената <span class="text-success">{{ materijal.naslov }}</span> са обуке <span class="text-success">{{ materijal.obuka.naziv }}</span></h1>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-lg-10 offset-1">
+        <div class="card border-dark mb-3">
+            <div class="card-header text-primary">
+                <h3>Исправка описа и категоризације материјала са обуке</h3>
+            </div>
+            <div class="card-body text-dark">
+                <form id="dokument-forma" action="{{ path_for('materijal.izmena.post') }}" method="POST" data-parsley-validate>
+                    {{ csrf|raw }}
+                    <input type="hidden" id="idIzmena" name="idIzmena" value="{{ materijal.id }}" readonly>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="naslov">Наслов материјала-документа</label>
+                            <input type="text" value="{{ old.naslov ? : materijal.naslov }}" class="form-control{{ errors.naslov[0] ? ' is-invalid' : '' }}" name="naslov" id="naslov" required maxlength="250">
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">{{ errors.naslov[0] ? : 'Обавезно поље' }}</div>
+                        </div>
+                        <div class="col form-group">
+                            <label for="obuka_id" class="mr-3">Обука</label>
+                            <select name="obuka_id" id="obuka_id" class="custom-select" required>
+                                <option value=""> </option>
+                                {% for obu in obuke %}
+                                <option value="{{ obu.id }}" {{old.obuka_id == obu.id ? ' selected' : ''}}
+                                {{materijal.obuka_id == obu.id ? ' selected' : ''}}>
+                                    {{ obu.naziv }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col form-group">
+                            <label for="vrsta_id" class="mr-3">Врста материјала</label>
+                            <select name="vrsta_id" id="vrsta_id" class="custom-select" required>
+                                <option value=""> </option>
+                                {% for vrs in vrste %}
+                                <option value="{{ vrs.id }}" {{old.vrsta_id == vrs.id ? ' selected' : ''}} {{materijal.vrsta_id == vrs.id ? ' selected' : ''}}>{{ vrs.naziv }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+            <hr style="margin-top: 30px;">
+            <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" title="Сними измене обуке">
+                      <i class="fas fa-save"></i>&emsp;Сними
+                    </button>
+                    <a href="{{ path_for('materijal') }}" class="btn btn-secondary"><i class="fas fa-ban"></i> &emsp;Откажи</a>
+                </div>
+            </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock naslov %}
+
+{% block skripta %}
+<script src="{{ base_url() }}/js/parsley.js"></script>
+<script src="{{ base_url() }}/js/parsley_sr.js"></script>
+<script>
+$( document ).ready(function() {
+        var n = "{{nivo}}";
+        var i;
+        for (i = 2; i < n+1; i++) {
+           $('.level_'+i).each(
+                function(){
+                    $(this).text("-".repeat(i*3)+" "+$(this).text());
+                }
+           );
+        };
+});
+</script>
+{% endblock skripta %}

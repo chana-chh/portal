@@ -2,15 +2,15 @@
 
 namespace App\Controllers;
 
-use App\Models\DokumentKategorija;
+use App\Models\BibliotekaKategorija;
 use App\Models\Dokument;
 use App\Classes\Logger;
 
-class DokumentKatController extends Controller
+class BibliotekaKatController extends Controller
 {
     public function getKategorije($request, $response, $args)
     {
-        $model = new DokumentKategorija();
+        $model = new BibliotekaKategorija();
         $data = $model->getListNS();
         $id_poslednjeg = null;
         $roditelji_id = null;
@@ -24,7 +24,7 @@ class DokumentKatController extends Controller
                 json_encode($roditelji_id);
             }
         }
-        $this->render($response, 'dokkategorije/lista.twig', compact('data', 'roditelji_id', 'id_poslednjeg'));
+        $this->render($response, 'bibkategorija/lista.twig', compact('data', 'roditelji_id', 'id_poslednjeg'));
     }
 
     public function postKategorijeDodavanje($request, $response)
@@ -44,7 +44,7 @@ class DokumentKatController extends Controller
                 'required' => true,
                 'minlen' => 4,
                 'maxlen' => 255,
-                'multi_unique' => 'dokumenti_kategorije.naziv,parent_id'
+                'multi_unique' => 'biblioteka_kategorije.naziv,parent_id'
             ],
             'korisnik_id' => [
                 'required' => true,
@@ -57,22 +57,22 @@ class DokumentKatController extends Controller
         $this->validator->validate($data, $validation_rules);
 
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Дошло је до грешке приликом додавања категорије ДОКУМЕНТА.');
-            return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+            $this->flash->addMessage('danger', 'Дошло је до грешке приликом додавања категорије ОБУКА.');
+            return $response->withRedirect($this->router->pathFor('bib.kategorija'));
         } else {
-            $this->flash->addMessage('success', 'Нова категорија ДОКУМЕНТА је успешно додата.');
-            $model = new DokumentKategorija();
+            $this->flash->addMessage('success', 'Нова категорија ОБУКА је успешно додата.');
+            $model = new BibliotekaKategorija();
             $poslednji  = $model->insertNS($data['parent_id'], $data['naziv'], $data['korisnik_id'], $data['arhiva']);
             $kategorija = $model->find($poslednji);
             $this->log($this::DODAVANJE, $kategorija, 'naziv');
-            return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $kategorija->id]));
+            return $response->withRedirect($this->router->pathFor('bib.kategorija', ['poslednji' => $kategorija->id]));
         }
     }
 
     public function postKategorijeBrisanje($request, $response)
     {
         $id = (int)$request->getParam('idBrisanje');
-        $model = new DokumentKategorija();
+        $model = new BibliotekaKategorija();
         $za_brisanje = $model->getWithChildrenNS($id);
 
         foreach ($za_brisanje as $b) {
@@ -85,25 +85,25 @@ class DokumentKatController extends Controller
         $naziv = implode(',', $za_brisanje_naziv);
         $in = implode(',', $za_brisanje_id);
 
-        $modeld = new Dokument();
+        $modeld = new BibliotekaDokument();
         $sql = "UPDATE {$modeld->getTable()} SET kategorija_id = 1, opis = CONCAT('Налазио се у обрисаним категоријама:',' ','$naziv',' ',opis) 
         WHERE kategorija_id IN ($in);";
         $modeld->fetch($sql);
 
         $success = $model->deleteWithChildren($id);
         if ($success) {
-            $this->flash->addMessage('success', "Категорија ДОКУМЕНТА је успешно обрисана.");
-            return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+            $this->flash->addMessage('success', "Категорија ОБУКА је успешно обрисана.");
+            return $response->withRedirect($this->router->pathFor('bib.kategorija'));
         } else {
-            $this->flash->addMessage('danger', "Дошло је до грешке приликом брисања категорије ДОКУМЕНТА.");
-            return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+            $this->flash->addMessage('danger', "Дошло је до грешке приликом брисања категорије ОБУКА.");
+            return $response->withRedirect($this->router->pathFor('bib.kategorija'));
         }
     }
 
     public function getKategorijeIzmena($request, $response, $args)
     {
         $id = (int) $args['id'];
-        $model = new DokumentKategorija();
+        $model = new BibliotekaKategorija();
         $kategorija = $model->find($id);
 
         $kategorije = $model->getFlatListNS();
@@ -121,7 +121,7 @@ class DokumentKatController extends Controller
         array_pop($roditelji_nazivi);
         $putanja = implode("\\", $roditelji_nazivi);
 
-        $this->render($response, 'dokkategorije/izmena.twig', compact('kategorija', 'putanja', 'kategorije', 'nivo', 'pozicija'));
+        $this->render($response, 'bibkategorija/izmena.twig', compact('kategorija', 'putanja', 'kategorije', 'nivo', 'pozicija'));
     }
 
     public function postKategorijeIzmena($request, $response)
@@ -134,7 +134,7 @@ class DokumentKatController extends Controller
 
         unset($data['idIzmena']);
 
-        $model = new DokumentKategorija();
+        $model = new BibliotekaKategorija();
         $stari = $model->find($id);
 
         $validation_rules = [
@@ -142,7 +142,7 @@ class DokumentKatController extends Controller
                 'required' => true,
                 'minlen' => 4,
                 'maxlen' => 50,
-                'multi_unique' => 'dokumenti_kategorije.naziv,parent_id#id:' . $id
+                'multi_unique' => 'biblioteka_kategorije.naziv,parent_id#id:' . $id
             ]
         ];
 
@@ -154,28 +154,28 @@ class DokumentKatController extends Controller
 
             if ($model->isParentUnderMyChildren($id, $data['parent_id'])) {
                 $this->flash->addMessage('danger', 'Дошло је до грешке приликом премештања категорије. Немогуће премештање у сопствену поткатегорију!');
-                return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+                return $response->withRedirect($this->router->pathFor('bib.kategorija'));
             }else{
                 if (((int) $pozicija) > $pozicija_maks) {
                     $data['position'] = $pozicija_maks+1;
 
                     $this->validator->validate($data, $validation_rules);
                     if ($this->validator->hasErrors()) {
-                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ДОКУМЕНТА.');
-                        return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ОБУКА.');
+                        return $response->withRedirect($this->router->pathFor('bib.kategorija'));
                     } else {
                     $model->update($data, $id);
                     $model->rebuild();
-                    $this->flash->addMessage('success', 'Подаци категорије ДОКУМЕНТА су успешно измењени.');
+                    $this->flash->addMessage('success', 'Подаци категорије ОБУКА су успешно измењени.');
                     $kategorija = $model->find($id);
                     $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
-                    return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $id]));
+                    return $response->withRedirect($this->router->pathFor('bib.kategorija', ['poslednji' => $id]));
                     }
                 }else{
                     $this->validator->validate($data, $validation_rules);
                     if ($this->validator->hasErrors()) {
-                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ДОКУМЕНТА.');
-                        return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ОБУКА.');
+                        return $response->withRedirect($this->router->pathFor('bib.kategorija'));
                     } else {
                         $model->update($data, $id);
                         $sqla = "UPDATE {$model->getTable()} SET position = position + 1
@@ -185,10 +185,10 @@ class DokumentKatController extends Controller
 
                         $preraspodela_pozicija = $model->fetch($sqla);
                         $model->rebuild();
-                        $this->flash->addMessage('success', 'Подаци категорије ДОКУМЕНТА су успешно измењени.');
+                        $this->flash->addMessage('success', 'Подаци категорије ОБУКА су успешно измењени.');
                         $kategorija = $model->find($id);
                         $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
-                        return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $id]));
+                        return $response->withRedirect($this->router->pathFor('bib.kategorija', ['poslednji' => $id]));
                     }
                 }
             }
@@ -203,8 +203,8 @@ class DokumentKatController extends Controller
 
                     $this->validator->validate($data, $validation_rules);
                     if ($this->validator->hasErrors()) {
-                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ДОКУМЕНТА.');
-                        return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ОБУКА.');
+                        return $response->withRedirect($this->router->pathFor('bib.kategorija'));
                     } else {
                     $model->update($data, $id);
 
@@ -219,10 +219,10 @@ class DokumentKatController extends Controller
                         $index++;
                     };
                     $model->rebuild();
-                    $this->flash->addMessage('success', 'Подаци категорије ДОКУМЕНТА су успешно измењени.');
+                    $this->flash->addMessage('success', 'Подаци категорије ОБУКА су успешно измењени.');
                     $kategorija = $model->find($id);
                     $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
-                    return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $id]));
+                    return $response->withRedirect($this->router->pathFor('bib.kategorija', ['poslednji' => $id]));
                     }
                 }elseif(((int) $pozicija) > $stari->position){
                     // Kada je nova pozicija VEĆA od stare u roditeljskoj kategoriji
@@ -232,8 +232,8 @@ class DokumentKatController extends Controller
 
                     $this->validator->validate($data, $validation_rules);
                     if ($this->validator->hasErrors()) {
-                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ДОКУМЕНТА.');
-                        return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ОБУКА.');
+                        return $response->withRedirect($this->router->pathFor('bib.kategorija'));
                     } else {
                         $model->update($data, $id);
                         $sqla = "UPDATE {$model->getTable()} SET position = position - 1
@@ -244,10 +244,10 @@ class DokumentKatController extends Controller
 
                         $preraspodela_pozicija = $model->fetch($sqla);
                         $model->rebuild();
-                    $this->flash->addMessage('success', 'Подаци категорије ДОКУМЕНТА су успешно измењени.');
+                    $this->flash->addMessage('success', 'Подаци категорије ОБУКА су успешно измењени.');
                     $kategorija = $model->find($id);
                     $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
-                    return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $id]));}
+                    return $response->withRedirect($this->router->pathFor('bib.kategorija', ['poslednji' => $id]));}
                 }else{
                     // Kada je nova pozicija MANJA od stare u roditeljskoj kategoriji
                     unset($data['parent_id']);
@@ -255,8 +255,8 @@ class DokumentKatController extends Controller
 
                     $this->validator->validate($data, $validation_rules);
                     if ($this->validator->hasErrors()) {
-                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ДОКУМЕНТА.');
-                        return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+                        $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене података категорије ОБУКА.');
+                        return $response->withRedirect($this->router->pathFor('bib.kategorija'));
                     } else {
                         $model->update($data, $id);
                         $sqlc = "UPDATE {$model->getTable()} SET position = position + 1
@@ -266,10 +266,10 @@ class DokumentKatController extends Controller
                                 AND id != $id;";
                         $preraspodela_pozicija = $model->fetch($sqlc);
                         $model->rebuild();
-                    $this->flash->addMessage('success', 'Подаци категорије ДОКУМЕНТА су успешно измењени.');
+                    $this->flash->addMessage('success', 'Подаци категорије ОБУКА су успешно измењени.');
                     $kategorija = $model->find($id);
                     $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
-                    return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $id]));}
+                    return $response->withRedirect($this->router->pathFor('bib.kategorija', ['poslednji' => $id]));}
                 }
         }else{
             // Slučaj kada se menja samo --NAZIV-- kategorije
@@ -278,14 +278,14 @@ class DokumentKatController extends Controller
             $this->validator->validate($data, $validation_rules);
 
             if ($this->validator->hasErrors()) {
-                $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене назива категорије ДОКУМЕНТА.');
-                return $response->withRedirect($this->router->pathFor('dokument.kategorija'));
+                $this->flash->addMessage('danger', 'Дошло је до грешке приликом измене назива категорије ОБУКА.');
+                return $response->withRedirect($this->router->pathFor('bib.kategorija'));
             } else {
-                $this->flash->addMessage('success', 'Назив категорије ДОКУМЕНТА је успешно измењен.');
+                $this->flash->addMessage('success', 'Назив категорије ОБУКА је успешно измењен.');
                 $model->update($data, $id);
                 $kategorija = $model->find($id);
                 $this->log($this::IZMENA, $kategorija, 'naziv', $stari);
-                return $response->withRedirect($this->router->pathFor('dokument.kategorija', ['poslednji' => $id]));
+                return $response->withRedirect($this->router->pathFor('bib.kategorija', ['poslednji' => $id]));
             }
         }
     }

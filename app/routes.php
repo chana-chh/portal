@@ -18,12 +18,17 @@ $app->get('/clanci/komentar/{id}', '\App\Controllers\ClanakController:getKomenta
 $app->post('/clanci/komentar', '\App\Controllers\ClanakController:postKomentar')->setName('clanci.komentar.post');
 //Doks
 $app->get('/dokumenti/lista[/{id_kat}[/{id_vrs}]]', '\App\Controllers\DokumentController:getLista')->setName('dokumenti.lista');
-//$app->get('/dokumenti/kategorija/{id}', '\App\Controllers\DokumentController:getDokumentiKategorija')->setName('dokumenti.kategorija');
 $app->get('/dokumenti/pretraga', '\App\Controllers\DokumentController:getDokumentiPretraga')->setName('dokumenti.pretraga');
 $app->post('/dokumenti/pretraga', '\App\Controllers\DokumentController:postDokumentiPretraga');
 $app->get('/dokumenti/arhiva[/{id_kat}[/{id_vrs}]]', '\App\Controllers\DokumentController:getArhiva')->setName('dokumenti.arhiva');
 $app->get('/dokumenti/arhiva-pretraga', '\App\Controllers\DokumentController:getDokumentiArhivaPretraga')->setName('dokumenti.arhiva.pretraga');
 $app->post('/dokumenti/arhiva-pretraga', '\App\Controllers\DokumentController:postDokumentiArhivaPretraga');
+//Obuke
+$app->get('/obuka/lista[/{id_kat}]', '\App\Controllers\BibliotekaObukaController:getLista')->setName('obuka.lista');
+$app->get('/obuka/pretraga', '\App\Controllers\BibliotekaObukaController:getDokumentiPretraga')->setName('obuka.pretraga');
+$app->post('/obuka/pretraga', '\App\Controllers\BibliotekaObukaController:postDokumentiPretraga');
+$app->get('/obuka/materijal/{id}', '\App\Controllers\BibliotekaObukaController:getMaterijal')->setName('obuka.materijal');
+
 
 $app->group('', function () {
     //Prijava
@@ -40,6 +45,23 @@ $app->group('', function () {
 
 // ADMIN
 $app->group('', function () {
+    // Obuke
+    $this->get('/admin/obuka/dodavanje', '\App\Controllers\BibliotekaObukaController:getDokumentDodavanje')->setName('obuka.dodavanje.get');
+    $this->post('/admin/obuka/dodavanje', '\App\Controllers\BibliotekaObukaController:postDokumentDodavanje')->setName('obuka.dodavanje.post');
+    $this->post('/admin/obuka/brisanje', '\App\Controllers\BibliotekaObukaController:postDokumentiBrisanje')->setName('obuka.brisanje');
+    $this->get('/admin/obuka/izmena/{id}', '\App\Controllers\BibliotekaObukaController:getDokumentiIzmena')->setName('obuka.detalj');
+    $this->post('/admin/obuka/izmena', '\App\Controllers\BibliotekaObukaController:postDokumentiIzmena')->setName('obuka.izmena');
+
+    // Materijal
+    $this->get('/materijal', '\App\Controllers\BibliotekaDokumentController:getLista')->setName('materijal');
+    $this->get('/materijal/pretraga', '\App\Controllers\BibliotekaDokumentController:getPretraga')->setName('materijal.pretraga');
+    $this->post('/materijal/pretraga', '\App\Controllers\BibliotekaDokumentController:postPretraga');
+    $this->get('/materijal/dodavanje', '\App\Controllers\BibliotekaDokumentController:getDodavanje')->setName('materijal.dodavanje.get');
+    $this->post('/materijal/dodavanje', '\App\Controllers\BibliotekaDokumentController:postDodavanje')->setName('materijal.dodavanje.post');
+    $this->post('/materijal/brisanje', '\App\Controllers\BibliotekaDokumentController:postBrisanje')->setName('materijal.brisanje');
+    $this->get('/materijal/izmena/{id}', '\App\Controllers\BibliotekaDokumentController:getIzmena')->setName('materijal.izmena.get');
+    $this->post('/materijal/izmena', '\App\Controllers\BibliotekaDokumentController:postIzmena')->setName('materijal.izmena.post');
+
     // Komentari
     $this->get('/admin/komentari', '\App\Controllers\KomentariController:getLista')->setName('komentari');
     $this->get('/admin//komentari/pretraga', '\App\Controllers\KomentariController:getKomentariPretraga')->setName('komentari.pretraga');
@@ -71,6 +93,28 @@ $app->group('', function () {
     $this->post('/admin/korisnik-dodavanje', '\App\Controllers\KorisnikController:postKorisnikDodavanje')->setName('admin.korisnik.dodavanje');
     $this->get('/admin/korisnik-izmena/{id}', '\App\Controllers\KorisnikController:getKorisnikIzmena')->setName('admin.korisnik.izmena.get');
     $this->post('/admin/korisnik-izmena', '\App\Controllers\KorisnikController:postKorisnikIzmena')->setName('admin.korisnik.izmena.post');
+
+    // Biblioteka vrste
+    $this->get('/admin/bib/vrste', '\App\Controllers\BibliotekaVrsteController:getLista')->setName('bib.vrste');
+    $this->post('/admin/bib/vrste/dodavanje', '\App\Controllers\BibliotekaVrsteController:postDodavanje')->setName('bib.vrste.dodavanje');
+    $this->post('/admin/bib/vrste/brisanje', '\App\Controllers\BibliotekaVrsteController:postBrisanje')->setName('bib.vrste.brisanje');
+    $this->post('/admin/bib/vrste/detalj', '\App\Controllers\BibliotekaVrsteController:postDetalj')->setName('bib.vrste.detalj');
+    $this->post('/admin/bib/vrste/izmena', '\App\Controllers\BibliotekaVrsteController:postIzmena')->setName('bib.vrste.izmena');
+
+    // Biblioteka program
+    $this->get('/admin/bib/program', '\App\Controllers\BibliotekaProgramController:getLista')->setName('bib.program');
+    $this->post('/admin/bib/program/dodavanje', '\App\Controllers\BibliotekaProgramController:postDodavanje')->setName('bib.program.dodavanje');
+    $this->post('/admin/bib/program/brisanje', '\App\Controllers\BibliotekaProgramController:postBrisanje')->setName('bib.program.brisanje');
+    $this->post('/admin/bib/program/detalj', '\App\Controllers\BibliotekaProgramController:postDetalj')->setName('bib.program.detalj');
+    $this->post('/admin/bib/program/izmena', '\App\Controllers\BibliotekaProgramController:postIzmena')->setName('bib.program.izmena');
+
+    // Biblioteka Kategorije
+    $this->get('/admin/bib/kategorije[/{poslednji}]', '\App\Controllers\BibliotekaKatController:getKategorije')->setName('bib.kategorija');
+    $this->post('/admin/bib/kategorije/dodavanje', '\App\Controllers\BibliotekaKatController:postKategorijeDodavanje')->setName('bib.kategorija.dodavanje');
+    $this->post('/admin/bib/kategorije/brisanje', '\App\Controllers\BibliotekaKatController:postKategorijeBrisanje')->setName('bib.kategorija.brisanje');
+    $this->get('/admin/bib/kategorije/izmena/{id}', '\App\Controllers\BibliotekaKatController:getKategorijeIzmena')->setName('bib.kategorija.detalj');
+    $this->post('/admin/bib/kategorije/izmena', '\App\Controllers\BibliotekaKatController:postKategorijeIzmena')->setName('bib.kategorija.izmena');
+
     //Logovi
     $this->get('/admin/logovi', '\App\Controllers\LogController:getLog')->setName('logovi');
     $this->get('/admin/logovi/pretraga', '\App\Controllers\LogController:getLogPretraga')->setName('logovi.pretraga');

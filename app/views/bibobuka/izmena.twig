@@ -1,0 +1,107 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row mt-2">
+    <div class="col-lg-10 offset-1">
+        <h1><i class="fas fa-file-signature text-secondary"></i> Измена обуке <span class="text-success">{{ dokument.naslov }}</span></h1>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-lg-10 offset-1">
+        <div class="card border-dark mb-3">
+            <div class="card-header text-primary">
+                <h3>Исправка описа и категоризације обука</h3>
+            </div>
+            <div class="card-body text-dark">
+                <form id="dokument-forma" action="{{ path_for('obuka.izmena') }}" method="POST" data-parsley-validate>
+                    {{ csrf|raw }}
+                    <input type="hidden" id="idIzmena" name="idIzmena" value="{{ dokument.id }}" readonly>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="naziv">Назив обуке</label>
+                            <input type="text" value="{{ old.naziv ? : dokument.naziv }}" class="form-control{{ errors.naziv[0] ? ' is-invalid' : '' }}" name="naziv" id="naziv" required maxlength="250">
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">{{ errors.naziv[0] ? : 'Обавезно поље' }}</div>
+                        </div>
+                        <div class="col form-group">
+                            <label for="kategorija_id" class="mr-3">Категорија обуке</label>
+                            <select name="kategorija_id" id="kategorija_id" class="custom-select" required>
+                                <option value=""> </option>
+                                {% for kat in kategorije %}
+                                <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.kategorija_id == kat.id ? ' selected' : ''}}
+                                {{dokument.kategorija_id == kat.id ? ' selected' : ''}}>
+                                    {{ kat.naziv }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col form-group">
+                            <label for="program_id" class="mr-3">Врста програма обуке</label>
+                            <select name="program_id" id="program_id" class="custom-select" required>
+                                <option value=""> </option>
+                                {% for vrs in programi %}
+                                <option value="{{ vrs.id }}" {{old.program_id == vrs.id ? ' selected' : ''}} {{dokument.program_id == vrs.id ? ' selected' : ''}}>{{ vrs.naziv }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                          <label for="datum">Датум</label>
+                          <input name="datum" type="date" id="datum" class="form-control{{ errors.datum[0] ? ' is-invalid' : '' }}"
+                            value="{{ old.datum ? : dokument.datum }}">
+                          <div class="valid-feedback">Odgovarajući podatak</div>
+                          <div class="invalid-feedback">{{ errors.datum[0] ? : 'Неисправан податак' }}</div>
+                        </div>
+                        <div class="col form-group">
+                            <label for="organizator">Организатор</label>
+                            <input type="text" value="{{ old.organizator ? : dokument.organizator }}" class="form-control{{ errors.organizator[0] ? ' is-invalid' : '' }}" name="organizator" id="organizator" maxlength="255">
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">{{ errors.organizator[0] ? : 'Неисправан податак' }}</div>
+                        </div>
+                        <div class="col form-group">
+                            <label for="finansijer">Финансијер</label>
+                            <input type="text" value="{{ old.finansijer ? : dokument.finansijer }}" class="form-control{{ errors.finansijer[0] ? ' is-invalid' : '' }}" name="finansijer" id="finansijer" maxlength="255">
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">{{ errors.finansijer[0] ? : 'Неисправан податак' }}</div>
+                        </div>
+                        <div class="col form-group">
+                            <label for="mesto">Место</label>
+                            <input type="text" value="{{ old.mesto ? : dokument.mesto }}" class="form-control{{ errors.mesto[0] ? ' is-invalid' : '' }}" name="mesto" id="mesto" maxlength="255">
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">{{ errors.mesto[0] ? : 'Неисправан податак' }}</div>
+                        </div>
+                    </div>
+                                <hr style="margin-top: 30px;">
+            <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" title="Сними измене обуке">
+                      <i class="fas fa-save"></i>&emsp;Сними
+                    </button>
+                    <a href="{{ path_for('obuka.lista') }}" class="btn btn-secondary"><i class="fas fa-ban"></i> &emsp;Откажи</a>
+                </div>
+            </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock naslov %}
+
+{% block skripta %}
+<script src="{{ base_url() }}/js/parsley.js"></script>
+<script src="{{ base_url() }}/js/parsley_sr.js"></script>
+<script>
+$( document ).ready(function() {
+        var n = "{{nivo}}";
+        var i;
+        for (i = 2; i < n+1; i++) {
+           $('.level_'+i).each(
+                function(){
+                    $(this).text("-".repeat(i*3)+" "+$(this).text());
+                }
+           );
+        };
+});
+</script>
+{% endblock skripta %}

@@ -62,4 +62,14 @@ class Dokument extends Model
         return $this->fetch($sql);
     }
 
+    public function sledeci()
+    {
+        $sql="SELECT AUTO_INCREMENT
+        FROM information_schema.tables
+        WHERE table_name = '{$this->table()}'
+        AND table_schema = 'portal';";
+        
+        return (int) $this->fetch($sql)[0]->AUTO_INCREMENT;
+    }
+
 }

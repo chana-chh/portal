@@ -1,6 +1,6 @@
 <nav class="navbar navbar-dark bg-dark text-light navbar-expand-lg sticky-top">
   <a href="{{ path_for('pocetna') }}" class="navbar-brand text-light">
-    Портал запослених у Градским управама града Крагујевца
+    Портал запослених у Градским<br> управама града Крагујевца
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,6 +16,9 @@
         <a class="nav-link" href="{{ path_for('dokumenti.lista') }}"><i class="fas fa-file-alt"></i> Документа</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="{{ path_for('obuka.lista') }}"><i class="fas fa-graduation-cap"></i> Електронска библиотека</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="{{ path_for('clanci.lista') }}"><i class="fas fa-newspaper"></i> Новости</a>
       </li>
       <li class="nav-item">
@@ -26,20 +29,17 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-edit"></i> Аутори докумената
+          <i class="fas fa-edit"></i> Аутори
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{{ path_for('dokument.dodavanje.get') }}"><i class="fas fa-upload"></i> Отпремање документа</a>
-        </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-bullhorn"></i> Аутори новости
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{{ path_for('autor.objave.lista') }}"><i class="fas fa-clipboard"></i> Објаве</a>
-          <a class="dropdown-item" href="{{ path_for('komentari') }}"><i class="fas fa-comments"></i> Коментари</a>
+          <a class="dropdown-item" href="{{ path_for('dokument.dodavanje.get') }}"><i class="fas fa-upload text-primary"></i>&emsp;Отпремање документа</a>
+          {% if auth.user.nivo == 0 %}
+          <hr class="dropdown-divider" style="border-color:blue;">
+          <a class="dropdown-item" href="{{ path_for('materijal') }}"><i class="fas fa-book-open text-success"></i>&emsp;Преглед-додавање материјала</a>
+          {% endif %}
+          <hr class="dropdown-divider" style="border-color:blue;">
+          <a class="dropdown-item" href="{{ path_for('autor.objave.lista') }}"><i class="fas fa-clipboard text-warning"></i>&emsp;Објаве</a>
+          <a class="dropdown-item" href="{{ path_for('komentari') }}"><i class="fas fa-comments text-warning"></i>&emsp;Коментари</a>
         </div>
       </li>
       <li class="nav-item">
@@ -57,6 +57,11 @@
           <a class="dropdown-item" href="{{ path_for('kategorija') }}">Категорије чланака</a>
           <a class="dropdown-item" href="{{ path_for('dokument.kategorija') }}">Категорије докумената</a>
           <a class="dropdown-item" href="{{ path_for('vrste') }}">Врсте докумената</a>
+          <hr class="dropdown-divider">
+          <a class="dropdown-item" href="{{ path_for('bib.vrste') }}">Врсте материјала са обука</a>
+          <a class="dropdown-item" href="{{ path_for('bib.program') }}">Врсте програма обука</a>
+          <a class="dropdown-item" href="{{ path_for('bib.kategorija') }}">Категорије обука</a>
+          <hr class="dropdown-divider">
           <a class="dropdown-item" href="{{ path_for('admin.korisnik.lista') }}">Корисници</a>
           <a class="dropdown-item" href="{{ path_for('logovi') }}">Логови</a>
         </div>

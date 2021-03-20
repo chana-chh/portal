@@ -1,0 +1,42 @@
+{% for d in data %}
+<li class="mt-2 mb-1">
+	{% if d.children %}
+	<a href="" data-toggle="collapse" data-target="#id-{{ d.id }}-collapse" style="text-decoration: none;">
+		{% if id_poslednjeg ==  d.id %}
+        <img src="{{ base_url() }}/img/zvezda.png" alt="folder" height="24px">
+        {% else %}
+	    <img src="{{ base_url() }}/img/021-folder-19.png" alt="folder" height="24px">
+	    {% endif %}
+	</a>&emsp;{{ d.naziv }} &nbsp;&nbsp;
+	<small>
+		<button class="btn btn-outline-success btn-sm otvori-dodavanje" data-toggle="modal" data-target="#dodajModal"
+            data-parent="{{ d.id }}" title="Додавање подкатегорије">
+            <i class="fas fa-plus"></i></button>&nbsp;
+		<a href="{{ path_for('bib.kategorija.detalj', { id: d.id }) }}" class="text-warning"><i class="fas fa-pencil-alt" title="Измени"></i></a>&nbsp;
+		<button class="btn btn-outline-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
+            data-id="{{ d.id }}" title="Брисање одабране категорије"><i class="fas fa-trash"></i></button>
+	</small>
+	<ul class="collapse list-unstyled ml-5" id="id-{{ d.id }}-collapse">
+		{% include "templates/inc/recursion.twig" with {'data': d.children} %}
+	</ul>
+	{% else %}
+	<a href="" data-toggle="collapse" data-target="#id-{{ d.id }}-collapse" style="text-decoration: none;">
+		{% if id_poslednjeg ==  d.id %}
+        <img src="{{ base_url() }}/img/zvezda.png" alt="folder" height="24px">
+        {% elseif d.naziv == "НЕРАСПОРЕЂЕНИ" %}
+	    <img src="{{ base_url() }}/img/022-folder-18.png" alt="folder" height="24px">
+	    {% else %}
+	    <img src="{{ base_url() }}/img/025-folder-15.png" alt="folder" height="24px">
+	    {% endif %}
+	</a>&emsp;{{ d.naziv }} &nbsp;&nbsp;
+	<small>
+		<button class="btn btn-outline-success btn-sm otvori-dodavanje" data-toggle="modal" data-target="#dodajModal"
+            data-parent="{{ d.id }}" title="Додавање подкатегорије">
+            <i class="fas fa-plus"></i></button>&nbsp;
+		<a href="{{ path_for('bib.kategorija.detalj', { id: d.id }) }}" class="text-warning"><i class="fas fa-pencil-alt" title="Измени"></i></a>&nbsp;
+				<button class="btn btn-outline-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
+            data-id="{{ d.id }}" title="Брисање одабране категорије"><i class="fas fa-trash"></i></button>
+	</small>
+	{% endif %}
+</li>
+{% endfor %}

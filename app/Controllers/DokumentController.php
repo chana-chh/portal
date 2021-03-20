@@ -369,10 +369,11 @@ class DokumentController extends Controller
             $extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
             $velicina_tekst = human_filesize($dokument->getSize());
             $velicina_mb = $dokument->getSize() / 1024 / 1024;
-            $naslov_ceo = str_replace(" ", "_", $data['naslov']);
-            $naslov = substr($naslov_ceo, 0, 25);
-            $vrstazaime = str_replace(" ", "_", $vrsta);
-            $name = "{$vrstazaime}_{$naslov}_{$unique}";
+
+            $modelDokument = new Dokument();
+            $sledeci = $modelDokument->sledeci();
+
+            $name = "dokument"."_{$sledeci}_{$unique}";
             $filename = "{$name}.{$extension}";
             $veza = URL . "doc/{$filename}";
             $data['velicina_tekst'] = $velicina_tekst;
@@ -381,7 +382,6 @@ class DokumentController extends Controller
             $data['link'] = $veza;
             $data['korisnik_id'] = $this->auth->user()->id;
             $dokument->moveTo('doc/' . $filename);
-            $modelDokument = new Dokument();
             $modelDokument->insert($data);
 
             $dok = $modelDokument->find($modelDokument->lastId());

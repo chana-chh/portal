@@ -1,0 +1,59 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row mt-md-2">
+    <div class="col">
+        <h1>
+            <i class="fas fa-book-open text-warning"></i> Преглед материјала са обуке <span class="text-warning">{{ obuka.naziv }}</span>
+        </h1>
+    </div>
+    <div class="col justify-content-end text-right">
+        <div class="btn-group btn-group mt-3">
+            <a href="#" class="btn btn-secondary" onclick="window.history.back();">
+                <i class="fas fa-arrow-alt-circle-left text-warning"></i>
+            </a>
+            <a class="btn btn-outline-secondary text-warning" href="{{ path_for('pocetna') }}" title="Повратак на почетну страну">
+                <i class="fa fa-home"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<hr />
+{% if materijal %}
+<div class="table-responsive">
+    <table class="table mobilni">
+        <thead class="thead-dark">
+            <tr>
+                <th class="w-5">#</th>
+                <th class="w-20">Наслов</th>
+                <th class="w-20">Опис</th>
+                <th class="w-15">Врста</th>
+                <th class="w-20">Обука</th>
+                <th class="w-10">Аутор</th>
+                <th class="w-10">Преглед</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mat in materijal %}
+            <tr>
+                <td>{{ mat.id }}</td>
+                <td>{{ mat.naslov }}</td>
+                <td>{{ mat.opis }}</td>
+                <td>{{ mat.vrsta.naziv }}</td>
+                <td>{{ mat.obuka.naziv }}</td>
+                <td>{{ mat.korisnik().imePrezime() }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                      <a href="{{ mat.link }}" class="btn btn-success btn-sm" title="Преглед" target="_blank">{{ mat.tip|upper }}&emsp;{{ mat.velicina_tekst }}&emsp;<i class="fas fa-eye"></i></a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+  <h3>
+    <i class="fas fa-ban text-danger"></i>&emsp;Материјал са ове обуке не постоји или још није додат!
+  </h3>
+{% endif %}
+{% endblock naslov %}

@@ -1,0 +1,192 @@
+{% extends "templates/app.twig" %}
+{% block stil %}
+<style type="text/css">
+input.parsley-error
+    {
+      color: #B94A48 !important;
+      background-color: #F2DEDE !important;
+      border: 1px solid #EED3D7 !important;
+    }
+</style>
+{% endblock stil %}
+{% block naslov %}
+<div class="row mt-md-2">
+    <div class="col">
+        <h1>
+            <i class="fas fa-book-open text-secondary"></i> Преглед материјала са СВИХ обука
+        </h1>
+        {% if data %}
+        <small><em class="text-warning">[филтрирано]</em></small>
+        {% else %}
+        <small><em class="text-success">[сав материјал]</em></small>
+        {% endif %}
+    </div>
+    <div class="col justify-content-end text-right">
+        <div class="btn-group btn-group mt-3">
+          <a class="btn btn-primary btn-sm pretraga_div" href="{{ path_for('materijal.dodavanje.get') }}"><i class="fas fa-upload"></i>&emsp;Отпремање материјала</a>
+            <button type="button" class="btn btn-success btn-sm prikazi" id="prikazi" title="Прикажи форму за филтрирање">
+                <i class="fas fa-filter"></i> Filter</button>
+            <a href="{{ path_for('materijal') }}" class="btn btn-secondary btn-sm pretraga_div"><i class="fas fa-book-open"></i>&emsp;Сав материјал</a>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="card border-dark mb-3 pretraga_div" style="display: none;">
+    <div class="card-header">Филтрирање материјала са обука</div>
+    <div class="card-body text-dark">
+        <form action="{{ path_for('materijal.pretraga') }}" method="POST">
+            {{ csrf|raw }}
+            <div class="form-row">
+                <div class="form-group col-lg-3">
+                    <label for="naslov">Наслов: </label>
+                    <input type="text" name="naslov" id="naslov" class="form-control" value="{{ data.naslov }}" autocomplete="off" placeholder="... наслов документа">
+                </div>
+                <div class="form-group col-lg-3">
+                    <label for="opis">Опис: </label>
+                    <input type="text" name="opis" id="opis" class="form-control" value="{{ data.opis }}" autocomplete="off" placeholder="... опис документа">
+                </div>
+                <div class="form-group col-lg-3">
+                            <label for="obuka_id" class="mr-3">Обуке</label>
+                            <select name="obuka_id" id="obuka_id" class="custom-select">
+                                <option value=""> </option>
+                                {% for kat in obuke %}
+                                <option value="{{ kat.id }}" {{old.obuka_id == kat.id ? ' selected' : ''}}>
+                                    {{ kat.naziv }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="valid-feedback">Исправно попуњено</div>
+                            <div class="invalid-feedback">{{ errors.obuka_id[0] ? : 'Обавезно поље.' }}</div>
+                </div>
+                                <div class="form-group col-lg-3">
+                    <label for="vrsta_id" class="mr-3">Врста документа</label>
+                    <select name="vrsta_id" id="vrsta_id" class="custom-select izbor-sa-stilom">
+                        <option value=""></option>
+                        {% for vrsta in vrste %}
+                        <option value="{{ vrsta.id }}" {{old.vrsta_id == vrsta.id ? ' selected' : ''}}>{{ vrsta.naziv }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-row text-right mt-4">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-filter"></i> Филтрирај
+                    </button>
+                    <a href="{{ path_for('materijal') }}" class="btn btn-secondary btn-sm"><i class="fas fa-book-open"></i>&emsp;Сав материјал са обука</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table mobilni">
+        <thead class="thead-dark">
+            <tr>
+                <th class="w-5">#</th>
+                <th class="w-20">Наслов</th>
+                <th class="w-20">Опис</th>
+                <th class="w-15">Врста</th>
+                <th class="w-20">Обука</th>
+                <th class="w-15">Објавио</th>
+                <th class="w-5" style="text-align:right;"><i class="fas fa-cogs text-warning"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mat in materijal.data %}
+            <tr>
+                <td>{{ mat.id }}</td>
+                <td>{{ mat.naslov }}</td>
+                <td>{{ mat.opis }}</td>
+                <td>{{ mat.vrsta.naziv }}</td>
+                <td>{{ mat.obuka.naziv }}</td>
+                <td>{{ mat.korisnik().imePrezime() }}</td>
+                <td style="text-align:right;">
+                    <div class="btn-group btn-group-sm">
+                                <a href="{{ mat.link }}" class="btn btn-primary btn-sm" title="Преглед" target="_blank">
+            <i class="fas fa-eye"></i>
+        </a>
+                        <a class="btn btn-warning btn-sm otvori-izmenu" href="{{ path_for('materijal.izmena.get', {id:mat.id}) }}" title="Измена података ставке">
+                            <i class="fas fa-edit"></i></a>
+                        <button class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal" data-id="{{ mat.id }}" title="Брисање одабране ставке">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="row">
+  <nav class="col">
+    <ul class="pagination pagination-sm">
+      {% for button in materijal.links.buttons %}
+      <li class="page-item{{ button.current ? ' active' : '' }}">
+        <a class="page-link" href="{{ button.url }}">{{ button.page }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  <p class="col justify-content-end text-right text-info"><strong>
+      Prikazani redovi od
+      <em>{{ materijal.links.row_from }}</em> до
+      <em>{{ materijal.links.row_to }}</em> од укупно
+      <em>{{ materijal.links.total_rows }}</em>
+    </strong>
+  </p>
+</div>
+  {# Modal za brisanje #}
+  <div id="brisanjeModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">Упозорење!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4>Да ли желите трајно да обришете ставку?</h4>
+          <p class="text-danger">* Ова акција је неповратна!</p>
+          <form id="brisanje-forma" action="{{ path_for('materijal.brisanje') }}" method="POST">
+            {{ csrf|raw }}
+            <input type="hidden" id="idBrisanje" name="idBrisanje">
+            <hr style="margin-top: 30px;">
+
+            <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+              <div class="form-group">
+                <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
+                  <i class="fas fa-trash-alt"></i>&emsp;Обриши
+                </button>
+                <a class="btn btn-secondary" data-dismiss="modal">
+                  <i class="fas fa-ban"></i>&emsp;Откажи
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {# Kraj modala za brisanje #}
+{% endblock naslov %}
+{% block skripta %}
+<script src="{{ base_url() }}/js/parsley.js"></script>
+<script src="{{ base_url() }}/js/parsley_sr.js"></script>
+<script>
+  $(document).ready(function () {
+
+    $('#prikazi').click(function () {
+      $('.pretraga_div').toggle();
+    });
+
+    $(document).on('click', '.otvori-brisanje', function () {
+      var id = $(this).data("id");
+      $('#idBrisanje').val(id);
+    });
+
+
+  });
+</script>
+{% endblock skripta %}

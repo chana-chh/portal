@@ -1,0 +1,158 @@
+{% extends "templates/app.twig" %}
+{% block stil %}
+<style type="text/css">
+.collapsing 
+    {
+    -webkit-transition: none !important;
+    transition: none !important;
+    }
+input.parsley-error
+    {
+      color: #B94A48 !important;
+      background-color: #F2DEDE !important;
+      border: 1px solid #EED3D7 !important;
+    }
+</style>
+{% endblock stil %}
+{% block naslov %}
+<div class="row mt-2">
+  <div class="col">
+    <h2>
+      <i class="fas fa-sitemap text-secondary"></i> Преглед категорија обука
+    </h2>
+  </div>
+</div>
+<hr />
+{% endblock naslov %}
+{% block sadrzaj %}
+<div class="row m-4">
+    <div class="col">
+      <ul class="list-unstyled" style="font-size: 1.2rem;">
+        {% include "templates/inc/recursion_bib.twig" with {'data': data, 'id_poslednjeg':id_poslednjeg} only %}
+      </ul>
+    </div>
+  </div>
+
+
+{# Modal za dodavanje podkategorije #}
+<div id="dodajModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Додавање подкатегорије</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="modal-dodavanje-forma" action="{{ path_for('bib.kategorija.dodavanje') }}" method="POST" data-parsley-validate>
+                    {{ csrf|raw }}
+                    <input type="hidden" id="modal" name="modal" value="1" readonly>
+                    <input type="hidden" id="parentModal" name="parentModal" readonly>
+                    <div class="form-group">
+                        <label for="dnModal">Назив</label>
+                        <input type="text" class="form-control" name="dnModal" id="dnModal" aria-describedby="Назив категорије" value="{{ old.dnModal ? : '' }}" required minlength="4">
+                    </div>
+                    <hr style="margin-top: 30px;">
+                    <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+                        <div class="form-group">
+                            <button id="btn-modal-dodavanje" type="submit" class="btn btn-warning">
+                                <i class="fas fa-plus"></i>&emsp;Додај
+                            </button>
+                            <a class="btn btn-secondary" data-dismiss="modal">
+                                <i class="fas fa-ban"></i>&emsp;Откажи
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{# Kraj modala za dodavanje podkategorije #}
+
+{# Modal za brisanje #}
+<div id="brisanjeModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Упозорење!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4>Да ли желите трајно да обришете категорију обуке?</h4>
+        <p class="text-danger">* Ова акција је неповратна!</p>
+        <form id="brisanje-forma" action="{{ path_for('bib.kategorija.brisanje') }}" method="POST">
+          {{ csrf|raw }}
+          <input type="hidden" id="idBrisanje" name="idBrisanje">
+          <hr style="margin-top: 30px;">
+
+          <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+            <div class="form-group">
+              <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i>&emsp;Обриши
+              </button>
+              <a class="btn btn-secondary" data-dismiss="modal">
+                <i class="fas fa-ban"></i>&emsp;Откажи
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{# Kraj modala za brisanje #}
+
+{% endblock sadrzaj %}
+{% block traka %}
+<div class="card border-dark mb-3">
+    <div class="card-header"><h4>Додавање коренске категорије</h4></div>
+    <div class="card-body text-dark">
+        <form id="dodavanje-forma" action="{{ path_for('bib.kategorija.dodavanje') }}" method="POST" data-parsley-validate>
+            {{ csrf|raw }}
+            <input type="hidden" id="modal" name="modal" value="0" readonly>
+            <input type="hidden" id="parent_id" name="parent_id" value="0" readonly>
+            <div class="form-group">
+                <label for="naziv">Назив</label>
+                <input type="text" class="form-control" name="naziv" id="naziv" aria-describedby="Назив коренске категорије" value="{{ old.naziv ? : '' }}" required minlength="5">
+            </div>
+            <hr style="margin-top: 30px;">
+            <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+                <div class="form-group">
+                    <button id="btn-dodavanje" type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>&emsp;Додај
+                    </button>
+                    <a href="{{ path_for('bib.kategorija') }}" class="btn btn-secondary"><i class="fas fa-ban"></i> &emsp;Откажи</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock traka %}
+{% block skripta %}
+<script src="{{ base_url() }}/js/parsley.js"></script>
+<script src="{{ base_url() }}/js/parsley_sr.js"></script>
+<script>
+$(document).ready(function () {
+
+    var otvoriti = {{ roditelji_id|json_encode() }};
+    $.each(otvoriti, function( index, value ) {
+      $('#id-' + value + '-collapse').collapse('toggle');
+    });
+
+    $(document).on('click', '.otvori-dodavanje', function () {
+      var parent = $(this).data("parent");
+      $('#parentModal').val(parent);
+    });
+
+    $(document).on('click', '.otvori-brisanje', function () {
+      var id = $(this).data("id");
+      $('#idBrisanje').val(id);
+    });
+
+});
+</script>
+{% endblock skripta %}

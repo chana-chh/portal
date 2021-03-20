@@ -3,7 +3,7 @@
 <div class="row mt-2">
   <div class="col">
     <h2>
-      <i class="fas fa-sitemap text-secondary"></i> Преглед врста докумената
+      <i class="fas fa-sitemap text-secondary"></i> Преглед врста програма обука
     </h2>
   </div>
 </div>
@@ -26,10 +26,10 @@
       <td style="text-align:right;">
         <div class="btn-group btn-group-sm">
           <button class="btn btn-warning btn-sm otvori-izmenu" data-toggle="modal" data-target="#izmenaModal"
-            data-id="{{ vrs.id }}" title="Измена података одабране врсте">
+            data-id="{{ vrs.id }}" title="Измена података одабране врсте програма">
             <i class="fas fa-edit"></i></button>
           <button class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
-            data-id="{{ vrs.id }}" title="Брисање одабране врсте">
+            data-id="{{ vrs.id }}" title="Брисање одабране врсте програма">
             <i class="fas fa-trash-alt"></i>
           </button>
         </div>
@@ -49,9 +49,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <h4>Да ли желите трајно да обришете врсту?</h4>
+        <h4>Да ли желите трајно да обришете врсту програма?</h4>
         <p class="text-danger">* Ова акција је неповратна!</p>
-        <form id="brisanje-forma" action="{{ path_for('vrste.brisanje') }}" method="POST">
+        <form id="brisanje-forma" action="{{ path_for('bib.program.brisanje') }}" method="POST">
           {{ csrf|raw }}
           <input type="hidden" id="idBrisanje" name="idBrisanje">
           <hr style="margin-top: 30px;">
@@ -84,7 +84,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="izmena-forma" action="{{ path_for('vrste.izmena') }}" method="POST" class="needs-validation"
+        <form id="izmena-forma" action="{{ path_for('bib.program.izmena') }}" method="POST" class="needs-validation"
           novalidate>
           {{ csrf|raw }}
           <input type="hidden" id="idIzmena" name="idIzmena">
@@ -120,7 +120,7 @@
 <div class="card border-dark mb-3">
   <div class="card-header">Додавање нове врсте</div>
   <div class="card-body text-dark mobilni">
-    <form action="{{ path_for('vrste.dodavanje') }}" method="POST" class="needs-validation" novalidate>
+    <form action="{{ path_for('bib.program.dodavanje') }}" method="POST" class="needs-validation" novalidate>
       {{ csrf|raw }}
       <div class="form-group">
         <label for="naziv">Назив</label>
@@ -135,7 +135,7 @@
         <div class="col">
           <button type="submit" class="btn btn-primary text-right"><i class="fas fa-plus-square"
               title="Додавање нове врсте"></i> &emsp;Додај</button>
-          <a href="{{ path_for('vrste') }}" class="btn btn-secondary"><i class="fas fa-ban"></i>
+          <a href="{{ path_for('bib.program') }}" class="btn btn-secondary"><i class="fas fa-ban"></i>
             &emsp;Откажи</a>
         </div>
       </div>
@@ -190,7 +190,7 @@
         "id": id
       };
 
-      var ruta = ["{{ path_for('vrste.detalj') }}"];
+      var ruta = ["{{ path_for('bib.program.detalj') }}"];
 
       $.ajax({
         url: ruta,
