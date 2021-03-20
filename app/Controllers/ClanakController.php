@@ -24,13 +24,14 @@ class ClanakController extends Controller
             WHERE  objavljen = 1
             AND deleted_at IS NULL
             ORDER BY published_at DESC;");
-
+    
         $sql = "SELECT
-    			COUNT(id) as broj, MONTHNAME(t.published_at) as mesec, YEAR(t.published_at) as godina, MONTH (t.published_at) as mm
-				FROM clanci t 
+    			COUNT(id) as broj, MONTHNAME(tabela.published_at) as mesec, YEAR(tabela.published_at) as godina, MONTH (tabela.published_at) as mm
+				FROM clanci tabela 
 				WHERE  objavljen = 1
             	AND deleted_at IS NULL
-				GROUP BY EXTRACT(YEAR_MONTH FROM t.published_at) DESC;";
+				GROUP BY EXTRACT(YEAR_MONTH FROM tabela.published_at);";
+
         $arhiva =$model->fetch($sql);
 
         $najpopularniji = $model->najpopularniji();
