@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\BibliotekaKategorija;
-use App\Models\Dokument;
+use App\Models\BibliotekaObuka;
 use App\Classes\Logger;
 
 class BibliotekaKatController extends Controller
@@ -85,8 +85,8 @@ class BibliotekaKatController extends Controller
         $naziv = implode(',', $za_brisanje_naziv);
         $in = implode(',', $za_brisanje_id);
 
-        $modeld = new BibliotekaDokument();
-        $sql = "UPDATE {$modeld->getTable()} SET kategorija_id = 1, opis = CONCAT('Налазио се у обрисаним категоријама:',' ','$naziv',' ',opis) 
+        $modeld = new BibliotekaObuka();
+        $sql = "UPDATE {$modeld->getTable()} SET kategorija_id = 1, naziv = CONCAT('Налазио се у обрисаним категоријама:',' ','$naziv',' ', naziv) 
         WHERE kategorija_id IN ($in);";
         $modeld->fetch($sql);
 

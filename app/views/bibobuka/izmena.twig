@@ -49,7 +49,7 @@
                         <div class="form-group col-md-3">
                           <label for="datum">Датум</label>
                           <input name="datum" type="date" id="datum" class="form-control{{ errors.datum[0] ? ' is-invalid' : '' }}"
-                            value="{{ old.datum ? : dokument.datum }}">
+                            value="{{ old.datum ? : dokument.datum|date('Y-m-d') }}">
                           <div class="valid-feedback">Odgovarajući podatak</div>
                           <div class="invalid-feedback">{{ errors.datum[0] ? : 'Неисправан податак' }}</div>
                         </div>
