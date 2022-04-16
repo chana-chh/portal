@@ -18,7 +18,6 @@ $app->get('/clanci/komentar/{id}', '\App\Controllers\ClanakController:getKomenta
 $app->post('/clanci/komentar', '\App\Controllers\ClanakController:postKomentar')->setName('clanci.komentar.post');
 //Doks
 $app->get('/dokumenti/lista[/{id_kat}[/{id_vrs}]]', '\App\Controllers\DokumentController:getLista')->setName('dokumenti.lista');
-//$app->get('/dokumenti/kategorija/{id}', '\App\Controllers\DokumentController:getDokumentiKategorija')->setName('dokumenti.kategorija');
 $app->get('/dokumenti/pretraga', '\App\Controllers\DokumentController:getDokumentiPretraga')->setName('dokumenti.pretraga');
 $app->post('/dokumenti/pretraga', '\App\Controllers\DokumentController:postDokumentiPretraga');
 $app->get('/dokumenti/arhiva[/{id_kat}[/{id_vrs}]]', '\App\Controllers\DokumentController:getArhiva')->setName('dokumenti.arhiva');
