@@ -7,6 +7,7 @@ use App\Classes\Logger;
 use App\Models\Kategorija;
 use App\Models\Clanak;
 use App\Models\Dokument;
+use App\Models\BibliotekaObuka;
 
 
 class HomeController extends Controller
@@ -21,9 +22,13 @@ class HomeController extends Controller
         $brojDoc = $modelDoc->broj_doc();
         $poslednjiUp = $modelDoc->poslednjiUp();
 
+        $modelObu = new BibliotekaObuka();
+        $brojBib = $modelObu->broj_doc();
+        $posObu = $modelObu->poslednjiUp();
+
         $imenik = rand(1, 59);
 
-        $this->render($response, 'home.twig', compact('brojClanaka', 'poslednjaObjavaClanak', 'brojDoc', 'poslednjiUp', 'imenik'));
+        $this->render($response, 'home.twig', compact('brojClanaka', 'poslednjaObjavaClanak', 'brojDoc', 'poslednjiUp', 'brojBib', 'posObu', 'imenik'));
     }
 
     public function getHelp($request, $response)

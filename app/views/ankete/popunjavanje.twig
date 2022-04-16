@@ -1,0 +1,305 @@
+{% extends "templates/appmanji.twig" %}
+{% block stil %}
+    <style>
+        .numberCircle {
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            padding: 8px;
+
+            background: #fff;
+            border: 2px solid #24a0ed;
+            color: #24a0ed;
+            text-align: center;
+
+            font: 28px Arial, sans-serif;
+        }
+    </style>
+{% endblock stil %}
+{% block naslov %}
+<div class="row mt-5 md-2" style="overflow: visible;">
+    <div class="col-lg-8">
+        <h2 class="text-primary font-italic"><i class="fas fa-spell-check"></i>&emsp;{{ anketa.naziv }}</h2>
+        <p class="lead">({{ anketa.pocetak|date('d.m.Y') }} - {{ anketa.kraj|date('d.m.Y') }})</p>
+    </div>
+    <div class="col-lg-4 text-right mt-3 ne_stampaj">
+        <div class="btn-group">
+            <a href="{{ path_for('ankete') }}" class="btn btn-secondary btn-sm" title="Повратак на листу анкета">
+                <i class="fas fa-list"></i> Листа анкета
+            </a>
+            <button type="button" class="btn btn-primary btn-sm" title="Штампање" onclick="window.print();">
+                <i class="fas fa-print"></i> Штампај</button>
+        </div>
+    </div>
+</div>
+<hr />
+{% endblock naslov %}
+{% block sadrzaj %}
+<div class="row mt-5 mb-4 ne_stampaj">
+    <div class="col col-lg-10 offset-lg-1">
+        <h4>{{ anketa.poruka }}</h4>
+        <br>
+        <h5>Биће Вам потребно око <span class="numberCircle">{{ anketa.vreme }}</span> минута да завршите ову анкету/истраживање</h5>
+    </div>
+</div>
+<div class="row mb-2 ne_stampaj">
+    <div class="col col-lg-10 offset-lg-1 text-danger">
+        <strong> Важно:</strong> У случају да сте на неко од питања одговорили са "ДА" можете приложити један или више докумената уз одговор. Ако желите да приложите више документа они морају бити сви у једном фолдеру и бирате их тако што држите притиснут тастер CTRL док бирате левим кликом миша жељена документа. Дозвољеним су документи типа Portable Document Format PDF, Microsoft WORD DOC и DOCX као и текстуални фајлови TXT максималне величине 32MB.<strong> Могуће је уклонити документ повратком на анкету/истраживање након слања одговора, али Вас молимо да тада НЕ МЕЊАТЕ одговоре јер измене неће бити сачуване.</strong>
+    </div>
+</div>
+{% if (pitanja)%}
+<div class="row mt-5 mb-4">
+    <div class="col col-lg-10 offset-lg-1">
+        <div class="card border-warning" id="pitanja">
+            <div class="card-header">
+                <h4 class="font-italic font-weight-light" id="top">Питања:</h4>
+            </div>
+            <div class="card-body">
+                <form id="dokument-forma" action="{{ path_for('slanje') }}" method="POST" enctype="multipart/form-data">
+                    {{ csrf|raw }}
+                    <input type="hidden" id="anketa_id" name="anketa_id" value="{{ anketa.id }}">
+                    {# PITANJA I ODGOVORI #}
+                    {% for pitanje in pitanja %}
+                    <h5 class="card-title" id="pitanje{{loop.index}}">{{loop.index}}. {{pitanje.naziv}}</h5>
+                    {# TEKST #}
+                    {% if pitanje.vrsta == "text" %}
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <input type="text" class="form-control" name="odgovor-{{ pitanje.id }}"
+                                id="odgovor_id{{ pitanje.id }}t" maxlength="250"
+                                {% if pitanje.odgovor(auth.user.ispitanik) %}
+                                value="{{ pitanje.odgovor(auth.user.ispitanik)[0].odgovor_id }}" {% endif %}>
+                        </div>
+                    </div>
+                    {# BROJ #}
+                    {% elseif pitanje.vrsta == "broj" %}
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <input type="number" class="form-control" id="odgovor_id{{ pitanje.id }}b"
+                                name="odgovor-{{ pitanje.id }}" min="1" {% if pitanje.odgovor(auth.user.ispitanik) %}
+                                value="{{ pitanje.odgovor(auth.user.ispitanik)[0].odgovor_id }}" {% endif %}>
+                        </div>
+                    </div>
+                    {# SELEKT #}
+                    {% elseif pitanje.vrsta == "selekt" %}
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="odgovor_id{{ pitanje.id }}s">Одаберите неки од одговора са падајуће листе:</label>
+                            <select name="odgovor-{{ pitanje.id }}" id="odgovor_id{{ pitanje.id }}s" class="form-control form-control-lg">
+                                <option value=""> </option>
+                                {% for odg in pitanje.tipoviOdgovora() %}
+                                <option value="{{ odg.id }}" {% if pitanje.odgovor(auth.user.ispitanik) %}
+                                    {{ pitanje.odgovor(auth.user.ispitanik)[0].odgovor_id == odg.id ? ' selected' : '' }}
+                                    {% endif %}>{{ odg.naziv }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    {% else %}
+                    {# RADIO BUTTON #}
+                    <div class="form-row">
+                        <div class="col form-group">
+                            {% for odg in pitanje.tipoviOdgovora() %}
+                            <div class="form-check">
+                                <label>
+                                <input class="form-check-input rad{{ pitanje.id }}" type="radio" name="odgovor-{{ pitanje.id }}"
+                                    id="odgovor_id{{ odg.id }}r"
+                                    {% if pitanje.odgovor(auth.user.ispitanik) %}
+                                    {{ pitanje.odgovor(auth.user.ispitanik)[0].odgovor_id == odg.id ? ' checked' : '' }}
+                                    {% endif %} value="{{ odg.id }}" data-vrednost="{{odg.naziv}}"
+                                    data-prikazi="{{ pitanje.id }}">
+                                {{odg.naziv}}</label>
+                            </div>
+                            {% endfor %}
+                            <button type="button" class="btn btn-warning btn-sm ne_stampaj ciscenje" title="Уклони одговор" data-id="{{ pitanje.id }}">
+                            <i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                    {# DOKUMENTI POCETAK #}
+                    {% if pitanje.dokumenta(pitanje.odgovor(auth.user.ispitanik)[0].id)|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th class="w-90">Priložena dokumenta</th>
+                                    <th class="w-10 text-right"><i class="fas fa-cogs text-warning"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dok in pitanje.dokumenta(pitanje.odgovor(auth.user.ispitanik)[0].id) %}
+                                <tr>
+                                    <td><a href="{{ dok.link }}" title="Преглед" target="_blank">
+                                            Преглед документа - {{dok.link[26:]}}&emsp;<i class="fas fa-eye"></i>
+                                        </a></td>
+                                    <td class="text-right">
+                                        <a href="" class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal" 
+                                        data-id="{{ dok.id }}" title="Брисање документа">
+                                        <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {# DOKUMENTI KRAJ #}
+                    {# OBRAZLOZENJE U SLUCAJU DA JE ODGOVOR DA ILI NE POCETAK #}
+                    <div class="form-row" style="display:none" id="pdiv{{ pitanje.id }}" name="pdiv-{{ pitanje.id }}">
+                        <div class="col form-group">
+                            <label for="obrazlozenje">Образложење:</label>
+                            <textarea class="form-control" id="obrazlozenje{{ pitanje.id }}"
+                                name="obrazlozenje-{{ pitanje.id }}"
+                                rows="3">{% if pitanje.odgovor(auth.user.ispitanik) %}{{ pitanje.odgovor(auth.user.ispitanik)[0].obrazlozenje }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                    {# OBRAZLOZENJE KRAJ #}
+                    {% if pitanje.link > 0 %}
+                    {# UPLOAD U SLUCAJU DA JE ODGOVOR DA POCETAK #}
+                    <div class="form-row" style="display:none" id="fdiv{{ pitanje.id }}" name="fdiv-{{ pitanje.id }}">
+                        <div class="col form-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="dokument{{ pitanje.id }}"
+                                    name="dokument-{{ pitanje.id }}[]" multiple>
+                                <label id="file-label" class="custom-file-label" for="dokument"
+                                    data-browse="Пронађи">Изабери документ</label>
+                            </div>
+                        </div>
+                    </div>
+                    {# UPLOAD KRAJ #}
+                    {% endif %}
+                    {% endif %}
+                    <hr style="border-top: dotted 1px;">
+                    {% endfor %}
+
+                    <div class="row justify-content-end text-right ne_stampaj">
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary text-right">
+                                <i class="fas fa-paper-plane" title="Пошаљи одговоре"></i>
+                                &emsp;Пошаљи одговоре
+                            </button>
+                            <a href="{{ path_for('izbor') }}" class="btn btn-secondary"><i class="fas fa-ban"></i>
+                                &emsp;Откажи</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+  {# Modal za brisanje #}
+  <div id="brisanjeModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">Упозорење!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4>Да ли желите трајно да обришете ДОКУМЕНТ?</h4>
+          <p class="text-danger">* Ова акција је неповратна!</p>
+          <p class="text-danger">У случају да сте извршили неке промене у одговорима оне неће бити сачуване. Најпре пошаљите измене, а потом се вратите да само обришете овај документ!</p>
+          <form id="brisanje-forma" action="{{ path_for('dokankete.brisanje') }}" method="POST">
+            {{ csrf|raw }}
+            <input type="hidden" id="idBrisanje" name="idBrisanje">
+            <hr style="margin-top: 30px;">
+
+            <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+              <div class="form-group">
+                <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
+                  <i class="fas fa-trash-alt"></i>&emsp;Обриши
+                </button>
+                <a class="btn btn-secondary" data-dismiss="modal">
+                  <i class="fas fa-ban"></i>&emsp;Откажи
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {# Kraj modala za brisanje #}
+{% endblock sadrzaj %}
+
+{% block traka %}
+<div class="row mt-5 mb-4 sticky-top ne_stampaj">
+    <div class="col col-lg-12 pl-5">
+    <h5>Време до истека сесије:</h5>
+    <h5 id="tajmer"></h5>
+        <ul class="list-group">
+            {% if (pitanja)%}
+            {% for pitanje in pitanja %}
+            {% if  loop.index % 5 == 0 %}
+            <li class="list-group-item"><a href="#pitanje{{loop.index}}"><strong>Питање - {{loop.index}}</strong></a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            <li class="list-group-item"><a href="#top"><i class="fas fa-arrow-circle-up"></i> Врх стране</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock traka %}
+{% block skripta %}
+<script>
+  $(document).ready(function () {
+        $(':radio:checked').each(Obrazlozenje);
+        $('input[type="radio"]').click(Obrazlozenje);
+        var vreme = "{{ vreme }}";
+        const d = new Date();
+        let countDownDate = d.getTime() + vreme*60000;
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById("tajmer").innerHTML = minutes + "m " + seconds + "s ";
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("tajmer").innerHTML = "Сесија је истекла!";
+            }
+        }, 1000);
+        function Obrazlozenje(){
+            var inputValue = $(this).data("vrednost");
+            var inputID = $(this).data("prikazi");
+            var sdiv = "#pdiv" + inputID;
+            var obr = "#obrazlozenje" + inputID;
+            var tdiv = "#fdiv" + inputID;
+            if (inputValue === "НЕ" || inputValue === "ДА") {
+              $(sdiv).show();
+            } else {
+              $(sdiv).hide();
+              $(obr).val('');
+            }
+
+            if (inputValue === "ДА") {
+              $(tdiv).show();
+            } else {
+              $(tdiv).hide();
+            }
+        };
+        $(".custom-file-input").on("change", function() {
+          var files = Array.from(this.files)
+          var fileName = files.map(f =>{return f.name}).join(", ")
+          $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+  });
+  $(document).on('click', '.otvori-brisanje', function () {
+      var id = $(this).data("id");
+      $('#idBrisanje').val(id);
+    });
+
+  $(document).on('click', '.ciscenje', function () {
+        var id = $(this).data("id");
+        var cis = ".rad" + id;
+        var ddk = "#dokument" + id;
+        console.log(cis);
+        $(cis).prop('checked', false);
+        $(ddk).val('');
+    });
+  </script>
+{% endblock skripta %}

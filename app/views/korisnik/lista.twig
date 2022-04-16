@@ -25,10 +25,11 @@
       <th class="w-5">ID</th>
       <th class="w-10">Име и презиме</th>
       <th class="w-10">Електронска адреса</th>
-      <th class="w-20">Категорије новости</th>
-      <th class="w-20">Категорије документа</th>
+      <th class="w-15">Категорије новости</th>
+      <th class="w-15">Категорије документа</th>
       <th class="w-15">Корисничко име</th>
       <th class="w-10">Ниво права</th>
+      <th class="w-10">ФУК</th>
       <th class="w-10 text-right"><i class="fas fa-cogs text-warning"></i></th>
     </tr>
   </thead>
@@ -60,6 +61,7 @@
         Аутор
         {% endif %}
       </td>
+      <td>{{ korisnik.ispitanik }}</td>
       <td class="text-right">
         {% if korisnik.nivo == 0 %}
         {% if auth.user.nivo == 1000 %}

@@ -1,8 +1,8 @@
 {% extends "templates/app.twig" %}
 {% block naslov %}
-<div class="row">
+<div class="row mt-2">
     <div class="col-lg-10 offset-1">
-        <h1><i class="fas fa-file-signature text-secondary"></i> Отпремање докумената</h1>
+        <h1><i class="fas fa-book-open text-secondary"></i> Отпремање материјала са обука за електронску библиотеку</h1>
     </div>
 </div>
 <hr>
@@ -10,10 +10,10 @@
     <div class="col-lg-10 offset-1">
         <div class="card border-dark mb-3">
             <div class="card-header text-primary">
-                <h3>Додавање описа докумената и његово објављивање на портал</h3>
+                <h3>Додавање описа материјала и његово објављивање на портал</h3>
             </div>
             <div class="card-body text-dark">
-                <form id="dokument-forma" action="{{ path_for('dokument.dodavanje.post') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <form id="dokument-forma" action="{{ path_for('materijal.dodavanje.post') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                     {{ csrf|raw }}
                     <div class="row mb-2">
                         <div class="col text-danger">
@@ -22,26 +22,26 @@
                     </div>
                     <div class="form-row">
                         <div class="col form-group">
-                            <label for="naslov">Наслов документа</label>
+                            <label for="naslov">Наслов материјала</label>
                             <input type="text" value="{{ old.naslov ? : '' }}" class="form-control{{ errors.naslov[0] ? ' is-invalid' : '' }}" name="naslov" id="naslov" required maxlength="250">
                             <div class="valid-feedback">Одговарајући податак</div>
                             <div class="invalid-feedback">{{ errors.naslov[0] ? : 'Обавезно поље' }}</div>
                         </div>
                         <div class="col form-group">
-                            <label for="kategorija_id" class="mr-3">Категорија документа</label>
-                            <select name="kategorija_id" id="kategorija_id" class="custom-select izbor-sa-stilom">
+                            <label for="obuka_id" class="mr-3">Обука</label>
+                            <select name="obuka_id" id="obuka_id" class="custom-select izbor-sa-stilom">
                                 <option value=""> </option>
-                                {% for kat in kategorije %}
-                                <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.kategorija_id == kat.id ? ' selected' : ''}}>
-                                    {{ kat.naziv }}
+                                {% for obu in obuke %}
+                                <option value="{{ obu.id }}" {{old.obuka_id == obu.id ? ' selected' : ''}}>
+                                    {{ obu.naziv }}
                                 </option>
                                 {% endfor %}
                             </select>
                             <div class="valid-feedback">Исправно попуњено</div>
-                            <div class="invalid-feedback">{{ errors.kategorija_id[0] ? : 'Обавезно поље.' }}</div>
+                            <div class="invalid-feedback">{{ errors.obuka_id[0] ? : 'Обавезно поље.' }}</div>
                         </div>
                         <div class="col form-group">
-                            <label for="vrsta_id" class="mr-3">Врста документа</label>
+                            <label for="vrsta_id" class="mr-3">Врста материјала</label>
                             <select name="vrsta_id" id="vrsta_id" class="custom-select {{ errors.vrsta_id[0] ? ' is-invalid' : '' }}" required>
                                 <option value=""> </option>
                                 {% for vrs in vrste %}
@@ -54,7 +54,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col form-group">
-                            <label for="opis">Опис / кратак садржај документа</label>
+                            <label for="opis">Опис / кратак садржај материјала</label>
                             <textarea class="form-control{{ errors.opis[0] ? ' is-invalid' : '' }}" rows="4" name="opis" id="opis" required>{{ old.opis ? : '' }}</textarea>
                             <div class="valid-feedback">Одговарајући податак</div>
                             <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
@@ -64,16 +64,16 @@
                         <div class="form-group col-lg-8">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input{{ errors.dokument[0] ? ' is-invalid' : '' }}" id="dokument" name="dokument" required>
-                                <label id="file-label" class="custom-file-label" for="dokument" data-browse="Пронађи">Изабери документ</label>
+                                <label id="file-label" class="custom-file-label" for="dokument" data-browse="Пронађи">Изабери материјал</label>
                                 <div class="valid-feedback">Одговарајући податак</div>
-                                <div class="invalid-feedback">{{ errors.dokument[0] ? : 'Морате одабрати документ' }}</div>
+                                <div class="invalid-feedback">{{ errors.dokument[0] ? : 'Морате одабрати материјал' }}</div>
                             </div>
                         </div>
                         <div class="col-lg-4 form-group text-right mb-0">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-file-upload"></i> Отпреми
                             </button>
-                            <a class="btn btn-secondary" type="reset" href="{{ path_for('pocetna') }}" title="Откажи" id="otkazi-validation">
+                            <a class="btn btn-secondary" type="reset" href="{{ path_for('materijal') }}" title="Откажи" id="otkazi-validation">
                                 <i class="fas fa-ban"></i> Откажи
                             </a>
                         </div>
@@ -88,22 +88,12 @@
 {% block skripta %}
 <script>
 		$("#dokument").on("change", function () {
-			$("#file-label").text("Одабран је документ са називом и екстензијом:  " + this.files[0].name);
+			$("#file-label").text("Одабран је материјал са називом и екстензијом:  " + this.files[0].name);
 		});
 
 		$("#otkazi-validation").on("click", function () {
 			$("#dokument-forma").removeClass("was-validated");
 		});
-
-        var n = "{{nivo}}";
-        var i;
-        for (i = 2; i < n+1; i++) {
-           $('.level_'+i).each(
-                function(){
-                    $(this).text("-".repeat(i*3)+" "+$(this).text());
-                }
-           );
-        };
 
 	(function () {
 		"use strict";

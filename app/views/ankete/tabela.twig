@@ -1,0 +1,190 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row mt-md-2">
+  <div class="col">
+    <h1>
+      <i class="fas fa-poll text-success"></i>&emsp;Табеларни преглед анкета/истраживања
+    </h1>
+    {% if data %}
+    <small><em class="text-warning">[филтрирано]</em></small>
+    {% else %}
+    <small><em class="text-success">[све анкете/истраживања]</em></small>
+    {% endif %}
+  </div>
+  <div class="col justify-content-end text-right">
+    <div class="btn-group btn-group mt-3">
+      <a href="{{ path_for('anketa.dodavanje.get') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Додај
+        анкету</a>
+      <button type="button" class="btn btn-success btn-sm prikazi" id="prikazi" title="Prikaži formu za filtriranje">
+        <i class="fas fa-filter"></i> Филтер</button>
+      <a href="{{ path_for('ankete')}}" class="btn btn-secondary btn-sm pretraga_div"><i class="fas fa-list"></i> Све
+        анкета/истраживања</a>
+    </div>
+  </div>
+</div>
+<hr />
+<div class="card border-dark mb-3 pretraga_div" style="display: none;">
+  <div class="card-header">Филтрирање анкета/истраживања</div>
+  <div class="card-body text-dark mobilni">
+    <form class="form" action="{{ path_for('ankete.pretraga')}}" method="POST">
+      {{ csrf|raw }}
+      <div class="form-row">
+        <div class="form-group col-lg-6">
+          <label for="naziv">Назив: </label>
+          <input type="text" name="naziv" id="naziv" class="form-control" value="{{ data.naziv }}" autocomplete="off"
+            placeholder="... назив анкете/истраживања">
+        </div>
+
+        <div class="form-group col-lg-6">
+          {% if tipovi is empty %}
+          <h4 class="text-warning">Типови анкете нису дефинисани!</h4>
+          {% else %}
+          <label for="tip_id" class="mr-3">Типови анкете/истраживања</label>
+          <select name="tip_id" id="tip_id" class="custom-select izbor-sa-stilom">
+            <option value=""></option>
+            {% for tip in tipovi %}
+            <option value="{{ tip.id }}" {{old.tip_id == tip.id ? ' selected' : ''}}>{{ tip.naziv }}</option>
+            {% endfor %}
+          </select>
+          {% endif %}
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-3">
+          <label for="datum_1">Почетак анкете/истраживања(од): </label>
+          <input type="date" name="datum_1" id="datum_1" class="form-control">
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="datum_2">Почетак анкете/истраживања(до): </label>
+          <input type="date" name="datum_2" id="datum_2" class="form-control">
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="datum_3">Крај анкете/истраживања(од): </label>
+          <input type="date" name="datum_3" id="datum_3" class="form-control">
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="datum_4">Крај анкете/истраживања(до): </label>
+          <input type="date" name="datum_4" id="datum_4" class="form-control">
+        </div>
+      </div>
+      <div class="col-lg-12 text-right" style="margin-top: 30px;">
+        <div class="btn-group">
+          <button type="submit" class="btn btn-success btn-sm">
+            <i class="fas fa-filter"></i> Филтрирај
+          </button>
+          <a href="{{ path_for('ankete')}}" class="btn btn-secondary btn-sm"><i class="fas fa-list"></i> Све
+            анкете/истаживања</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% if ankete.data is empty %}
+<h3>У овом тренутку нема креираних анкета. Можете их додати кликом на дугме "Додај анкету".</h3>
+{% else %}
+<div class="table-responsive">
+  <table class="table table-hover table-sm">
+    <thead class="thead-dark">
+      <tr>
+        <th class="w-10">ID</th>
+        <th class="w-40">Назив анкете/истраживања</th>
+        <th class="w-20">Типови анкете/истраживања</th>
+        <th class="w-10">Почетак</th>
+        <th class="w-10">Крај</th>
+        <th class="w-10 text-right"><i class="fas fa-cogs text-warning"></i></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for anketa in ankete.data %}
+      <tr>
+        <th class="text-danger">{{ anketa.id }}</th>
+        <td>{{ anketa.naziv }}</td>
+        <td>{{ anketa.tip.naziv }}</td>
+        <td>{{ anketa.pocetak|date('d.m.Y') }}</td>
+        <td>{{ anketa.kraj|date('d.m.Y') }}</td>
+        <td class="text-right">
+          <div class="btn-group btn-group-sm">
+            <a class="btn btn-success btn-sm" href="{{ path_for('ankete.pregled', { id: anketa.id }) }}"
+              title="Детаљни преглед одабране анкете"><i class="fas fa-eye"></i></a>
+            <a class="btn btn-warning btn-sm otvori-izmenu" href="{{ path_for('anketa.izmena.get', {id:anketa.id}) }}"
+              title="Измена података анкете">
+              <i class="fas fa-edit"></i></a>
+            <button class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
+              data-id="{{ anketa.id }}" title="Брисање анкете">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="row  mt-5">
+  <nav class="col col-lg-5 offset-lg-1">
+    <ul class="pagination pagination-sm">
+      {% for button in ankete.links.buttons %}
+      <li class="page-item{{ button.current ? ' active' : '' }}">
+        <a class="page-link" href="{{ button.url }}">{{ button.page }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  <p class="col col-lg-5 justify-content-end text-right text-primary">
+    Приказани редови од
+    <em>{{ ankete.links.row_from }}</em> до
+    <em>{{ ankete.links.row_to }}</em> од укупно
+    <em>{{ ankete.links.total_rows }}</em>
+  </p>
+</div>
+{% endif %}
+{# Modal za brisanje #}
+<div id="brisanjeModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Упозорење!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4>Да ли желите трајно да обришете АНКЕТУ?</h4>
+        <p class="text-danger">* Ова акција је неповратна!</p>
+        <form id="brisanje-forma" action="{{ path_for('anketa.brisanje') }}" method="POST">
+          {{ csrf|raw }}
+          <input type="hidden" id="idBrisanje" name="idBrisanje">
+          <hr style="margin-top: 30px;">
+
+          <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+            <div class="form-group">
+              <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i>&emsp;Обриши
+              </button>
+              <a class="btn btn-secondary" data-dismiss="modal">
+                <i class="fas fa-ban"></i>&emsp;Откажи
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+  {# Kraj modala za brisanje #}
+{% endblock naslov %}
+{% block skripta %}
+<script>
+  $(document).ready(function () {
+
+    $('.prikazi').click(function () {
+      $('.pretraga_div').toggle();
+    });
+
+    $(document).on('click', '.otvori-brisanje', function () {
+      var id = $(this).data("id");
+      $('#idBrisanje').val(id);
+    });
+  });
+</script>
+{% endblock skripta %}

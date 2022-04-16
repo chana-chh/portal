@@ -64,6 +64,18 @@
                         {{ errors.nivo[0] ? : 'Obavezno polje' }}
                     </div>
                 </div>
+                <div class="form-group col">
+                    <label for="ispitanik">ФУК</label>
+                    <select class="custom-select{{ errors.ispitanik[0] ? ' is-invalid' : '' }}" id="ispitanik" name="ispitanik">
+                    <option value=""></option>
+                    {% if auth.user.nivo == 0 %}
+                    <option value="100" {{ korisnik.ispitanik == 100 ? ' selected' : '' }}>Администратор</option>
+                    {% endif %}
+                    {% for isp in ispitanici %}
+                    <option value="{{ isp.id }}" {{isp.id == korisnik.ispitanik ? ' selected' : ''}}>{{ isp.naziv }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
             </div>
             <div class="form-row">
                 <div class="form-group col">

@@ -3,18 +3,24 @@
 <div class="row mt-2">
   <div class="col">
     <h2>
-      <i class="fas fa-sitemap text-secondary"></i> Преглед врста докумената
+      <i class="fas fa-tasks"></i> Преглед типова одговора за анкете/истраживања
     </h2>
   </div>
 </div>
 <hr />
 {% endblock naslov %}
 {% block sadrzaj %}
+{% if vrste is empty %}
+<br>
+<h3 class="text-warning">У овом тренутку нема креираних типова одговора за анкете/истраживања.</h3>
+<br>
+{% else %}
 <table class="table table-striped table-sm">
   <thead class="thead-dark">
     <tr>
       <th class="w-10" scope="col">ID</th>
-      <th class="w-70" scope="col">Назив</th>
+      <th class="w-50" scope="col">Назив</th>
+      <th class="w-20" scope="col">Оцена</th>
       <th class="w-20" scope="col" style="text-align:right;"><i class="fas fa-cogs text-warning"></i></th>
     </tr>
   </thead>
@@ -23,13 +29,14 @@
     <tr>
       <th scope="row" class="text-danger">{{ vrs.id }}</th>
       <td>{{ vrs.naziv }}</td>
+      <td>{{ vrs.ocena }}</td>
       <td style="text-align:right;">
         <div class="btn-group btn-group-sm">
           <button class="btn btn-warning btn-sm otvori-izmenu" data-toggle="modal" data-target="#izmenaModal"
-            data-id="{{ vrs.id }}" title="Измена података одабране врсте">
+            data-id="{{ vrs.id }}" title="Измена података одабраног типова одговора за анкете/истраживања">
             <i class="fas fa-edit"></i></button>
           <button class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal"
-            data-id="{{ vrs.id }}" title="Брисање одабране врсте">
+            data-id="{{ vrs.id }}" title="Брисање одабраног типова одговора за анкете/истраживања">
             <i class="fas fa-trash-alt"></i>
           </button>
         </div>
@@ -37,7 +44,7 @@
     {% endfor %}
   </tbody>
 </table>
-
+{% endif %}
 {# Modal za brisanje #}
 <div id="brisanjeModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -49,9 +56,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <h4>Да ли желите трајно да обришете врсту?</h4>
+        <h4>Да ли желите трајно да обришете тип одговора?</h4>
         <p class="text-danger">* Ова акција је неповратна!</p>
-        <form id="brisanje-forma" action="{{ path_for('vrste.brisanje') }}" method="POST">
+        <form id="brisanje-forma" action="{{ path_for('tip-odgovora.brisanje') }}" method="POST">
           {{ csrf|raw }}
           <input type="hidden" id="idBrisanje" name="idBrisanje">
           <hr style="margin-top: 30px;">
@@ -84,17 +91,26 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="izmena-forma" action="{{ path_for('vrste.izmena') }}" method="POST" class="needs-validation"
+        <form id="izmena-forma" action="{{ path_for('tip-odgovora.izmena') }}" method="POST" class="needs-validation"
           novalidate>
           {{ csrf|raw }}
           <input type="hidden" id="idIzmena" name="idIzmena">
           <div class="form-group">
             <label for="nazivModal">Назив</label>
             <input type="text" class="form-control{{ errors.nazivModal[0] ? ' is-invalid' : '' }}" name="nazivModal"
-              id="nazivModal" aria-describedby="Назив врсте" required minlength="5">
+              id="nazivModal" aria-describedby="Назив врсте" required minlength="2">
             <div class="valid-feedback">Одговарајући податак</div>
             <div class="invalid-feedback">
-              {{ errors.nazivModal[0] ? : 'Обавезно поље са најмање 5 карактера' }}
+              {{ errors.nazivModal[0] ? : 'Обавезно поље са најмање 2 карактера' }}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ocenaModal">Оцена</label>
+            <input type="number" class="form-control{{ errors.ocenaModal[0] ? ' is-invalid' : '' }}" name="ocenaModal"
+              id="ocenaModal" aria-describedby="Оцена типа одговора" min="0" step="1" max="254" autocomplete="off" required>
+            <div class="valid-feedback">Одговарајући податак</div>
+            <div class="invalid-feedback">
+              {{ errors.ocenaModal[0] ? : 'Обавезно поље максималне вредности 255.' }}
             </div>
           </div>
           <hr style="margin-top: 30px;">
@@ -118,24 +134,33 @@
 {% endblock sadrzaj %}
 {% block traka %}
 <div class="card border-dark mb-3">
-  <div class="card-header">Додавање нове врсте</div>
+  <div class="card-header">Додавање новог типа одговора</div>
   <div class="card-body text-dark mobilni">
-    <form action="{{ path_for('vrste.dodavanje') }}" method="POST" class="needs-validation" novalidate>
+    <form action="{{ path_for('tip-odgovora.dodavanje') }}" method="POST" class="needs-validation" novalidate>
       {{ csrf|raw }}
       <div class="form-group">
         <label for="naziv">Назив</label>
         <input type="text" class="form-control{{ errors.naziv[0] ? ' is-invalid' : '' }}" value="{{ old.naziv ? : '' }}"
-          name="naziv" id="naziv" aria-describedby="Назив врсте" required minlength="5">
+          name="naziv" id="naziv" aria-describedby="Назив врсте" required minlength="2">
         <div class="valid-feedback">Одговарајући податак</div>
         <div class="invalid-feedback">
           {{ errors.naziv[0] ? : 'Обавезно поље са најмање 5 карактера, а највише 255 карактера' }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="ocena">Оцена</label>
+        <input type="number" class="form-control{{ errors.ocena[0] ? ' is-invalid' : '' }}" value="{{ old.ocena ? : '' }}"
+          name="ocena" id="ocena" aria-describedby="Оцена" min="0" step="1" max="254" autocomplete="off" required>
+        <div class="valid-feedback">Одговарајући податак</div>
+        <div class="invalid-feedback">
+          {{ errors.ocena[0] ? : 'Обавезно поље максималне вредности 255.' }}
         </div>
       </div>
       <div class="row justify-content-end text-right">
         <div class="col">
           <button type="submit" class="btn btn-primary text-right"><i class="fas fa-plus-square"
               title="Додавање нове врсте"></i> &emsp;Додај</button>
-          <a href="{{ path_for('vrste') }}" class="btn btn-secondary"><i class="fas fa-ban"></i>
+          <a href="{{ path_for('tip-odgovora') }}" class="btn btn-secondary"><i class="fas fa-ban"></i>
             &emsp;Откажи</a>
         </div>
       </div>
@@ -190,7 +215,7 @@
         "id": id
       };
 
-      var ruta = ["{{ path_for('vrste.detalj') }}"];
+      var ruta = ["{{ path_for('tip-odgovora.detalj') }}"];
 
       $.ajax({
         url: ruta,
@@ -201,6 +226,7 @@
           $(".csrf_value").val(data.cvalue);
           $("#idIzmena").val(data.vrsta.id);
           $("#nazivModal").val(data.vrsta.naziv);
+          $("#ocenaModal").val(data.vrsta.ocena);
         }
       });
 

@@ -1,0 +1,26 @@
+{% for d in kategorije %}
+<li class="mt-2 mb-1">
+    {% if d.children %}
+    <a href="" data-toggle="collapse" data-target="#id-{{ d.id }}-collapse" style="text-decoration: none;">
+        <img src="{{ base_url() }}/img/021-folder-19.png" alt="folder" height="24px">
+    </a>&emsp;
+	    <a href="{{ path_for('obuka.lista', { 'id_kat': d.id }) }}" class="text-reset">{{ d.naziv }}</a>
+	    &emsp;<span class="badge badge-pill badge-warning">{{ radni.brojdok(d.id)~ '/' ~ radni.brojdok_sadecom(d.id)}}</span>
+	    &nbsp;&nbsp;
+    <ul class="collapse list-unstyled ml-5" id="id-{{ d.id }}-collapse">
+        {% include "templates/inc/recursion_listabib.twig" with {'kategorije': d.children, 'kategorija':kategorija, 'radni':radni} %}
+    </ul>
+    {% else %}
+    <a href="" data-toggle="collapse" data-target="#id-{{ d.id }}-collapse" style="text-decoration: none;">
+        {% if d.naziv == "НЕРАСПОРЕЂЕНИ" %}
+        <img src="{{ base_url() }}/img/022-folder-18.png" alt="folder" height="24px">
+        {% else %}
+        <img src="{{ base_url() }}/img/025-folder-15.png" alt="folder" height="24px">
+        {% endif %}
+    </a>&emsp;
+    <a href="{{ path_for('obuka.lista', { 'id_kat': d.id }) }}" class="text-reset">{{ d.naziv }}</a>
+    &emsp;<span class="badge badge-pill badge-warning">{{ radni.brojdok(d.id) }}</span>
+    &nbsp;&nbsp;
+    {% endif %}
+</li>
+{% endfor %}

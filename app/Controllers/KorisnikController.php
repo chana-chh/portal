@@ -5,6 +5,7 @@ namespace App\Controllers;
 use \App\Models\Korisnik;
 use \App\Models\Kategorija;
 use \App\Models\DokumentKategorija;
+use App\Models\AnketaIspitanik;
 use App\Classes\Logger;
 
 class KorisnikController extends Controller
@@ -25,11 +26,14 @@ class KorisnikController extends Controller
     {
         $model_kategorije = new Kategorija();
         $kategorije = $model_kategorije->all();
+    
+    	$model_ispitanici = new AnketaIspitanik();
+        $ispitanici = $model_ispitanici->all();
 
         $model_kate_dok = new DokumentKategorija();
         $kategorije_dokumenta = $model_kate_dok->getFlatListNS();
 
-        $this->render($response, 'korisnik/dodavanje.twig', compact( 'kategorije', 'kategorije_dokumenta'));
+        $this->render($response, 'korisnik/dodavanje.twig', compact( 'kategorije', 'kategorije_dokumenta', 'ispitanici'));
     }
 
     public function postKorisnikDodavanje($request, $response)
@@ -114,11 +118,14 @@ class KorisnikController extends Controller
 
         $model_kategorije = new Kategorija();
         $kategorije = $model_kategorije->all();
+    
+    	$model_ispitanici = new AnketaIspitanik();
+        $ispitanici = $model_ispitanici->all();
 
         $model_kate_dok = new DokumentKategorija();
         $kategorije_dokumenta = $model_kate_dok->getFlatListNS();
 
-        $this->render($response, 'korisnik/izmena.twig', compact('korisnik', 'kategorije', 'kategorije_dokumenta'));
+        $this->render($response, 'korisnik/izmena.twig', compact('korisnik', 'kategorije', 'kategorije_dokumenta', 'ispitanici'));
     }
 
     public function postKorisnikIzmena($request, $response)

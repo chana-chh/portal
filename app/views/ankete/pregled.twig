@@ -1,0 +1,199 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row mt-5 md-2">
+    <div class="col-lg-8">
+        <h2 class="text-primary font-italic">{{ anketa.naziv }}</h2>
+        <p class="lead">({{ anketa.pocetak|date('d.m.Y') }} - {{ anketa.kraj|date('d.m.Y') }})</p>
+    </div>
+    <div class="col-lg-4 text-right mt-3 ne_stampaj">
+        <div class="btn-group">
+            <a href="{{ path_for('ankete') }}" class="btn btn-secondary btn-sm" title="Повратак на листу анкета">
+                <i class="fas fa-list"></i> Листа анкета
+            </a>
+            <button type="button" class="btn btn-primary btn-sm" title="Штампање" onclick="window.print();">
+                <i class="fas fa-print"></i> Штампај</button>
+        </div>
+    </div>
+</div>
+<hr/>
+{% endblock naslov %}
+{% block sadrzaj %}
+<div class="row mt-5 mb-4 ne_stampaj">
+    <div class="col col-lg-10 offset-lg-1">
+        <h5>Порука испитаницима: <em>{{ anketa.poruka }}</em></h5>
+        <hr>
+        <h5>Време потребно за попуњавање: <em>{{ anketa.vreme }}</em></h5>
+    </div>
+</div>
+{% if pitanja %}
+<div class="row mt-5 mb-4 ne_stampaj">
+    <div class="col col-lg-10 offset-lg-1">
+        <div class="card border-warning" id="pitanja">
+            <div class="card-header">
+                <h4 class="font-italic font-weight-light">Питања/одговори:</h4>
+            </div>
+            <div class="card-body">
+                {% for pitanje in pitanja %}
+                <h5 class="card-title text-primary">{{pitanje.redosled}}. {{pitanje.naziv}}</h5>
+                <blockquote class="blockquote">
+                    {% if pitanje.vrsta == "radio" or pitanje.vrsta == "selekt" %}
+                    {% for odg in pitanje.tipoviOdgovora() %}
+                    <p class="mb-0" style="font-size: 1rem;">&emsp;&emsp;{{loop.index}}. {{odg.naziv}}</p>
+                    {% endfor %}
+                    {% endif %}
+                </blockquote>
+                <div class="row ne_stampaj">
+                    <div class="col-lg-6">
+                        {% if (pitanje.link == 1)%}
+                            <cite title="... могуће је прикачити документ уз одговор"><i class="fas fa-file-alt"></i></cite>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-6 text-right mt-3">
+                        <div class="btn-group">
+                            <a class="btn btn-warning btn-sm otvori-izmenu" href="{{ path_for('pitanje.izmena.get', {id:pitanje.id}) }}" title="Измена текста или опција питања">
+                                <i class="fas fa-edit"></i></a>
+                                <button class="btn btn-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal" data-id="{{ pitanje.id }}" title="Брисање питања">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                        </div>
+                    </div>
+                </div>
+                <hr style="border-top: dotted 1px;">
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+  {# Modal za brisanje #}
+  <div id="brisanjeModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">Упозорење!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4>Да ли желите трајно да обришете ПИТАЊЕ?</h4>
+          <p class="text-danger">* Ова акција је неповратна!</p>
+          <form id="brisanje-forma" action="{{ path_for('pitanje.brisanje') }}" method="POST">
+            {{ csrf|raw }}
+            <input type="hidden" id="idBrisanje" name="idBrisanje">
+            <hr style="margin-top: 30px;">
+
+            <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+              <div class="form-group">
+                <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
+                  <i class="fas fa-trash-alt"></i>&emsp;Обриши
+                </button>
+                <a class="btn btn-secondary" data-dismiss="modal">
+                  <i class="fas fa-ban"></i>&emsp;Откажи
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {# Kraj modala za brisanje #}
+{% endblock sadrzaj %}
+
+{% block traka %}
+<div class="card border-success mt-5 mb-4 ne_stampaj">
+    <div class="card-header">Додавање питања</div>
+    <div class="card-body text-dark mobilni">
+        <form action="{{ path_for('pitanje.dodavanje') }}" id="configform" method="POST" data-parsley-validate>
+            {{ csrf|raw }}
+            <input type="hidden" id="anketa_id" name="anketa_id" value="{{ anketa.id }}">
+            <div class="form-group">
+                <label for="naziv">Текст питања: </label>
+                <input type="text" class="form-control" value="" name="naziv" id="naziv" aria-describedby="Tekst pitanja" required>
+            </div>
+            <div class="form-row">
+            <div class="form-group col-lg-6">
+                <label for="vrsta" class="mr-3">Врста питања</label>
+                <select name="vrsta" id="vrsta" class="form-control izbor-sa-stilom" onchange="provera(this);" required>
+                    <option value=""></option>
+                        {% for vrsta in vrste %}
+                    <option value="{{ vrsta }}">{{vrsta}}</option>
+                        {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-lg-6">
+                <label for="redosled">Редослед питања</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" name="redosled" id="redosled" value="{{ sledeci }}" min="1" step="1" autocomplete="off">
+                </div>
+            </div>
+            </div>
+            <div class="form-row" id="tipovi" style="display: none;">
+                <div class="form-group col">
+                    <label for="odgovori" class="mr-3">Типови питања<br><small>(За избор више типова истовремено држати притиснут CTRL тастер приликом бирања)</small></label>
+                    <select name="odgovori[]" id="odgovori"
+                    class="custom-select pera" multiple="multiple">
+                    {% for tip in tipovi %}
+                    <option value="{{ tip.id }}">{{ tip.naziv }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-row mt-2">
+                <div class="form-group col">
+                <label class="mt-1">
+                <input class="form-check-inline" type="checkbox" name="link" id="link"> Да ли је могуће додати документ уз питање?
+                </label>
+                </div>
+            </div>
+            <div class="row justify-content-end text-right">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary text-right"><i class="fas fa-plus-square" title="Додавање питања"></i> &emsp;Додај</button>
+                    <a href="" class="btn btn-secondary" id="configreset"><i class="fas fa-ban"></i> &emsp;Откажи</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<hr>
+<div class="row mt-5 mb-4 ne_stampaj">
+    <div class="col col-lg-10 offset-lg-1">
+        <h4 class="font-italic font-weight-light">Учешће у испитивању:</h4>
+{% for uce in anketa.ucesce(anketa.id) %}
+    <p> <a href="{{ path_for('odgovori', { 'id_ankete': anketa.id, 'id_ispitanika': uce.ispitanik_id}) }}" class="text-reset">&emsp;&emsp;{{uce.ispitanik}} {{uce.broj_odgovora}}/{{anketa.brojpitanja(anketa.id)}}</a> </p>
+{% endfor %}
+<hr>
+<h6 class="text-danger font-italic font-weight-light">Још увек нису узели учешће:</h6>
+{% for nuce in anketa.nucesce(anketa.id) %}
+    <p class="mb-0" style="font-size: 1rem;">&emsp;&emsp;{{nuce.naziv}}</p>
+{% endfor %}
+</div>
+</div>
+<br>
+{% endblock traka %}
+{% block skripta %}
+<script src="{{ base_url() }}/js/parsley.js"></script>
+<script src="{{ base_url() }}/js/parsley_sr.js"></script>
+<script>
+
+    function provera(that) {
+    if (that.value === "radio" || that.value === "selekt") {
+        document.getElementById("tipovi").style.display = "block";
+        $(".pera").prop('required',true);
+    } else {
+        document.getElementById("tipovi").style.display = "none";
+    }
+    };
+
+    $(document).on('click', '.otvori-brisanje', function () {
+      var id = $(this).data("id");
+      $('#idBrisanje').val(id);
+    });
+
+     $('#configreset').click(function(){
+        $('#configform')[0].reset();
+    });
+
+</script>
+{% endblock skripta %}

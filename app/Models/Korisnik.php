@@ -118,5 +118,40 @@ class Korisnik extends Model
             return "Није дефинисано!";
         }
         
-    }    
+    }
+
+	public function ankete()
+    {
+        return $this->hasMany('App\Models\Anketa', 'korisnik_id');
+    }
+
+    public function anketedok()
+    {
+        return $this->hasMany('App\Models\AnketaDokument', 'korisnik_id');
+    }
+
+    public function anketeIspitanik()
+    {
+        return $this->hasMany('App\Models\AnketaIspitanik', 'korisnik_id');
+    }
+
+    public function anketeOdgovor()
+    {
+        return $this->hasMany('App\Models\AnketaOdgovor', 'korisnik_id');
+    }
+
+    public function anketePitanje()
+    {
+        return $this->hasMany('App\Models\AnketaPitanje', 'korisnik_id');
+    }
+
+    public function anketeTip()
+    {
+        return $this->hasMany('App\Models\AnketaTip', 'korisnik_id');
+    }
+
+    public function anketaTipOdgovora()
+    {
+        return $this->hasMany('App\Models\AnketaTipOdgovora', 'korisnik_id');
+    }
 }

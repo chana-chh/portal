@@ -1,0 +1,24 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row mt-5 md-2">
+    <div class="col-lg-12">
+        <h2 class="text-primary font-italic">Преглед доступних анкета/истраживања</h2>
+    </div>
+</div>
+<hr/>
+{% if ankete is empty %}
+<br>
+<h3 class="text-warning">У овом тренутку нема доступних анкета/истраживања.</h3>
+<br>
+{% else %}
+{% for ank in ankete %}
+<div class="row mt-5 md-2">
+    <div class="col-lg-6 offset-lg-3">
+            <a href="{{ path_for('popunjavanje', { id: ank.id }) }}" class="btn btn-lg btn-warning w-100">
+                    <i class="fas fa-pencil"></i> {{ank.naziv}} ({{ ank.pocetak|date('d.m.Y') }} - {{ ank.kraj|date('d.m.Y') }})
+                </a>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock naslov %}
