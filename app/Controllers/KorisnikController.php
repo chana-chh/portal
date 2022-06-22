@@ -26,6 +26,9 @@ class KorisnikController extends Controller
     {
         $model_kategorije = new Kategorija();
         $kategorije = $model_kategorije->all();
+    
+    	$model_ispitanici = new AnketaIspitanik();
+        $ispitanici = $model_ispitanici->all();
 
         $model_ispitanici = new AnketaIspitanik();
         $ispitanici = $model_ispitanici->all();
@@ -118,6 +121,9 @@ class KorisnikController extends Controller
 
         $model_kategorije = new Kategorija();
         $kategorije = $model_kategorije->all();
+    
+    	$model_ispitanici = new AnketaIspitanik();
+        $ispitanici = $model_ispitanici->all();
 
         $model_ispitanici = new AnketaIspitanik();
         $ispitanici = $model_ispitanici->all();

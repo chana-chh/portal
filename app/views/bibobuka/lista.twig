@@ -1,0 +1,176 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row m-2">
+    <div class="col-lg-10">
+        <h1 id="top">
+            <img src="{{ base_url() }}/img/obuka.png" alt="Обуке" style="max-width: 64px;
+  width:100%;"> &emsp;Преглед обука <small class="text-danger font-italic font-weight-light" style="font-size: 1.2rem;">(по редоследу објављивања)</small>
+        </h1>
+        {% if kategorija %}
+        <h4 class="text-secondary"><i class="fas fa-folder-open text-warning"></i> Категорија обука: {{kategorija.naziv}}</h4>
+        {% endif %}
+    </div>
+    <div class="col-lg-2 text-right">
+        <div class="btn-group mt-4">
+            <a class="btn btn-outline-secondary text-warning" onclick="window.history.back();" title="Повратак на претходну страну">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            {% if data %}
+                <a class="btn btn-outline-secondary text-primary" href="{{ path_for('obuka.lista') }}" title="Уклони филтер-све обуке">
+                    <i class="fas fa-graduation-cap"></i>
+                </a>
+            {% endif %}
+            {% if auth.logged %}
+            {% if auth.user.nivo == 0 %}
+                <a class="btn btn-outline-secondary text-success" href="{{ path_for('obuka.dodavanje.get') }}" title="Додавање обуке">
+                    <i class="fa fa-plus"></i>
+                </a>
+            {% endif %}
+            {% endif %}
+            <a class="btn btn-outline-secondary text-warning" href="{{ path_for('pocetna') }}" title="Повратак на почетну страну">
+                <i class="fa fa-home"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<hr>
+{% endblock naslov %}
+{% block sadrzaj %}
+<div class="row mb-2 mt-2">
+    <div class="col col-lg-10 offset-lg-1">
+        {% if data %}
+        <em class="text-warning">[Филтрирани подаци]</em>&emsp;<i class="fas fa-filter text-warning"></i>
+        {% endif %}
+    </div>
+</div>
+{% for dok in obuke.data %}
+<div class="row">
+    <div class="col col-lg-10 offset-lg-1">
+        <h4>{{ dok.naziv }}</h4>
+        <blockquote class="blockquote text-right" style="font-size: 0.875em">
+            <p class="mb-0 text-secondary"><i class="fas fa-calendar-alt text-warning"></i> {{ dok.created_at|date('d.m.Y') }}&emsp;<i class="fas fa-user text-warning"></i> {{ dok.korisnik.imePrezime() }}</p>
+            <footer class="blockquote-footer">Категорија: <cite title="Категорија">{{ dok.kategorija.naziv }}</cite></footer>
+        </blockquote>
+        <hr>
+    </div>
+</div>
+<div class="row mb-2">
+    <div class="col-lg-9 offset-lg-1">
+                <h6>&emsp;&emsp;&emsp;{{ dok.organizator ? dok.organizator : '' }} {{ dok.finansijer ? ' - ' ~ dok.finansijer : '' }} {{ dok.mesto ? ' (' ~ dok.mesto ~ ')' : '' }}</h6>
+    </div>
+    <div class="col-lg-2 text-right">
+        <a href="{{ path_for('obuka.materijal', { id: dok.id }) }}" class="btn btn-outline-primary btn-sm" title="Материјал">
+            Материјал <i class="fas fa-eye"></i>
+        </a>
+        {% if auth.logged %}
+        {% if auth.user.nivo == 0 %}
+        <a href="{{ path_for('obuka.detalj', { id: dok.id }) }}" class="btn btn-outline-warning btn-sm" title="Измена података обуке"><i class="fas fa-pencil-alt"></i></a>
+        <button class="btn btn-outline-danger btn-sm otvori-brisanje" data-toggle="modal" data-target="#brisanjeModal" data-id="{{ dok.id }}" title="Брисање обуке"><i class="fas fa-trash"></i></button>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+<hr style="border-top: dotted 1px blue;">
+{% endfor %}
+<div class="row  mt-5">
+    <nav class="col col-lg-5 offset-lg-1">
+        <ul class="pagination pagination-sm">
+            {% for button in obuke.links.buttons %}
+            <li class="page-item{{ button.current ? ' active' : '' }}">
+                <a class="page-link" href="{{ button.url }}">{{ button.page }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    <p class="col col-lg-5 justify-content-end text-right text-primary">
+        Prikazani redovi od
+        <em>{{ obuke.links.row_from }}</em> do
+        <em>{{ obuke.links.row_to }}</em> od ukupno
+        <em>{{ obuke.links.total_rows }}</em>
+    </p>
+</div>
+
+{# Modal za brisanje #}
+<div id="brisanjeModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Упозорење!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4>Да ли желите трајно да обришете одабрану обуку?</h4>
+        <p class="text-danger">* Ова акција је неповратна!</p>
+        <form id="brisanje-forma" action="{{ path_for('obuka.brisanje') }}" method="POST">
+          {{ csrf|raw }}
+          <input type="hidden" id="idBrisanje" name="idBrisanje">
+          <hr style="margin-top: 30px;">
+
+          <div class="row justify-content-end" style="margin-top: 30px; padding: 10px;">
+            <div class="form-group">
+              <button id="btn-brisanje-obrisi" type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i>&emsp;Обриши
+              </button>
+              <a class="btn btn-secondary" data-dismiss="modal">
+                <i class="fas fa-ban"></i>&emsp;Откажи
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{# Kraj modala za brisanje #}
+{% endblock sadrzaj %}
+
+{% block traka %}
+<div class="row mt-5 mb-4">
+    <div class="col col-lg-12 pl-5">
+        <h4 class="font-italic text-secondary">Претрага обука</h4>
+        <br>
+        <form class="form" action="{{ path_for('obuka.pretraga')}}" method="POST">
+            {{ csrf|raw }}
+            <input type="hidden" id="id_kat" name="id_kat" value="{{ kategorija.id }}" />
+            <div class="row">
+                <div class="col col-lg-10">
+                    <input type="text" name="upit" id="upit" class="form-control" autocomplete="off" placeholder="...појам за претрагу" required>
+                </div>
+                <div class="col col-lg-2">
+                    <button type="submit" class="btn btn-default btn-sm">
+                        <i class="fas fa-search text-primary"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col col-lg-12 pl-5">
+        <h4 class="font-italic text-secondary">Категорије</h4>
+        <br>
+        <small class="font-italic text-secondary" style="background-color: white;"><i class="fas fa-question-circle"></i> Клик на икону приказује поткатегорије, клик на назив приказује обуке у категорији</small>
+        <hr>
+        <ul class="list-unstyled">
+            {% include "templates/inc/recursion_listabib.twig" with {'kategorije': kategorije, 'kategorija':kategorija, 'radni':radni} %}
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <div class="col col-lg-12 pl-5 text-center mt-2 mb-2">
+        <a href="#top" style="font-size: 1.2rem;"><i class="fas fa-arrow-circle-up"></i> Врх стране</a>
+    </div>
+</div>
+{% endblock traka %}
+{% block skripta %}
+<script>
+$(document).ready(function () {
+    $(document).on('click', '.otvori-brisanje', function () {
+      var id = $(this).data("id");
+      $('#idBrisanje').val(id);
+    });
+});
+</script>
+{% endblock skripta %}

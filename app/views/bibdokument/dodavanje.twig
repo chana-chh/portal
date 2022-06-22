@@ -1,0 +1,116 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row mt-2">
+    <div class="col-lg-10 offset-1">
+        <h1><i class="fas fa-book-open text-secondary"></i> Отпремање материјала са обука за електронску библиотеку</h1>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-lg-10 offset-1">
+        <div class="card border-dark mb-3">
+            <div class="card-header text-primary">
+                <h3>Додавање описа материјала и његово објављивање на портал</h3>
+            </div>
+            <div class="card-body text-dark">
+                <form id="dokument-forma" action="{{ path_for('materijal.dodavanje.post') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    {{ csrf|raw }}
+                    <div class="row mb-2">
+                        <div class="col text-danger">
+                            <strong>Важно:</strong> Дозвољеним су документи типа Portable Document Format PDF, Microsoft WORD DOC и DOCX као и текстуални фајлови TXT максималне величине 32MB
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="naslov">Наслов материјала</label>
+                            <input type="text" value="{{ old.naslov ? : '' }}" class="form-control{{ errors.naslov[0] ? ' is-invalid' : '' }}" name="naslov" id="naslov" required maxlength="250">
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">{{ errors.naslov[0] ? : 'Обавезно поље' }}</div>
+                        </div>
+                        <div class="col form-group">
+                            <label for="obuka_id" class="mr-3">Обука</label>
+                            <select name="obuka_id" id="obuka_id" class="custom-select izbor-sa-stilom">
+                                <option value=""> </option>
+                                {% for obu in obuke %}
+                                <option value="{{ obu.id }}" {{old.obuka_id == obu.id ? ' selected' : ''}}>
+                                    {{ obu.naziv }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="valid-feedback">Исправно попуњено</div>
+                            <div class="invalid-feedback">{{ errors.obuka_id[0] ? : 'Обавезно поље.' }}</div>
+                        </div>
+                        <div class="col form-group">
+                            <label for="vrsta_id" class="mr-3">Врста материјала</label>
+                            <select name="vrsta_id" id="vrsta_id" class="custom-select {{ errors.vrsta_id[0] ? ' is-invalid' : '' }}" required>
+                                <option value=""> </option>
+                                {% for vrs in vrste %}
+                                <option value="{{ vrs.id }}" {{old.vrsta_id == vrs.id ? ' selected' : ''}}>{{ vrs.naziv }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="valid-feedback">Исправно попуњено</div>
+                            <div class="invalid-feedback">{{ errors.vrsta_id[0] ? : 'Обавезно поље.' }}</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="opis">Опис / кратак садржај материјала</label>
+                            <textarea class="form-control{{ errors.opis[0] ? ' is-invalid' : '' }}" rows="4" name="opis" id="opis" required>{{ old.opis ? : '' }}</textarea>
+                            <div class="valid-feedback">Одговарајући податак</div>
+                            <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-8">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input{{ errors.dokument[0] ? ' is-invalid' : '' }}" id="dokument" name="dokument" required>
+                                <label id="file-label" class="custom-file-label" for="dokument" data-browse="Пронађи">Изабери материјал</label>
+                                <div class="valid-feedback">Одговарајући податак</div>
+                                <div class="invalid-feedback">{{ errors.dokument[0] ? : 'Морате одабрати материјал' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 form-group text-right mb-0">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-file-upload"></i> Отпреми
+                            </button>
+                            <a class="btn btn-secondary" type="reset" href="{{ path_for('materijal') }}" title="Откажи" id="otkazi-validation">
+                                <i class="fas fa-ban"></i> Откажи
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock naslov %}
+
+{% block skripta %}
+<script>
+		$("#dokument").on("change", function () {
+			$("#file-label").text("Одабран је материјал са називом и екстензијом:  " + this.files[0].name);
+		});
+
+		$("#otkazi-validation").on("click", function () {
+			$("#dokument-forma").removeClass("was-validated");
+		});
+
+	(function () {
+		"use strict";
+		window.addEventListener("load", function () {
+			var forms = document.getElementsByClassName("needs-validation");
+			var validation = Array.prototype.filter.call(forms, function (form) {
+				form.addEventListener("submit", function (event) {
+					if (form.checkValidity() === false) {
+						event.preventDefault();
+						event.stopPropagation();
+					}
+					form.classList.add("was-validated");
+				}, false
+				);
+			});
+		}, false
+		);
+	})();
+</script>
+{% endblock skripta %}

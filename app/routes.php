@@ -142,7 +142,10 @@ $app->group('', function () {
     $this->get('/ankete/pretraga', '\App\Controllers\AnketaController:getPretraga')->setName('ankete.pretraga');
     $this->post('/ankete/pretraga', '\App\Controllers\AnketaController:postPretraga');
     $this->get('/ankete/pregled/{id}', '\App\Controllers\AnketaController:getPregled')->setName('ankete.pregled');
+<<<<<<< HEAD
     $this->get('/ankete/uporedni/{id}', '\App\Controllers\AnketaController:getUporedni')->setName('ankete.uporedni');
+=======
+>>>>>>> d25c66007a4316687ea3094a0694529575f6444e
     $this->get('/anketa/dodavanje', '\App\Controllers\AnketaController:getDodavanje')->setName('anketa.dodavanje.get');
     $this->post('/anketa/dodavanje', '\App\Controllers\AnketaController:postDodavanje')->setName('anketa.dodavanje.post');
     $this->get('/anketa/izmena/{id}', '\App\Controllers\AnketaController:getIzmena')->setName('anketa.izmena.get');
