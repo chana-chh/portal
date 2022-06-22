@@ -1,0 +1,97 @@
+{% extends "templates/app.twig" %}
+{% block stil %}
+<style type="text/css">
+input[type=checkbox].form-check-input {
+  transform: scale(1.7);
+}
+</style>
+{% endblock stil %}
+{% block naslov %}
+<div class="row">
+	<div class="col-lg-8 offset-lg-2">
+		<h1><i class="fas fa-question-circle text-warning"></i> Измена текста или опција питања</h1>
+	</div>
+</div>
+<hr>
+<br>
+<div class="row mt-3">
+	<div class="col-lg-8 offset-lg-2">
+<form action="{{ path_for('pitanje.izmena') }}" method="POST" class="form mb-3" id="forma" data-parsley-validate>
+	{{ csrf | raw }}
+	<input type="hidden" name="idIzmena" value="{{ pitanje.id }}">
+    <input type="hidden" id="anketa_id" name="anketa_id" value="{{ anketa.id }}">
+		<div class="form-row">
+			<div class="form-group col-lg-6">
+                <label for="naziv"><h4>Текст питања: </h4></label>
+                <input type="text" class="form-control form-control-lg" value="{{ old.naziv ? : pitanje.naziv }}" name="naziv" id="naziv" aria-describedby="Tekst pitanja" required>
+            </div>
+            <div class="form-group col-lg-1">
+
+            </div>
+            <div class="form-group col-lg-5">
+				<div class="form-check mt-5">
+					<input type="checkbox" class="form-check-input" name="link" id="link" {{pitanje.link == 1 ? ' checked' : ''}}>
+					<label class="form-check-label" for="link"><h4>&emsp;Да ли је могуће додати документ уз питање?</h4></label>
+				</div>
+            </div>
+        </div>
+        <br>
+            <div class="form-row">
+            <div class="form-group col-lg-4">
+                <label for="vrsta" class="mr-3"><h4>Врста питања: </h4></label>
+                <select name="vrsta" id="vrsta" class="form-control form-control-lg" required>
+                    <option value=""></option>
+                        {% for vrsta in vrste %}
+                    <option value="{{ vrsta }}" {{old.vrsta == vrsta ? ' selected' : ''}} {{pitanje.vrsta == vrsta ? ' selected' : ''}}>{{vrsta}}</option>
+                        {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-lg-2">
+                <label for="redosled"><h4>Редослед питања: </h4></label>
+                <div class="input-group">
+                    <input type="number" class="form-control form-control-lg" name="redosled" id="redosled" value="{{ old.redosled ? : pitanje.redosled }}" min="0" step="1" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group col-lg-6" id="tipovi" style="display: none;">
+                <label for="odgovori" class="mr-3"><h4>Типови питања: </h4><small>(За избор више типова истовремено држати притиснут CTRL тастер приликом бирања)</small></label>
+                <select name="odgovori[]" id="odgovori"
+                    class="form-control form-control-lg" multiple="multiple">
+                    {% for tip in tipovi %}
+                    <option value="{{ tip.id }}" {{ tip.id in pitanje.odgovori ? ' selected' : ''}}>{{ tip.naziv }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            </div>
+            <br>
+		<div class="form-row">
+		<div class="form-group col text-right">
+			<button type="submit" id="dugme-submit" class="btn btn-primary" title="Сними измене"><i
+					class="fas fa-save"></i> Сними измене</button>
+			<a href="{{ path_for('ankete.pregled', {id:anketa.id}) }}" class="btn btn-secondary">
+				<i class="fas fa-ban"></i> Одустани</a>
+		</div>
+	</div>
+</form>
+	</div>
+</div>
+{% endblock naslov %}
+{% block skripta %}
+<script src="{{ base_url() }}/js/parsley.js"></script>
+<script src="{{ base_url() }}/js/parsley_sr.js"></script>
+<script>
+  $(document).ready(function () {
+    if($('#vrsta').val() == 'radio' || $('#vrsta').val() == 'selekt'){
+        $('#tipovi').show();
+    };
+
+    $('#vrsta').change(function(){
+        if($('#vrsta').val() == 'radio' || $('#vrsta').val() == 'selekt') {
+            $('#tipovi').show(); 
+        } else {
+            $('#tipovi').hide(); 
+        } 
+    });
+
+  });
+</script>
+{% endblock skripta %}

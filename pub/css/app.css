@@ -16,12 +16,20 @@ html, body {
   width: 5% !important;
 }
 
+.w-6 {
+  width: 6% !important;
+}
+
 .w-10 {
   width: 10% !important;
 }
 
 .w-15 {
   width: 15% !important;
+}
+
+.w-14 {
+  width: 14% !important;
 }
 
 .w-20 {

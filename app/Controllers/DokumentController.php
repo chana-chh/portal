@@ -346,7 +346,7 @@ class DokumentController extends Controller
             'naslov' => [
                 'required' => true,
                 'minlen' => 5,
-                'maxlen' => 254
+                'maxlen' => 500
             ],
             'vrsta_id' => [
                 'required' => true,

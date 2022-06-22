@@ -13,7 +13,7 @@
                 <h3>Додавање описа докумената и његово објављивање на портал</h3>
             </div>
             <div class="card-body text-dark">
-                <form id="dokument-forma" action="{{ path_for('dokument.dodavanje.post') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <form id="dokument-forma" action="{{ path_for('dokument.dodavanje.post') }}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                     {{ csrf|raw }}
                     <div class="row mb-2">
                         <div class="col text-danger">
@@ -23,13 +23,11 @@
                     <div class="form-row">
                         <div class="col form-group">
                             <label for="naslov">Наслов документа</label>
-                            <input type="text" value="{{ old.naslov ? : '' }}" class="form-control{{ errors.naslov[0] ? ' is-invalid' : '' }}" name="naslov" id="naslov" required maxlength="250">
-                            <div class="valid-feedback">Одговарајући податак</div>
-                            <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
+                            <input type="text" value="{{ old.naslov ? : '' }}" class="form-control" name="naslov" id="naslov" required minlength="5" maxlength="500">
                         </div>
                         <div class="col form-group">
                             <label for="kategorija_id" class="mr-3">Категорија документа</label>
-                            <select name="kategorija_id" id="kategorija_id" class="custom-select izbor-sa-stilom">
+                            <select name="kategorija_id" id="kategorija_id" class="custom-select izbor-sa-stilom" required>
                                 <option value=""> </option>
                                 {% for kat in kategorije %}
                                 <option class="level_{{kat.level}}" value="{{ kat.id }}" {{old.kategorija_id == kat.id ? ' selected' : ''}}>
@@ -37,27 +35,21 @@
                                 </option>
                                 {% endfor %}
                             </select>
-                            <div class="valid-feedback">Исправно попуњено</div>
-                            <div class="invalid-feedback">{{ errors.kategorija_id[0] ? : 'Обавезно поље.' }}</div>
                         </div>
                         <div class="col form-group">
                             <label for="vrsta_id" class="mr-3">Врста документа</label>
-                            <select name="vrsta_id" id="vrsta_id" class="custom-select {{ errors.vrsta_id[0] ? ' is-invalid' : '' }}" required>
+                            <select name="vrsta_id" id="vrsta_id" class="custom-select" required>
                                 <option value=""> </option>
                                 {% for vrs in vrste %}
                                 <option value="{{ vrs.id }}" {{old.vrsta_id == vrs.id ? ' selected' : ''}}>{{ vrs.naziv }}</option>
                                 {% endfor %}
                             </select>
-                            <div class="valid-feedback">Исправно попуњено</div>
-                            <div class="invalid-feedback">{{ errors.vrsta_id[0] ? : 'Обавезно поље.' }}</div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col form-group">
                             <label for="opis">Опис / кратак садржај документа</label>
                             <textarea class="form-control{{ errors.opis[0] ? ' is-invalid' : '' }}" rows="4" name="opis" id="opis" required>{{ old.opis ? : '' }}</textarea>
-                            <div class="valid-feedback">Одговарајући податак</div>
-                            <div class="invalid-feedback">{{ errors.sala_id[0] ? : 'Обавезно поље' }}</div>
                         </div>
                     </div>
                     <div class="form-row">
@@ -73,7 +65,7 @@
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-file-upload"></i> Отпреми
                             </button>
-                            <a class="btn btn-secondary" type="reset" href="{{ path_for('pocetna') }}" title="Откажи" id="otkazi-validation">
+                            <a class="btn btn-secondary" type="reset" href="{{ path_for('pocetna') }}" title="Откажи">
                                 <i class="fas fa-ban"></i> Откажи
                             </a>
                         </div>
@@ -86,13 +78,11 @@
 {% endblock naslov %}
 
 {% block skripta %}
+<script src="{{ base_url() }}/js/parsley.js"></script>
+<script src="{{ base_url() }}/js/parsley_sr.js"></script>
 <script>
 		$("#dokument").on("change", function () {
 			$("#file-label").text("Одабран је документ са називом и екстензијом:  " + this.files[0].name);
-		});
-
-		$("#otkazi-validation").on("click", function () {
-			$("#dokument-forma").removeClass("was-validated");
 		});
 
         var n = "{{nivo}}";
@@ -105,22 +95,5 @@
            );
         };
 
-	(function () {
-		"use strict";
-		window.addEventListener("load", function () {
-			var forms = document.getElementsByClassName("needs-validation");
-			var validation = Array.prototype.filter.call(forms, function (form) {
-				form.addEventListener("submit", function (event) {
-					if (form.checkValidity() === false) {
-						event.preventDefault();
-						event.stopPropagation();
-					}
-					form.classList.add("was-validated");
-				}, false
-				);
-			});
-		}, false
-		);
-	})();
 </script>
 {% endblock skripta %}

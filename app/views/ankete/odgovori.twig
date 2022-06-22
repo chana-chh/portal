@@ -1,0 +1,71 @@
+{% extends "templates/app.twig" %}
+{% block naslov %}
+<div class="row mt-5 md-2">
+    <div class="col-lg-8">
+        <h2 class="text-primary font-italic">{{ anketa.naziv }}</h2>
+        <p class="lead">({{ anketa.pocetak|date('d.m.Y') }} - {{ anketa.kraj|date('d.m.Y') }})</p>
+    </div>
+    <div class="col-lg-4 text-right mt-3 ne_stampaj">
+        <div class="btn-group">
+            <a href="{{ path_for('ankete') }}" class="btn btn-secondary btn-sm" title="Повратак на листу анкета">
+                <i class="fas fa-list"></i> Листа анкета
+            </a>
+            <button type="button" class="btn btn-primary btn-sm" title="Штампање" onclick="window.print();">
+                <i class="fas fa-print"></i> Штампај</button>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="row mt-5 mb-4 ne_stampaj">
+    <div class="col col-lg-10 offset-lg-1">
+        <div class="card border-warning" id="odgovori">
+            <div class="card-header">
+                <h4 class="font-italic font-weight-light">Одговори дати од стране <span class="text-success font-weight-normal">{{ ispitanik.naziv }}</span></h4>
+            </div>
+            <div class="card-body">
+                {% for odgovor in odgovori %}
+                <h5 class="card-title">{{odgovor.redosled}}. {{odgovor.pit}}</h5>
+                    {% if odgovor.vrsta == "radio" %}
+                    <p class="mb-0" style="font-size: 1rem;">&emsp;&emsp;{{odgovor.naziv}}</p>
+                    {% elseif odgovor.vrsta == "selekt" %}
+                    <p class="mb-0" style="font-size: 1rem;">&emsp;&emsp;{{odgovor.naziv}}</p>
+                    {% else %}
+                    <p class="mb-0" style="font-size: 1rem;">&emsp;&emsp;{{odgovor.odgovor_id}}</p>
+                    {% endif %}
+                    <br>
+                    {# OBRAZLOŽENJE POCETAK #}
+                    {% if odgovor.obrazlozenje %}
+                        <div class="alert alert-secondary">
+                            Образложење: <span class="font-weight-light">{{ odgovor.obrazlozenje }}</span>
+                        </div>
+                    {% endif %}
+                    {# DOKUMENTI POCETAK #}
+                    {% if odgovor.dokumenta()|length > 0 %}
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th class="w-100">Priložena dokumenta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dok in odgovor.dokumenta() %}
+                                <tr>
+                                    <td><a href="{{ dok.link }}" title="Преглед" target="_blank">
+                                            Преглед документа - {{dok.link[32:]}}&emsp;<i class="fas fa-eye"></i>
+                                        </a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {# DOKUMENTI KRAJ #}
+                <hr style="border-top: dotted 1px;">
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock naslov %}

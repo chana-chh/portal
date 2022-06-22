@@ -1,0 +1,86 @@
+{% extends "templates/app.twig" %}
+{% block stil %}
+{% endblock stil %}
+{% block naslov %}
+<div class="row">
+	<div class="col">
+		<h1><i class="fas fa-poll text-secondary"></i> Додавање анкете/истраживања</h1>
+	</div>
+</div>
+<hr>
+
+<form action="{{ path_for('anketa.dodavanje.post') }}" method="POST" class="form mb-3" data-parsley-validate id="forma">
+	{{ csrf | raw }}
+	<div class="form-row">
+		<div class="form-group col-lg-10">
+			<label for="naziv">
+				<h4>Назив: </h4>
+			</label>
+			<input type="text" name="naziv" id="naziv" autocomplete="off" class="form-control form-control-lg"
+				value="{{ old.naziv ? : '' }}" maxlength="255" required autofocus>
+		</div>
+		<div class="form-group col-lg-2">
+			<label for="vreme">
+				<h4>Потребно време (минута): </h4>
+			</label>
+			<input type="number" class="form-control form-control-lg" name="vreme" id="vreme"
+				value="{{ old.vreme ? : 0 }}" min="10" step="1" max="254" autocomplete="off">
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col">
+			<label for="poruka">
+				<h4>Порука: </h4>
+			</label>
+			<input type="text" name="poruka" id="poruka" autocomplete="off" class="form-control form-control-lg"
+				value="{{ old.poruka ? : '' }}" maxlength="255">
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-lg-3">
+			<label for="pocetak">
+				<h4>Почетак (од): </h4>
+			</label>
+			<input type="date" name="pocetak" id="pocetak" class="form-control form-control-lg" required>
+		</div>
+		<div class="form-group col-lg-3">
+			<label for="kraj">
+				<h4>Крај (до): </h4>
+			</label>
+			<input type="date" name="kraj" id="kraj" class="form-control form-control-lg" required>
+		</div>
+		<div class="form-group col-lg-6">
+			{% if tipovi is empty %}
+			<h4 class="text-warning">Типови анкете нису дефинисани!</h4>
+			{% else %}
+			<label for="tip_id">
+				<h4>Тип анкете: </h4>
+			</label>
+			<select name="tip_id" id="tip_id" class="form-control form-control-lg" required>
+				{% for tip in tipovi %}
+				<option value="{{ tip.id }}" {{old.tip_id == tip.id ? ' selected' : ''}}>{{ tip.naziv }}</option>
+				{% endfor %}
+			</select>
+			{% endif %}
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col text-right">
+			{% if tipovi is empty %}
+			<a href="{{ path_for('ankete') }}" class="btn btn-secondary">
+				<i class="fas fa-ban"></i> Одустани</a>
+			{% else %}
+			<button type="submit" id="dugme-submit" class="btn btn-primary" title="Креирај нову анкету"><i
+					class="fas fa-save"></i> Креирај нову анкету</button>
+			<a href="{{ path_for('ankete') }}" class="btn btn-secondary">
+				<i class="fas fa-ban"></i> Одустани</a>
+			{% endif %}
+		</div>
+	</div>
+	</div>
+</form>
+{% endblock naslov %}
+{% block skripta %}
+<script src="{{ base_url() }}/js/parsley.js"></script>
+<script src="{{ base_url() }}/js/parsley_sr.js"></script>
+{% endblock skripta %}
